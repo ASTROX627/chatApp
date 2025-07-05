@@ -1,6 +1,6 @@
 import { Eye, EyeOff } from "lucide-react"
 import type { FC } from "react"
-import type { FieldError, UseFormRegisterReturn } from "react-hook-form"
+import type { FieldError, UseFormRegisterReturn } from "react-hook-form";
 
 type AuthInputProps = {
   label: string
