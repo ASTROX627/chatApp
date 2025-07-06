@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 const Logout = () => {
   const navigate = useNavigate();
   const handleLogout = async() => {
-    const logoutPromise = httpService.post("/logout");
+    const logoutPromise = httpService.post("/auth/logout");
     toast.promise(
       logoutPromise,{
         loading: ("Singing out from your account..."),

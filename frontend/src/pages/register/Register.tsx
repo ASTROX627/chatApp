@@ -23,7 +23,7 @@ const Register: FC = (): JSX.Element => {
   const genders = ["male", "female"]
 
   const onSubmit: SubmitHandler<RegisterFormValue> = async (data) => {
-    const registerPromise = httpService.post("/register", data);
+    const registerPromise = httpService.post("/auth/register", data);
     toast.promise(
       registerPromise,
       {

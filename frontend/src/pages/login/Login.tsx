@@ -17,7 +17,7 @@ const Login: FC = (): JSX.Element => {
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<LoginFormValue> = async (data) => {
-    const loginPromise = httpService.post("/login", data);
+    const loginPromise = httpService.post("/auth/login", data);
     toast.promise(
       loginPromise,
       {
