@@ -1,9 +1,11 @@
 import { useState, type FC, type JSX } from "react"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import toast from "react-hot-toast"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import AuthInputs from "../../components/auth/AuthInputs"
 import SelectGender from "./SelectGender"
+import { httpService } from "../../core/httpService"
+import { AxiosError} from "axios"
 
 type RegisterFormValue = {
   fullName: string,
@@ -17,17 +19,42 @@ const Register: FC = (): JSX.Element => {
   const { register, watch, handleSubmit, formState: { errors } } = useForm<RegisterFormValue>()
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShoConfirmPassword] = useState(false);
-
+  const navigate = useNavigate();
   const genders = ["male", "female"]
 
-  const onSubmit: SubmitHandler<RegisterFormValue> = (data) => {
-    if (!data.gender) {
-      toast.error("Please select your gender");
-      return;
-    }
+  const onSubmit: SubmitHandler<RegisterFormValue> = async (data) => {
+    const registerPromise = httpService.post("/register", data);
+    toast.promise(
+      registerPromise,
+      {
+        loading: "Creating your account...",
+        success: (response) => {
+          if (response.status === 201) {
+            setTimeout(() => {
+              navigate("/login", { replace: true })
+            }, 3000);
+            return "Registration successful! Redirecting to login page..."
+          }
+          return "Register was successful"
+        },
+        error: (error) => {
+          if (error instanceof AxiosError && error.response) {
+            const status = error.response.status;
+            const errorMessage = error.response.data?.error;
 
-    toast.success("Registration successful")
-    console.log(data);
+            switch (status) {
+              case 400:
+                return errorMessage;
+              case 500:
+                return errorMessage;
+              default:
+                return "Something went wrong please try again later";
+            }
+          }
+          return "Somethin went wrong"
+        }
+      }
+    );
   }
 
   return (

@@ -1,7 +1,10 @@
 import { useState, type FC, type JSX } from "react"
 import { useForm, type SubmitHandler } from "react-hook-form"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import AuthInputs from "../../components/auth/AuthInputs"
+import { httpService } from "../../core/httpService"
+import toast from "react-hot-toast"
+import { AxiosError } from "axios"
 
 type LoginFormValue = {
   username: string,
@@ -11,9 +14,41 @@ type LoginFormValue = {
 const Login: FC = (): JSX.Element => {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValue>();
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<LoginFormValue> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<LoginFormValue> = async (data) => {
+    const loginPromise = httpService.post("/login", data);
+    toast.promise(
+      loginPromise,
+      {
+        loading: "Signing in to your account...",
+        success: (response) => {
+          if (response.status === 200) {
+            setTimeout(() => {
+              navigate("/", { replace: true })
+            }, 3000);
+            return "Signing successful! Redirecting to home page..."
+          }
+          return "Signing was successful"
+        },
+        error: (error) => {
+          if (error instanceof AxiosError && error.response) {
+            const status = error.response.status;
+            const errorMessage = error.response.data?.error;
+
+            switch (status) {
+              case 400:
+                return errorMessage;
+              case 500:
+                return errorMessage;
+              default:
+                return "Something went wrong please try again later";
+            }
+          }
+          return "Something went wrong"
+        }
+      }
+    );
   }
 
   return (
@@ -27,8 +62,11 @@ const Login: FC = (): JSX.Element => {
         <AuthInputs
           label="Username"
           register={register("username", {
-            required: true,
-            minLength: 3
+            required: "Username is required",
+            minLength: {
+              value: 3,
+              message: "Username must be at least 3 characters"
+            }
           })}
           error={errors.username}
           type="text"
@@ -39,8 +77,11 @@ const Login: FC = (): JSX.Element => {
         <AuthInputs
           label="Password"
           register={register("password", {
-            required: true,
-            minLength: 6
+            required: "Password is required",
+            minLength: {
+              value: 3,
+              message: "Password must be at least 6 characters"
+            }
           })}
           error={errors.password}
           type="password"

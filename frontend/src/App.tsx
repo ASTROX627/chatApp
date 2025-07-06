@@ -9,6 +9,7 @@ const App = () => {
       <Toaster
         position="bottom-left"
         reverseOrder={true}
+        toastOptions={{duration: 3000}}
       />
     </div>
   )

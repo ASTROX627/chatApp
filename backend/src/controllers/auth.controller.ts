@@ -107,7 +107,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 }
 
 // LOGOUT_CONTROLLER
-export const logout = (req: Request, res: Response) => {
+export const logout = async(req: Request, res: Response):Promise<void> => {
   try {
     res.cookie("jwt", "", {
       maxAge: 0

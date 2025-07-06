@@ -1,7 +1,9 @@
+import Logout from "../../components/auth/Logout"
+
 const Home = () => {
   return (
     <div>
-      Home
+      <Logout/>
     </div>
   )
 }
