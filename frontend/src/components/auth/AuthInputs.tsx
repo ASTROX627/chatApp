@@ -30,13 +30,13 @@ const AuthInputs: FC<AuthInputProps> = ({ label, register, type, placeholder, is
               <EyeOff
                 size={20}
                 onClick={toggleShowPassword}
-                className="absolute cursor-pointer right-1.5 top-2.5 z-1"
+                className="absolute cursor-pointer ltr:right-1.5 rtl:left-1.5 top-1/5 z-1"
               />
             ) : (
               <Eye
                 size={20}
                 onClick={toggleShowPassword}
-                className="absolute cursor-pointer right-1.5 top-2.5 z-1"
+                className="absolute cursor-pointer ltr:right-1.5 rtl:left-1.5 top-1/5 z-1"
               />
             )
           )

@@ -5,6 +5,9 @@ import AuthInputs from "../../components/auth/AuthInputs"
 import { httpService } from "../../core/httpService"
 import toast from "react-hot-toast"
 import { AxiosError } from "axios"
+import { useAuthContext } from "../../context/auth/authContext"
+import { useTheme } from "../../hooks/useTheme"
+import { useTranslation } from "react-i18next"
 
 type LoginFormValue = {
   username: string,
@@ -15,37 +18,35 @@ const Login: FC = (): JSX.Element => {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValue>();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { classes } = useTheme();
+  const { setAuthUser } = useAuthContext();
+  const { t } = useTranslation();
 
   const onSubmit: SubmitHandler<LoginFormValue> = async (data) => {
     const loginPromise = httpService.post("/auth/login", data);
     toast.promise(
       loginPromise,
       {
-        loading: "Signing in to your account...",
+        loading: t("auth.loginLoading"),
         success: (response) => {
           if (response.status === 200) {
+            setAuthUser(response.data.user)
+            localStorage.setItem("chat-user", JSON.stringify(response.data.user))
             setTimeout(() => {
               navigate("/", { replace: true })
             }, 3000);
-            return "Signing successful! Redirecting to home page..."
+            return t("auth.loginSuccess")
           }
-          return "Signing was successful"
+          return t("auth.networkError")
         },
         error: (error) => {
           if (error instanceof AxiosError && error.response) {
-            const status = error.response.status;
             const errorMessage = error.response.data?.error;
-
-            switch (status) {
-              case 400:
-                return errorMessage;
-              case 500:
-                return errorMessage;
-              default:
-                return "Something went wrong please try again later";
+            if (errorMessage) {
+              return errorMessage
             }
           }
-          return "Something went wrong"
+          return t("auth.networkError")
         }
       }
     );
@@ -53,39 +54,39 @@ const Login: FC = (): JSX.Element => {
 
   return (
     <div className="bg-gray-400/10 backdrop-blur-lg p-6 flex flex-col min-w-96 items-center justify-center rounded-lg shadow-lg">
-      <h1 className="text-white text-3xl font-semibold mb-5">Login <span className="text-purple-600">Chat App</span></h1>
+      <h1 className="text-white text-3xl font-semibold mb-5">{t("auth.login")} <span className={`${classes.primary.text}`}>{t("auth.chatApp")}</span></h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full mt-5 flex flex-col">
 
         {/* USERNAME_INPUT */}
         <AuthInputs
-          label="Username"
+          label={t("auth.username")}
           register={register("username", {
-            required: "Username is required",
+            required: t("auth.usernameRequired"),
             minLength: {
               value: 3,
-              message: "Username must be at least 3 characters"
+              message: t("auth.usernameMinLength")
             }
           })}
           error={errors.username}
           type="text"
-          placeholder="Enter your username"
+          placeholder={t("auth.usernamePlaceholder")}
         />
 
         {/* PASSWORD_INPUT */}
         <AuthInputs
-          label="Password"
+          label={t("auth.password")}
           register={register("password", {
-            required: "Password is required",
+            required: t("auth.passwordRequired"),
             minLength: {
-              value: 3,
-              message: "Password must be at least 6 characters"
+              value: 6,
+              message: t("auth.passwordMinLength")
             }
           })}
           error={errors.password}
           type="password"
-          placeholder="Enter your password"
+          placeholder={t("auth.passwordPlaceholder")}
           isPassword
           showPassword={showPassword}
           toggleShowPassword={() => setShowPassword(!showPassword)}
@@ -94,11 +95,11 @@ const Login: FC = (): JSX.Element => {
         <div className="mb-4">
           <Link
             to={"/register"}
-            className="text-sm hover:underline hover:text-purple-600 transition-all duration-200 inline-block ml-1"
-          >{"Don't"} have an account?</Link>
+            className={`text-sm hover:underline ${classes.secondary.hover.text} transition-all duration-200 inline-block ml-1`}
+          >{t("auth.donHanvAnAccount")}</Link>
         </div>
 
-        <button type="submit" className="btn btn-sm border-0 bg-purple-600 hover:bg-gray-400/0 hover:text-purple-600 hover:outline hover:outline-purple-600">Login</button>
+        <button type="submit" className={`btn btn-sm border-0 ${classes.primary.bg} hover:bg-gray-400/0 ${classes.primary.hover.text} hover:outline ${classes.primary.hover.outline}`}>{t("auth.login")}</button>
       </form>
     </div>
   )

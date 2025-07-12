@@ -1,0 +1,61 @@
+{
+  "home":{
+    "search": "Search...",
+    "changeTheme": "Change Theme",
+    "changeLanguage": "Change Language",
+    "selectLanguage": "Select a language",
+    "welcome": "welcome",
+    "selectUser": "Select a user to start conversation",
+    "startConversation": "Send a message to start conversation",
+    "sendMessage": "Send a message",
+    "sizeLimit": "size of file must be at least 10 MB",
+    "download": "Download",
+    "themes":{
+      "sky": "SKY",
+      "spring": "SPRING",
+      "fall": "FALL",
+      "winter": "WINTER"
+    },
+    "languages":{
+      "en": "English",
+      "fa": "فارسی"
+    }
+  },
+  "auth":{
+    "loginLoading": "Signing in to your account...",
+    "registerLoading": "Creating your account...",
+    "logoutLoading": "Singing out from your account...",
+    "loginSuccess": "Signing successful! Redirecting to home page...",
+    "registerSuccess": "Registration successful! Redirecting to login page...",
+    "logoutSuccessful": "Singing out successful! Redirecting to login page...",
+    "networkError": "Network error",
+    "tryAgain": "Something went wrong please try again later",
+    "login": "Login",
+    "register": "Register",
+    "chatApp": "Chat App",
+    "fullName": "FullName",
+    "username": "Username",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "gender": "Gender",
+    "fullNameRequired": "Full name is required",
+    "fullNameMinLength": "Full name must be at least 3 characters",
+    "fullNamePlaceholder": "Enter your full name",
+    "usernameRequired": "Username is required",
+    "usernameMinLength": "Username must be at least 3 characters",
+    "usernamePlaceholder": "Enter your username",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPasswordRequired": "Confirm password is required",
+    "passwordsDoNotMatch": "Password and confirm password do not match",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "selectGender": "Please select your gender",
+    "donHanvAnAccount": "{Don't} have an account?",
+    "haveAnAccount": "Already have an account?",
+    "genders":{
+      "male": "male",
+      "female": "female"
+    }
+  }
+}

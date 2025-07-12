@@ -1,0 +1,61 @@
+{
+  "home": {
+    "search": "جستجو...",
+    "changeTheme": "تغییر تم",
+    "changeLanguage": "تغییر زیان",
+    "selectLanguage": "یک زیان را انتخاب کنید",
+    "welcome": "درود",
+    "selectUser": "برای شروع گفتگو یک کاربر را انتخاب کنید",
+    "startConversation": "برای شروع گفتگو یک پیام ارسال کنید",
+    "sendMessage": "ارسال پیام",
+    "sizeLimit": "حجم فایل باید کمتر از ۱۰ مگابایت باشد.",
+    "download": "بارگیری",
+    "themes": {
+      "sky": "آسمان",
+      "spring": "بهاری",
+      "fall": "پاییزی",
+      "winter": "زمستانی"
+    },
+    "languages": {
+      "en": "English",
+      "fa": "فارسی"
+    }
+  },
+  "auth": {
+    "loginLoading": "درحال ورود به حساب کاربری...",
+    "registerLoading": "درحال ساختن حساب کاربری",
+    "logoutLoading": "در حال خروج از حساب کاربری...",
+    "loginSuccess": "ورود موفقیت آمیز بود! به صفحه اصلی منتقل می شوید...",
+    "registerSuccess": "ثبت نام موفقیت آمیز بود! به صفحه ورود منتقل می شوید...",
+    "logoutSuccessful": "خروج موفقیت آمیز بود! به صفحه ورود منتقل می شوید...",
+    "networkError": "خطا در شبکه",
+    "tryAgain": "خطایی رخ داده است لطفا بعدا امتحان کنید",
+    "login": "ورود",
+    "register": "ثبت نام",
+    "chatApp": "پیامرسان",
+    "fullName": "نام کامل",
+    "username": "نام کاربری",
+    "password": "رمز عبور",
+    "confirmPassword": "تکرار رمز عبور",
+    "gender": "جنسیت",
+    "fullNameRequired": "وارد کردن نام کامل الزامی است.",
+    "fullNameMinLength": "حداقل طول نام کامل ۳ کاراکتر است.",
+    "fullNamePlaceholder": "نام کامل خود را وارد کنید",
+    "usernameRequired": "وارد کردن نام کاربری الزامی است.",
+    "usernameMinLength": "حداقل طول نام کابری ۳ کاراکتر است.",
+    "usernamePlaceholder": "نام کاربری خود را وارد کنید",
+    "passwordRequired": "وارد کردن رمز عبور الزامی است.",
+    "passwordMinLength": "حداقل طول رمز عبور ۶ کاراکتر است.",
+    "passwordPlaceholder": "رمز عبور خود را وارد کنید",
+    "confirmPasswordRequired": "تکرار کردن رمز عبور الزامی است.",
+    "passwordsDoNotMatch": "رمز عبور با تکرار آن مطابقت ندارد.",
+    "confirmPasswordPlaceholder": "رمز عبور خود را تکرار کنید",
+    "selectGender": "لطفا جنسیت خود را انتخاب کنید.",
+    "donHanvAnAccount": "آیا حساب کابری ندارید؟",
+    "haveAnAccount": "آیا حساب کاربری دارید؟",
+    "genders": {
+      "male": "مرد",
+      "female": "زن"
+    }
+  }
+}

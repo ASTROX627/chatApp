@@ -1,5 +1,8 @@
 import type { FC } from "react"
 import type { FieldError, UseFormRegisterReturn } from "react-hook-form"
+import { useTheme } from "../../hooks/useTheme"
+import { useTranslation } from "react-i18next"
+import { useAppContext } from "../../context/app/appContext"
 
 type GenderProps = {
   register: UseFormRegisterReturn
@@ -8,9 +11,12 @@ type GenderProps = {
 }
 
 const SelectGender: FC<GenderProps> = ({ register, genders, error }) => {
+  const { classes } = useTheme();
+  const {language} = useAppContext();
+  const { t } = useTranslation();
   return (
     <div className="mb-3">
-      <label className="label ml-1 mb-2">Gender</label>
+      <label className="label ml-1 mb-2">{t("auth.gender")}</label>
       <div className="flex ml-1">
         {genders.map((gender) => (
           <div key={gender} className="form-control mr-3">
@@ -19,9 +25,15 @@ const SelectGender: FC<GenderProps> = ({ register, genders, error }) => {
                 {...register}
                 type="radio"
                 value={gender}
-                className="radio checked:bg-purple-200 checked:text-purple-600"
+                className={`radio ${classes.secondary.checked.bg} ${classes.primary.checked.text} transition-all duration-200`}
               />
-              <span>{gender.charAt(0).toUpperCase() + gender.slice(1)}</span>
+              {
+                language === "en"?(
+                  <span>{t(`auth.genders.${gender}`).charAt(0).toUpperCase() + gender.slice(1)}</span>
+                ):(
+                  <span>{t(`auth.genders.${gender}`)}</span>
+                )
+              }
             </label>
           </div>
         ))}

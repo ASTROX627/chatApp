@@ -1,9 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap");
 @import "tailwindcss";
 @plugin "daisyui";
+@plugin 'tailwind-scrollbar';
 
-body{
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("/bg.jpg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+body {
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.hover-primary:hover {
+  background-color: rgb(var(--theme-primary-rgb));
+}
+
+.hover-primary-text:hover {
+  color: rgb(var(--theme-primary-rgb));
+}
+
+.bg-primary {
+  background-color: rgb(var(--theme-primary-rgb));
+}
+
+.text-primary {
+  color: rgb(var(--theme-primary-rgb));
+}
+
+.border-primary {
+  border-color: rgb(var(--theme-primary-rgb));
+}
+
+.outline-primary {
+  outline-color: rgb(var(--theme-primary-rgb));
+}
+
+.hover-secondary:hover {
+  background-color: rgb(var(--theme-secondary-rgb));
+}
+
+.hover-secondary-text:hover {
+  color: rgb(var(--theme-secondary-rgb));
+}
+
+.bg-secondary {
+  background-color: rgb(var(--theme-secondary-rgb));
+}
+
+.text-secondary {
+  color: rgb(var(--theme-primary-rgb));
+}
+
+.border-secondary {
+  border-color: rgb(var(--theme-secondary-rgb));
+}
+
+.outline-secondary {
+  outline-color: rgb(var(--theme-secondary-rgb));
 }

@@ -7,25 +7,26 @@ exports.logout = exports.login = exports.register = void 0;
 const user_model_1 = __importDefault(require("../models/user.model"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const generateToken_1 = __importDefault(require("../utils/generateToken"));
+const i18nHelper_1 = require("../utils/i18nHelper");
 // REGISTER_CONTROLLER
 const register = async (req, res) => {
     try {
         const { fullName, username, password, confirmPassword, gender } = req.body;
         if (!fullName || !username || !password || !confirmPassword || !gender) {
-            res.status(400).json({ error: "All fields are required. " });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.allFieldsRequired") });
             return;
         }
         if (password !== confirmPassword) {
-            res.status(400).json({ error: "Password and confirm password do not match." });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.passwordMismatch") });
             return;
         }
         if (password.length < 6) {
-            res.status(400).json({ error: "Password must be at least 6 characters." });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.passwordMinLength") });
             return;
         }
         const user = await user_model_1.default.findOne({ username });
         if (user) {
-            res.status(400).json({ error: "a user with this username already exists." });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.userExists") });
             return;
         }
         const salt = await bcryptjs_1.default.genSalt(12);
@@ -42,7 +43,7 @@ const register = async (req, res) => {
         if (newUser) {
             await newUser.save();
             res.status(201).json({
-                message: "Registration successful",
+                message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.registrationSuccessful"),
                 user: {
                     _id: newUser._id,
                     fullName: newUser.fullName,
@@ -52,12 +53,12 @@ const register = async (req, res) => {
             });
         }
         else {
-            res.status(400).json({ error: "Invalid user data" });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.invalidUserData") });
         }
     }
     catch (error) {
         console.log("error in register controller", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
     }
 };
 exports.register = register;
@@ -66,21 +67,21 @@ const login = async (req, res) => {
     try {
         const { username, password } = req.body;
         if (!username || !password) {
-            res.status(400).json({ error: "All fields are required." });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.allFieldsRequired") });
             return;
         }
         if (password.length < 6) {
-            res.status(400).json({ error: "Password must be at least 6 characters." });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.passwordMinLength") });
         }
         const user = await user_model_1.default.findOne({ username });
         const isPasswordCorrect = await bcryptjs_1.default.compare(password, user?.password || "");
         if (!user || !isPasswordCorrect) {
-            res.status(400).json({ error: "Invalid username or password" });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.invalidCredentials") });
             return;
         }
         (0, generateToken_1.default)(user._id, res);
         res.status(200).json({
-            message: "Login successful",
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.loginSuccessful"),
             user: {
                 _id: user._id,
                 fullName: user.fullName,
@@ -92,7 +93,7 @@ const login = async (req, res) => {
     }
     catch (error) {
         console.log("Error in login controller.", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
     }
 };
 exports.login = login;
@@ -102,11 +103,11 @@ const logout = async (req, res) => {
         res.cookie("jwt", "", {
             maxAge: 0
         });
-        res.status(200).json({ error: "Logged out successful" });
+        res.status(200).json({ message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.logoutSuccessful") });
     }
     catch (error) {
         console.log("Error in logout controller", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
     }
 };
 exports.logout = logout;

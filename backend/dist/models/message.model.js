@@ -17,7 +17,23 @@ const messageSchema = new mongoose_1.default.Schema({
     },
     message: {
         type: String,
-        required: true
+    },
+    messageType: {
+        type: String,
+        enum: ["text", "file", "image", "document"],
+        default: "text"
+    },
+    fileUrl: {
+        type: String
+    },
+    fileSize: {
+        type: Number
+    },
+    fileName: {
+        type: String
+    },
+    fileMimeType: {
+        type: String
     }
 }, { timestamps: true });
 const Message = mongoose_1.default.model("Message", messageSchema);

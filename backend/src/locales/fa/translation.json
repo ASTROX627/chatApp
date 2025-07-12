@@ -1,0 +1,25 @@
+{
+  "errors": {
+    "allFieldsRequired": "تمام فیلدها اجباری هستند.",
+    "passwordMismatch": "رمز عبور و تکرار رمز عبور مطابقت ندارند.",
+    "passwordMinLength": "رمز عبور باید حداقل ۶ کاراکتر باشد.",
+    "userExists": "کاربری با این نام کاربری قبلاً وجود دارد.",
+    "invalidUserData": "اطلاعات کاربر نامعتبر است",
+    "internalServerError": "خطای داخلی سرور",
+    "invalidCredentials": "نام کاربری یا رمز عبور نامعتبر است",
+    "unauthorized": "غیرمجاز - توکن ارائه نشده",
+    "invalidToken": "غیرمجاز - توکن نامعتبر",
+    "userNotFound": "کاربر یافت نشد",
+    "jwtSecretNotConfigured": "رمز JWT تنظیم نشده است",
+    "noConversation": "گفتگویی پیدا نشد",
+    "messageRequired": "این فیلد نمی تواند خالی باشد",
+    "notAllowedFile": "این نوع فایل مجاز نیست"
+  },
+  "success": {
+    "registrationSuccessful": "ثبت نام با موفقیت انجام شد",
+    "loginSuccessful": "ورود موفقیت آمیز",
+    "logoutSuccessful": "خروج موفقیت آمیز",
+    "messageSendSuccessful": "پیام با موفقیت ارسال شد",
+    "messageGaveSuccessful": "پیام ها با موفیت دریافت شدند"
+  }
+}

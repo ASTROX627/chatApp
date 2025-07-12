@@ -1,0 +1,25 @@
+{
+  "errors": {
+    "allFieldsRequired": "All fields are required.",
+    "passwordMismatch": "Password and confirm password do not match.",
+    "passwordMinLength": "Password must be at least 6 characters.",
+    "userExists": "A user with this username already exists.",
+    "invalidUserData": "Invalid user data",
+    "internalServerError": "Internal server error",
+    "invalidCredentials": "Invalid username or password",
+    "unauthorized": "Unauthorized - No Token Provided",
+    "invalidToken": "Unauthorized - Invalid Token",
+    "userNotFound": "User not found",
+    "jwtSecretNotConfigured": "JWT Secret not configured",
+    "noConversation": "No conversation found",
+    "messageRequired": "This filed can not empty",
+    "notAllowedFile": "This type of file not allowed"
+  },
+  "success": {
+    "registrationSuccessful": "Registration successful",
+    "loginSuccessful": "Login successful",
+    "logoutSuccessful": "Logged out successful",
+    "messageSendSuccessful": "Message sent successfully",
+    "messageGaveSuccessful": "Messages gave successfully"
+  }
+}

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcryptjs";
 import generateTokenAndSetCookies from "../utils/generateToken";
+import { getLocalizedMessage } from "../utils/i18nHelper";
 
 // REGISTER_CONTROLLER
 export const register = async (req: Request, res: Response): Promise<void> => {
@@ -9,24 +10,24 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const { fullName, username, password, confirmPassword, gender } = req.body;
 
     if (!fullName || !username || !password || !confirmPassword || !gender) {
-      res.status(400).json({ error: "All fields are required. " })
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.allFieldsRequired") })
       return;
     }
 
     if (password !== confirmPassword) {
-      res.status(400).json({ error: "Password and confirm password do not match." })
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.passwordMismatch") })
       return;
     }
 
     if (password.length < 6) {
-      res.status(400).json({ error: "Password must be at least 6 characters." })
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.passwordMinLength") })
       return;
     }
 
     const user = await User.findOne({ username });
 
     if (user) {
-      res.status(400).json({ error: "a user with this username already exists." })
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.userExists") })
       return;
     }
 
@@ -48,7 +49,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       await newUser.save();
 
       res.status(201).json({
-        message: "Registration successful",
+        message: getLocalizedMessage(req, "success.registrationSuccessful"),
         user: {
           _id: newUser._id,
           fullName: newUser.fullName,
@@ -57,12 +58,12 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         }
       })
     } else {
-      res.status(400).json({ error: "Invalid user data" })
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.invalidUserData") })
     }
 
   } catch (error) {
     console.log("error in register controller", error);
-    res.status(500).json({ error: "Internal server error" })
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") })
   }
 }
 
@@ -72,26 +73,26 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-      res.status(400).json({ error: "All fields are required." })
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.allFieldsRequired") })
       return;
     }
 
     if (password.length < 6) {
-      res.status(400).json({ error: "Password must be at least 6 characters." })
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.passwordMinLength") })
     }
 
     const user = await User.findOne({ username });
     const isPasswordCorrect = await bcrypt.compare(password, user?.password || "");
 
     if (!user || !isPasswordCorrect) {
-      res.status(400).json({ error: "Invalid username or password" });
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.invalidCredentials") })
       return;
     }
 
     generateTokenAndSetCookies(user._id, res);
 
     res.status(200).json({
-      message: "Login successful",
+      message: getLocalizedMessage(req, "success.loginSuccessful"),
       user: {
         _id: user._id,
         fullName: user.fullName,
@@ -102,19 +103,19 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     })
   } catch (error) {
     console.log("Error in login controller.", error);
-    res.status(500).json({ error: "Internal server error" })
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") })
   }
 }
 
 // LOGOUT_CONTROLLER
-export const logout = async(req: Request, res: Response):Promise<void> => {
+export const logout = async (req: Request, res: Response): Promise<void> => {
   try {
     res.cookie("jwt", "", {
       maxAge: 0
     });
-    res.status(200).json({ error: "Logged out successful" });
+    res.status(200).json({ message: getLocalizedMessage(req, "success.logoutSuccessful") });
   } catch (error) {
     console.log("Error in logout controller", error);
-    res.status(500).json({ error: "Internal server error" })
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") })
   }
 }
