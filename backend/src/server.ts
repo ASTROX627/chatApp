@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import authRoute from "./routes/auth.route";
 import messageRoute from "./routes/message.route";
 import usersRoute from "./routes/users.route";
+import groupRoute from "./routes/group.route";
 import connectToMongoDB from "./db/connectToMongoDB";
 import cors from "cors"
 import protectRoute from "./middleware/protectRoute";
@@ -35,7 +36,8 @@ app.get('/favicon.ico', (req, res) => {
 
 app.use("/api/auth", authRoute);
 app.use("/api/messages", protectRoute, messageRoute);
-app.use("/api/users", usersRoute)
+app.use("/api/users", usersRoute);
+app.use("/api/group", protectRoute, groupRoute);
 
 
 app.listen(PORT, () => {

@@ -11,10 +11,10 @@ const SettingMenu: FC = () => {
 
   return (
     showSettingMenu && (
-      <>
+      <div className="h-full overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800">
         <ChangeTheme/>
         <ChangeLanguage/>
-      </>
+      </div>
     )
   )
 }

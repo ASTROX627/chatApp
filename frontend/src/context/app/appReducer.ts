@@ -4,14 +4,16 @@ export type LanguageType = "en" | "fa"
 type StateType = {
   showChatMenu: boolean,
   showSettingMenu: boolean,
+  ShowCreateGroupMenu: boolean,
   theme: ThemeType,
   isActiveChatButton: boolean,
   isActiveSettingButton: boolean,
+  isActiveCreateGroupButton: boolean,
   language: LanguageType
 }
 
 type ActionWithType = {
-  type: "SHOW_CHAT_MENU" | "SHOW_SETTING_MENU"
+  type: "SHOW_CHAT_MENU" | "SHOW_SETTING_MENU" | "SHOW_CREATE_GROUP_MENU"
 }
 
 
@@ -27,7 +29,7 @@ type ChangeLanguageActionWithTypeAndPayload = {
 
 type ActionWithTypeAndPayload = ChangeThemeActionWithTypeAndPayload | ChangeLanguageActionWithTypeAndPayload;
 
-type ActionType = ActionWithType |  ActionWithTypeAndPayload
+type ActionType = ActionWithType | ActionWithTypeAndPayload
 
 const appReducer = (state: StateType, action: ActionType) => {
   switch (action.type) {
@@ -36,16 +38,30 @@ const appReducer = (state: StateType, action: ActionType) => {
         ...state,
         showChatMenu: true,
         showSettingMenu: false,
+        ShowCreateGroupMenu: false,
         isActiveChatButton: true,
-        isActiveSettingButton: false
+        isActiveSettingButton: false,
+        isActiveCreateGroupButton: false
       }
     case "SHOW_SETTING_MENU":
       return {
         ...state,
-        showSettingMenu: true,
         showChatMenu: false,
+        showSettingMenu: true,
+        ShowCreateGroupMenu: false,
         isActiveChatButton: false,
-        isActiveSettingButton: true
+        isActiveSettingButton: true,
+        isActiveCreateGroupButton: false
+      }
+    case "SHOW_CREATE_GROUP_MENU":
+      return {
+        ...state,
+        showChatMenu: false,
+        showSettingMenu: false,
+        ShowCreateGroupMenu: true,
+        isActiveChatButton: false,
+        isActiveSettingButton: false,
+        isActiveCreateGroupButton: true
       }
     case "CHANGE_THEME":
       return {
@@ -53,7 +69,7 @@ const appReducer = (state: StateType, action: ActionType) => {
         theme: action.payload
       }
     case "CHANGE_LANGUAGE":
-      return{
+      return {
         ...state,
         language: action.payload
       }

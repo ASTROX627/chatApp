@@ -1,14 +1,16 @@
 import Logout from "./Logout"
 import { type FC, type JSX } from "react"
-import Chat‌MenuButton from "./Chat‌MenuButton"
+import ConversationMenuButton from "./ConversationMenuButton"
 import SettingMenuButton from "./SettingMenuButton"
+import CreateGroupMenuButton from "./CreateGroupMenuButton"
 
 const Sidebar:FC = ():JSX.Element => {
   return (
     <div className="flex flex-col justify-between h-full border-e-1 border-gray-500">
       <div className="flex flex-col">
-        <Chat‌MenuButton/>
+        <ConversationMenuButton/>
         <SettingMenuButton/>
+        <CreateGroupMenuButton/>
       </div>
       <Logout />
     </div>

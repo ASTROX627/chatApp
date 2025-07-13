@@ -9,7 +9,7 @@ const SettingMenuButton: FC = (): JSX.Element => {
   return (
     <div
       onClick={setShowSettingMenu}
-      className={`p-3 cursor-pointer ${classes.primary.hover.bg} transition-all duration-200 ${isActiveSettingButton? classes.primary.bg: ""}`}>
+      className={`p-3 cursor-pointer ${classes.primary.hover.bg} transition-all duration-200 border-b-1 border-gray-500 ${isActiveSettingButton? classes.primary.bg: ""}`}>
       <Settings size={30} />
     </div>
   )

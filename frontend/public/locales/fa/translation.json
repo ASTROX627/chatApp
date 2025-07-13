@@ -4,6 +4,16 @@
     "changeTheme": "تغییر تم",
     "changeLanguage": "تغییر زیان",
     "selectLanguage": "یک زیان را انتخاب کنید",
+    "selectGroupType": "یک نوع را انتخاب کنید",
+    "newGroup": "ایجاد گروه/کانال",
+    "createGroup": "ساخت گروه/کانال",
+    "createGroupLoading": "در حال ایجاد گروه/کانال...",
+    "createGroupSuccess": "گروه/کانال با موفقیت ایجاد شد.",
+    "selectTyperequired": "لطفا یک نوع را انتخاب کنید.",
+    "selectTypeValidate": "لطفا یک نوع معتبر را انتخاب کنید.",
+    "enterGroupName": "نام گروه/کانال",
+    "groupNameRequired": "وارد کردن نام گروه الزامی است.",
+    "groupNamePlaceholder": "نام گروه/کانال را وارد کنید",
     "welcome": "درود",
     "selectUser": "برای شروع گفتگو یک کاربر را انتخاب کنید",
     "startConversation": "برای شروع گفتگو یک پیام ارسال کنید",
@@ -19,6 +29,10 @@
     "languages": {
       "en": "English",
       "fa": "فارسی"
+    },
+    "groupTypes": {
+      "group": "گروه",
+      "channel": "کانال"
     }
   },
   "auth": {

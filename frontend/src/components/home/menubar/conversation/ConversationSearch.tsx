@@ -7,7 +7,7 @@ type SearchInputProps = {
   setSearchTerm: (value: string) => void;
 }
 
-const SearchInput: FC<SearchInputProps> = ({searchTerm, setSearchTerm}): JSX.Element => {
+const ConversationSearch: FC<SearchInputProps> = ({searchTerm, setSearchTerm}): JSX.Element => {
   const {t} = useTranslation();
   return (
     <div className="p-5 flex items-center gap-2">
@@ -25,4 +25,4 @@ const SearchInput: FC<SearchInputProps> = ({searchTerm, setSearchTerm}): JSX.Ele
   )
 }
 
-export default SearchInput
+export default ConversationSearch;

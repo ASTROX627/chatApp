@@ -5,12 +5,15 @@ import type { LanguageType, ThemeType } from "./appReducer";
 type AppContextType = {
   showChatMenu: boolean;
   showSettingMenu: boolean;
-  isActiveChatButton: boolean,
-  isActiveSettingButton: boolean
+  ShowCreateGroupMenu: boolean;
+  isActiveChatButton: boolean;
+  isActiveSettingButton: boolean;
+  isActiveCreateGroupButton: boolean,
   theme: ThemeType;
   language: LanguageType;
   setShowChatMenu: () => void;
   setShowSettingMenu: () => void;
+  setShowCreateGroupMenu: () => void;
   changeTheme: (theme: ThemeType) => void;
   changeLanguage: (language: LanguageType) => void;
 };
@@ -18,14 +21,17 @@ type AppContextType = {
 export const AppContext = createContext<AppContextType>({
   showChatMenu: true,
   showSettingMenu: false,
+  ShowCreateGroupMenu: false,
   isActiveChatButton: true,
   isActiveSettingButton: false,
+  isActiveCreateGroupButton: false,
   theme: "sky",
   language: 'en',
   setShowChatMenu: () => { },
   setShowSettingMenu: () => { },
+  setShowCreateGroupMenu: () => {},
   changeTheme: (theme: ThemeType) => { },
-  changeLanguage: (language: LanguageType) => {}
+  changeLanguage: (language: LanguageType) => { },
 });
 
 export const useAppContext = () => {

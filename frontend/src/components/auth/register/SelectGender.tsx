@@ -1,18 +1,18 @@
 import type { FC } from "react"
 import type { FieldError, UseFormRegisterReturn } from "react-hook-form"
-import { useTheme } from "../../hooks/useTheme"
+import { useTheme } from "../../../hooks/useTheme"
 import { useTranslation } from "react-i18next"
-import { useAppContext } from "../../context/app/appContext"
+import { useAppContext } from "../../../context/app/appContext"
 
-type GenderProps = {
+type SelectGenderProps = {
   register: UseFormRegisterReturn
   genders: string[]
   error: FieldError | undefined
 }
 
-const SelectGender: FC<GenderProps> = ({ register, genders, error }) => {
+const SelectGender: FC<SelectGenderProps> = ({ register, genders, error }) => {
   const { classes } = useTheme();
-  const {language} = useAppContext();
+  const { language } = useAppContext();
   const { t } = useTranslation();
   return (
     <div className="mb-3">
@@ -28,9 +28,9 @@ const SelectGender: FC<GenderProps> = ({ register, genders, error }) => {
                 className={`radio ${classes.secondary.checked.bg} ${classes.primary.checked.text} transition-all duration-200`}
               />
               {
-                language === "en"?(
+                language === "en" ? (
                   <span>{t(`auth.genders.${gender}`).charAt(0).toUpperCase() + gender.slice(1)}</span>
-                ):(
+                ) : (
                   <span>{t(`auth.genders.${gender}`)}</span>
                 )
               }

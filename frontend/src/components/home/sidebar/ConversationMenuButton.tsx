@@ -3,7 +3,7 @@ import type { FC, JSX } from "react";
 import { useAppContext } from "../../../context/app/appContext";
 import { useTheme } from "../../../hooks/useTheme";
 
-const Chat‌MenuButton: FC = (): JSX.Element => {
+const ConversationMenuButton: FC = (): JSX.Element => {
   const { setShowChatMenu, isActiveChatButton } = useAppContext();
   const {classes} = useTheme();
   return (
@@ -15,4 +15,4 @@ const Chat‌MenuButton: FC = (): JSX.Element => {
   )
 }
 
-export default Chat‌MenuButton;
+export default ConversationMenuButton;

@@ -5,13 +5,13 @@ import { THEME_CONFIGS } from "../../configs/theme/themConfig";
 import { getColorValues } from "../../configs/theme/getColorValues";
 import { useTranslation } from "react-i18next";
 
-
-
 const initialState = {
   showChatMenu: true,
   showSettingMenu: false,
+  ShowCreateGroupMenu: false,
   isActiveChatButton: true,
   isActiveSettingButton: false,
+  isActiveCreateGroupButton: false,
   theme: (localStorage.getItem("theme") as ThemeType) || "sky",
   language: (localStorage.getItem("language") as LanguageType) || "en"
 }
@@ -26,6 +26,10 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const setShowSettingMenu = () => {
     disatch({ type: "SHOW_SETTING_MENU" })
+  }
+
+  const setShowCreateGroupMenu = () => {
+    disatch({ type: "SHOW_CREATE_GROUP_MENU" })
   }
 
   const changeTheme = (theme: ThemeType) => {
@@ -61,7 +65,7 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [i18n, state.language])
 
   return (
-    <AppContext.Provider value={{ ...state, setShowChatMenu, setShowSettingMenu, changeTheme, changeLanguage }}>
+    <AppContext.Provider value={{ ...state, setShowChatMenu, setShowSettingMenu, setShowCreateGroupMenu, changeTheme, changeLanguage }}>
       {children}
     </AppContext.Provider>
   )

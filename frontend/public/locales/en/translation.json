@@ -4,6 +4,16 @@
     "changeTheme": "Change Theme",
     "changeLanguage": "Change Language",
     "selectLanguage": "Select a language",
+    "selectGroupType": "Select a type",
+    "newGroup": "New Group/Channel",
+    "createGroup": "Create Group/Channel",
+    "createGroupLoading": "Creating Group/Channel...",
+    "createGroupSuccess": "Creating Group/Channel successful.",
+    "selectTyperequired": "Please select a type",
+    "selectTypeValidate": "Please select a valid type",
+    "enterGroupName": "Group/Channel name",
+    "groupNameRequired": "Group name is required",
+    "groupNamePlaceholder": "Enter Group/Channel name",
     "welcome": "welcome",
     "selectUser": "Select a user to start conversation",
     "startConversation": "Send a message to start conversation",
@@ -19,6 +29,10 @@
     "languages":{
       "en": "English",
       "fa": "فارسی"
+    },
+    "groupTypes":{
+      "group": "Group",
+      "channel": "Channel"
     }
   },
   "auth":{
@@ -51,7 +65,7 @@
     "passwordsDoNotMatch": "Password and confirm password do not match",
     "confirmPasswordPlaceholder": "Confirm your password",
     "selectGender": "Please select your gender",
-    "donHanvAnAccount": "{Don't} have an account?",
+    "donHanvAnAccount": "Don't have an account?",
     "haveAnAccount": "Already have an account?",
     "genders":{
       "male": "male",

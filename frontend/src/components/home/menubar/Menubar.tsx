@@ -2,11 +2,12 @@ import type { FC, JSX } from "react"
 import { useAppContext } from "../../../context/app/appContext"
 import SettingMenu from "./settings/SettingMenu";
 import ConversationsMenu from "./conversation/ConversationsMenu";
+import CreateGroupMenu from "./createGroup/CreateGroupMenu";
 
 const Menubar: FC = (): JSX.Element => {
-  const { showChatMenu, showSettingMenu } = useAppContext();
+  const { showChatMenu, showSettingMenu, ShowCreateGroupMenu } = useAppContext();
   return (
-    <div className="h-full border-e-1 border-gray-500 w-[20vw]">
+    <div className= "h-full overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800 border-e-1 border-gray-500 w-[20vw]">
       {
         showChatMenu && (
           <ConversationsMenu />
@@ -15,6 +16,11 @@ const Menubar: FC = (): JSX.Element => {
       {
         showSettingMenu && (
           <SettingMenu />
+        )
+      }
+      {
+        ShowCreateGroupMenu && (
+          <CreateGroupMenu/>
         )
       }
     </div>
