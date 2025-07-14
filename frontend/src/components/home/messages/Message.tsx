@@ -15,9 +15,9 @@ const Message: FC<MessageProps> = ({ message }): JSX.Element => {
   const { selectedConversation } = useConversation();
   const { classes } = useTheme();
   const fromMe = message.senderId === authUser?._id;
-  const chatClassName = fromMe ? "chat-end": "chat-start";
-  const profilePicture = fromMe? authUser.profilePicture: selectedConversation?.profilePicture;
-  const {t} = useTranslation();
+  const chatClassName = fromMe ? "chat-end" : "chat-start";
+  const profilePicture = fromMe ? authUser.profilePicture : selectedConversation?.profilePicture;
+  const { t } = useTranslation();
 
   const downloadFile = (fileUrl: string, fileName: string) => {
     const link = document.createElement("a");

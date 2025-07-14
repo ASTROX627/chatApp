@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 const Messages = () => {
   const { messages, loading } = useGetMessages();
   const lastMessageRef = useRef<HTMLDivElement>(null);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -19,11 +19,11 @@ const Messages = () => {
       {
         !loading && messages.length > 0 && (
           messages.map((message: MessageType, index) => {
-            const isLastMessage = index === messages.length -1;
+            const isLastMessage = index === messages.length - 1;
             return (
               <div
                 key={message._id}
-                ref={isLastMessage? lastMessageRef: null}
+                ref={isLastMessage ? lastMessageRef : null}
               >
                 <Message
                   message={message}

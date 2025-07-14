@@ -3,6 +3,7 @@ import useGetConversations from "../../../../hooks/useGetConversations"
 import type { ConversationType } from "../../../../store/useConversation";
 import { getRandomEmoji } from "../../../../utils/emojis";
 import Conversation from "./Conversation";
+import { useAppContext } from "../../../../context/app/appContext";
 
 type ConversationsProps = {
   searchTerm: string
@@ -10,6 +11,7 @@ type ConversationsProps = {
 
 const Conversations: FC<ConversationsProps> = ({ searchTerm }) => {
   const { loading, conversations } = useGetConversations();
+  const {setShowMessageContainer} = useAppContext();
 
   const converSationsWithEmojis = useMemo(() => {
     return conversations.map((conversation: ConversationType) => ({
@@ -21,7 +23,7 @@ const Conversations: FC<ConversationsProps> = ({ searchTerm }) => {
   const filteredConversations = converSationsWithEmojis.filter((conversations: ConversationType) => (conversations.username.toLowerCase().includes(searchTerm.toLowerCase())))
 
   return (
-    <div className="flex flex-col p-5">
+    <div onClick={setShowMessageContainer} className="flex flex-col p-5">
       {
         filteredConversations.map((conversation: ConversationType, index) => (
           <Conversation

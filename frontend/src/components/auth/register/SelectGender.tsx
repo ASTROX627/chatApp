@@ -16,16 +16,16 @@ const SelectGender: FC<SelectGenderProps> = ({ register, genders, error }) => {
   const { t } = useTranslation();
   return (
     <div className="mb-3">
-      <label className="label ml-1 mb-2">{t("auth.gender")}</label>
+      <label className="label ml-1 mb-2 text-sm">{t("auth.gender")}</label>
       <div className="flex ml-1">
         {genders.map((gender) => (
           <div key={gender} className="form-control mr-3">
-            <label className="label gap-2 cursor-pointer">
+            <label className="label gap-2 cursor-pointer text-sm">
               <input
                 {...register}
                 type="radio"
                 value={gender}
-                className={`radio ${classes.secondary.checked.bg} ${classes.primary.checked.text} transition-all duration-200`}
+                className={`radio radio-sm ${classes.secondary.checked.bg} ${classes.primary.checked.text} transition-all duration-200`}
               />
               {
                 language === "en" ? (

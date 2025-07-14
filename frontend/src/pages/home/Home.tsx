@@ -4,7 +4,7 @@ import Sidebar from "../../components/home/sidebar/Sidebar"
 
 const Home = () => {
   return (
-    <div className="bg-gray-400/10 flex items-center justify-center backdrop-blur-lg rounded-lg shadowlg h-[80vh]">
+    <div className="bg-gray-400/10 flex items-center justify-start backdrop-blur-lg rounded-lg shadowlg h-[90vh] w-[90vw] relative">
       <Sidebar/>
       <Menubar/>
       <MessageContainer/>

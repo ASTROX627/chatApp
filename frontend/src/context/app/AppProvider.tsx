@@ -9,6 +9,8 @@ const initialState = {
   showChatMenu: true,
   showSettingMenu: false,
   ShowCreateGroupMenu: false,
+  showMessageContainer: false,
+  showSidebar: false,
   isActiveChatButton: true,
   isActiveSettingButton: false,
   isActiveCreateGroupButton: false,
@@ -30,6 +32,14 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const setShowCreateGroupMenu = () => {
     disatch({ type: "SHOW_CREATE_GROUP_MENU" })
+  }
+
+  const setShowSidebar = () => {
+    disatch({type: "SHOW_SIDEBAR"})
+  }
+
+  const setShowMessageContainer = () => {
+    disatch({type: "SHOW_MESSAGE_CONTAINER"})
   }
 
   const changeTheme = (theme: ThemeType) => {
@@ -65,7 +75,7 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [i18n, state.language])
 
   return (
-    <AppContext.Provider value={{ ...state, setShowChatMenu, setShowSettingMenu, setShowCreateGroupMenu, changeTheme, changeLanguage }}>
+    <AppContext.Provider value={{ ...state, setShowChatMenu, setShowSettingMenu, setShowCreateGroupMenu, setShowSidebar, setShowMessageContainer ,changeTheme, changeLanguage }}>
       {children}
     </AppContext.Provider>
   )

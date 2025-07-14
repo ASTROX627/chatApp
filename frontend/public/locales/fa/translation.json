@@ -20,6 +20,10 @@
     "sendMessage": "ارسال پیام",
     "sizeLimit": "حجم فایل باید کمتر از ۱۰ مگابایت باشد.",
     "download": "بارگیری",
+    "messages": "پیام ها",
+    "chats": "چت ها",
+    "settings": "تنظیمات",
+    "logout": "خروج",
     "themes": {
       "sky": "آسمان",
       "spring": "بهاری",

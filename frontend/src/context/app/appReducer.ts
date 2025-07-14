@@ -5,6 +5,8 @@ type StateType = {
   showChatMenu: boolean,
   showSettingMenu: boolean,
   ShowCreateGroupMenu: boolean,
+  showSidebar: boolean,
+  showMessageContainer: boolean,
   theme: ThemeType,
   isActiveChatButton: boolean,
   isActiveSettingButton: boolean,
@@ -13,7 +15,7 @@ type StateType = {
 }
 
 type ActionWithType = {
-  type: "SHOW_CHAT_MENU" | "SHOW_SETTING_MENU" | "SHOW_CREATE_GROUP_MENU"
+  type: "SHOW_CHAT_MENU" | "SHOW_SETTING_MENU" | "SHOW_CREATE_GROUP_MENU" | "SHOW_SIDEBAR" | "SHOW_MESSAGE_CONTAINER"
 }
 
 
@@ -39,6 +41,8 @@ const appReducer = (state: StateType, action: ActionType) => {
         showChatMenu: true,
         showSettingMenu: false,
         ShowCreateGroupMenu: false,
+        showSidebar: false,
+        showMessageContainer: false,
         isActiveChatButton: true,
         isActiveSettingButton: false,
         isActiveCreateGroupButton: false
@@ -49,6 +53,8 @@ const appReducer = (state: StateType, action: ActionType) => {
         showChatMenu: false,
         showSettingMenu: true,
         ShowCreateGroupMenu: false,
+        showSidebar: false,
+        showMessageContainer: false,
         isActiveChatButton: false,
         isActiveSettingButton: true,
         isActiveCreateGroupButton: false
@@ -59,10 +65,27 @@ const appReducer = (state: StateType, action: ActionType) => {
         showChatMenu: false,
         showSettingMenu: false,
         ShowCreateGroupMenu: true,
+        showSidebar: false,
+        showMessageContainer: false,
         isActiveChatButton: false,
         isActiveSettingButton: false,
         isActiveCreateGroupButton: true
       }
+    case "SHOW_SIDEBAR":
+      return {
+        ...state,
+        showSidebar: !state.showSidebar
+      }
+    case "SHOW_MESSAGE_CONTAINER": {
+      return {
+        ...state,
+        showChatMenu: false,
+        showSettingMenu: false,
+        ShowCreateGroupMenu: false,
+        showSidebar: false,
+        showMessageContainer: true,
+      }
+    }
     case "CHANGE_THEME":
       return {
         ...state,

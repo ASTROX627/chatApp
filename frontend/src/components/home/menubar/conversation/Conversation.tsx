@@ -6,7 +6,7 @@ import { useTheme } from "../../../../hooks/useTheme"
 type ConversationProps = {
   conversation: ConversationType,
   emoji: ReactNode,
-  lastIndex: boolean
+  lastIndex: boolean,
 }
 
 const Conversation: FC<ConversationProps> = ({ conversation, emoji, lastIndex }) => {

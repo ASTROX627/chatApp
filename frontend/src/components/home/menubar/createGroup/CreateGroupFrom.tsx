@@ -2,52 +2,24 @@ import type { FC, JSX } from "react"
 import { useTranslation } from "react-i18next"
 import { useTheme } from "../../../../hooks/useTheme";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import toast from "react-hot-toast";
-import { httpService } from "../../../../core/httpService";
-import { AxiosError } from "axios";
 import SelectGroupType from "./SelectGroupType";
 import CreateGroupNameInput from "./CreateGroupNameInput";
-
-type CreateGroupFormValue = {
-  groupName: string
-  groupType: "group" | "channel"
-}
+import { useCreateGroup, type CreateGroupFormValue } from "../../../../hooks/useCreateGroup";
 
 const CreateGroupFrom: FC = (): JSX.Element => {
   const { register, handleSubmit, formState: { errors } } = useForm<CreateGroupFormValue>();
-
   const { t } = useTranslation();
   const { classes } = useTheme();
+  const { createGroup } = useCreateGroup();
 
   const onSubmit: SubmitHandler<CreateGroupFormValue> = async (data) => {
-    const createGroupPromise = httpService.post("/group/create", data);
-    toast.promise(
-      createGroupPromise,
-      {
-        loading: t("home.createGroupLoading"),
-        success: (response) => {
-          if (response.status === 201) {
-            console.log("data:", response.data);
-            return t("home.createGroupSuccess")
-          }
-          return t("auth.networkError");
-        },
-        error: (error) => {
-          if (error instanceof AxiosError && error.response) {
-            const errorMessage = error.response.data?.error;
-            if (errorMessage) {
-              return errorMessage
-            }
-          }
-          return t("auth.networkError")
-        }
-      }
-    )
+    createGroup(data)
   }
+
   return (
     <form className="p-2 mt-5" onSubmit={handleSubmit(onSubmit)}>
       <CreateGroupNameInput
-        register={register("groupName",{
+        register={register("groupName", {
           required: t("home.groupNameRequired")
         })}
         error={errors.groupName}

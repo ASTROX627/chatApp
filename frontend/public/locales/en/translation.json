@@ -20,6 +20,10 @@
     "sendMessage": "Send a message",
     "sizeLimit": "size of file must be at least 10 MB",
     "download": "Download",
+    "messages": "Messages",
+    "chats": "Chats",
+    "settings": "Settings",
+    "logout": "Logout",
     "themes":{
       "sky": "SKY",
       "spring": "SPRING",

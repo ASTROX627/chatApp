@@ -8,8 +8,8 @@ const RegisterPage: FC = (): JSX.Element => {
   const { classes } = useTheme();
 
   return (
-    <div className="bg-gray-400/10 backdrop-blur-lg p-6 flex flex-col min-w-96 items-center justify-center rounded-lg shadow-lg">
-      <h1 className="text-white text-3xl font-semibold mb-5">{t("auth.register")} <span className={`${classes.primary.text}`}>{t("auth.chatApp")}</span></h1>
+    <div className="bg-gray-400/10 backdrop-blur-lg p-6 flex flex-col min-w-48 items-center justify-center rounded-lg shadow-lg">
+      <h1 className="text-white text-xl font-semibold mb-1">{t("auth.register")} <span className={`${classes.primary.text}`}>{t("auth.chatApp")}</span></h1>
       <RegisterForm />
     </div>
   )

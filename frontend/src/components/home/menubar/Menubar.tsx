@@ -5,9 +5,9 @@ import ConversationsMenu from "./conversation/ConversationsMenu";
 import CreateGroupMenu from "./createGroup/CreateGroupMenu";
 
 const Menubar: FC = (): JSX.Element => {
-  const { showChatMenu, showSettingMenu, ShowCreateGroupMenu } = useAppContext();
+  const { showChatMenu, showSettingMenu, ShowCreateGroupMenu, showMessageContainer} = useAppContext();
   return (
-    <div className= "h-full overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800 border-e-1 border-gray-500 w-[20vw]">
+    <div className= {`h-full overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800 border-gray-500 ${showMessageContainer? "w-0" : "w-full"} rounded-lg`}>
       {
         showChatMenu && (
           <ConversationsMenu />

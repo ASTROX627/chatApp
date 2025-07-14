@@ -54,7 +54,7 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="px-4 my-3">
+    <div className="my-3 sticky bottom-0 z-10 w-full">
       {
         selectedFile && (
           <div className="mb-2 p-2 bg-gray-600 rounded-lg flex items-center justify-between">
@@ -77,7 +77,7 @@ const MessageInput = () => {
           </div>
         )
       }
-      <form className="px-4 my-3" onSubmit={handleSubmit(onSubmit)}>
+      <form className="my-3 w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="w-full relative">
           <input
             {...register("message")}
@@ -90,9 +90,9 @@ const MessageInput = () => {
               type="button"
               onClick={() => fileInputRef.current?.click()}
             >
-              <Paperclip 
-                size={22} 
-                className="absolute ltr:right-10 rtl:left-10 top-1/5 cursor-pointer text-gray-400"  
+              <Paperclip
+                size={22}
+                className="absolute ltr:right-10 rtl:left-10 top-1/5 cursor-pointer text-gray-400"
               />
             </button>
             <button type="submit">
