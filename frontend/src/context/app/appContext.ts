@@ -13,6 +13,7 @@ type AppContextType = {
   isActiveCreateGroupButton: boolean,
   theme: ThemeType;
   language: LanguageType;
+  resetState: () => void;
   setShowChatMenu: () => void;
   setShowSettingMenu: () => void;
   setShowCreateGroupMenu: () => void;
@@ -33,6 +34,7 @@ export const AppContext = createContext<AppContextType>({
   isActiveCreateGroupButton: false,
   theme: "sky",
   language: 'en',
+  resetState: () => {},
   setShowChatMenu: () => { },
   setShowSettingMenu: () => { },
   setShowCreateGroupMenu: () => {},

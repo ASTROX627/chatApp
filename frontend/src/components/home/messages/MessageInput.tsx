@@ -54,7 +54,7 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="my-3 sticky bottom-0 z-10 w-full">
+    <div className="sticky bottom-0 z-10 w-full">
       {
         selectedFile && (
           <div className="mb-2 p-2 bg-gray-600 rounded-lg flex items-center justify-between">
@@ -77,7 +77,7 @@ const MessageInput = () => {
           </div>
         )
       }
-      <form className="my-3 w-full" onSubmit={handleSubmit(onSubmit)}>
+      <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="w-full relative">
           <input
             {...register("message")}

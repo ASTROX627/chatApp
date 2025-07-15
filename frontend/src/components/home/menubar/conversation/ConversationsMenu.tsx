@@ -11,7 +11,7 @@ const ConversationsMenu: FC = () => {
   return (
     showChatMenu && (
       <div className="h-full overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800">
-        <div className="flex items-center justify-between px-5">
+        <nav className="flex items-center justify-between px-5 sticky top-0 z-10 bg-slate-500">
           <button
             onClick={setShowSidebar}
           >
@@ -21,7 +21,7 @@ const ConversationsMenu: FC = () => {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />
-        </div>
+        </nav>
         <Conversations
           searchTerm={searchTerm}
         />

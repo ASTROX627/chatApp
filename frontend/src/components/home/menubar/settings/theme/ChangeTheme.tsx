@@ -16,7 +16,7 @@ const ChangeTheme: FC = (): JSX.Element => {
         <Palette size={22}/>
       </div>
       <div
-        className="grid grid-cols-2 p-5 w-[20-vw] gap-2"
+        className="grid grid-cols-2 justify-center items-center p-5 gap-2"
         role="radiogroup"
         aria-label="Theme selection"
       >

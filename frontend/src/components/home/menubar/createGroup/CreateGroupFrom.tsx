@@ -17,7 +17,7 @@ const CreateGroupFrom: FC = (): JSX.Element => {
   }
 
   return (
-    <form className="p-2 mt-5" onSubmit={handleSubmit(onSubmit)}>
+    <form className="mt-5 md:mt-7" onSubmit={handleSubmit(onSubmit)}>
       <CreateGroupNameInput
         register={register("groupName", {
           required: t("home.groupNameRequired")

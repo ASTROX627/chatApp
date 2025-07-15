@@ -57,7 +57,7 @@ const LoginFrom = () => {
       <div className="mb-4">
         <Link
           to={"/register"}
-          className={`text-sm hover:underline ${classes.secondary.hover.text} transition-all duration-200 inline-block ml-1`}
+          className={`text-sm lg:text-base hover:underline ${classes.secondary.hover.text} transition-all duration-200 inline-block ml-1`}
         >{t("auth.donHanvAnAccount")}</Link>
       </div>
 

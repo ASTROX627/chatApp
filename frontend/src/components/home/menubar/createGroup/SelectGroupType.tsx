@@ -20,7 +20,7 @@ const SelectGroupType: FC<SelectGroupTypeProps> = ({ register, error }): JSX.Ele
     <>
       <select
         {...register}
-        className={`select mt-5 ${error ? "borer-red-500" : ""}`}
+        className={`select w-full mt-5 ${error ? "borer-red-500" : ""}`}
         defaultValue={t("home.selectGroupType")}
       >
         <option disabled={true}>{t("home.selectGroupType")}</option>

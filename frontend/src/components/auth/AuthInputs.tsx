@@ -16,12 +16,12 @@ type AuthInputProps = {
 const AuthInputs: FC<AuthInputProps> = ({ label, register, type, placeholder, isPassword, showPassword, toggleShowPassword, error }) => {
   return (
     <>
-      <label className="label ml-1 mb-1 text-sm">{label}</label>
+      <label className="label ml-1 mb-1 text-sm lg:text-base">{label}</label>
       <div className="relative">
         <input
           {...register}
           type={isPassword ? (showPassword ? "text" : "password") : type}
-          className={`input w-full ${error ? "border-red-500 mb-1" : "mb-4"} text-sm`}
+          className={`input w-full ${error ? "border-red-500 mb-1" : "mb-4"} text-sm md:text-base placeholder:text-sm`}
           placeholder={placeholder}
         />
         {
@@ -30,13 +30,13 @@ const AuthInputs: FC<AuthInputProps> = ({ label, register, type, placeholder, is
               <EyeOff
                 size={20}
                 onClick={toggleShowPassword}
-                className="absolute cursor-pointer ltr:right-1.5 rtl:left-1.5 top-1/5 z-1"
+                className="absolute cursor-pointer ltr:right-1.5 rtl:left-1.5 top-1/5 z-10"
               />
             ) : (
               <Eye
                 size={20}
                 onClick={toggleShowPassword}
-                className="absolute cursor-pointer ltr:right-1.5 rtl:left-1.5 top-1/5 z-1"
+                className="absolute cursor-pointer ltr:right-1.5 rtl:left-1.5 top-1/5 z-10"
               />
             )
           )

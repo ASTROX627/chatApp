@@ -25,7 +25,7 @@ const Sidebar: FC = (): JSX.Element => {
   return (
     <div
       ref={ref}
-      className={`h-full border-gray-500 bg-slate-800 z-10 absolute flex flex-col justify-between items-center shadow-lg transition-all duration-300 ease-in-out overflow-hidden ${showSidebar ? "w-[70vw]" : "w-0"
+      className={`h-full border-gray-500 bg-slate-800 z-30 absolute flex flex-col justify-between items-center shadow-lg transition-all duration-300 ease-in-out overflow-hidden ${showSidebar ? "w-[70vw]" : "w-0"
         }`}
     >
       <div

@@ -15,7 +15,7 @@ type StateType = {
 }
 
 type ActionWithType = {
-  type: "SHOW_CHAT_MENU" | "SHOW_SETTING_MENU" | "SHOW_CREATE_GROUP_MENU" | "SHOW_SIDEBAR" | "SHOW_MESSAGE_CONTAINER"
+  type: "SHOW_CHAT_MENU" | "SHOW_SETTING_MENU" | "SHOW_CREATE_GROUP_MENU" | "SHOW_SIDEBAR" | "SHOW_MESSAGE_CONTAINER" | "RESET_STATE"
 }
 
 
@@ -35,6 +35,18 @@ type ActionType = ActionWithType | ActionWithTypeAndPayload
 
 const appReducer = (state: StateType, action: ActionType) => {
   switch (action.type) {
+    case "RESET_STATE":
+      return {
+        ...state,
+        showChatMenu: true,
+        showSettingMenu: false,
+        ShowCreateGroupMenu: false,
+        showSidebar: false,
+        showMessageContainer: false,
+        isActiveChatButton: true,
+        isActiveSettingButton: false,
+        isActiveCreateGroupButton: false
+      }
     case "SHOW_CHAT_MENU":
       return {
         ...state,

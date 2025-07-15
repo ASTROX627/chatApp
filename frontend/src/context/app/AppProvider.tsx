@@ -22,6 +22,10 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, disatch] = useReducer(appReducer, initialState);
   const { i18n } = useTranslation();
 
+  const resetState = () => {
+    disatch({type: "RESET_STATE"})
+  }
+
   const setShowChatMenu = () => {
     disatch({ type: "SHOW_CHAT_MENU" })
   }
@@ -75,7 +79,7 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [i18n, state.language])
 
   return (
-    <AppContext.Provider value={{ ...state, setShowChatMenu, setShowSettingMenu, setShowCreateGroupMenu, setShowSidebar, setShowMessageContainer ,changeTheme, changeLanguage }}>
+    <AppContext.Provider value={{ ...state, resetState, setShowChatMenu, setShowSettingMenu, setShowCreateGroupMenu, setShowSidebar, setShowMessageContainer ,changeTheme, changeLanguage }}>
       {children}
     </AppContext.Provider>
   )

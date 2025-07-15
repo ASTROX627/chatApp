@@ -21,7 +21,7 @@ const SelectLanguage = () => {
     <select
       value={language}
       onChange={handleChangeLanguage}
-      className={`select mt-5`}
+      className={`select mt-5 w-full`}
     >
       <option disabled={true}>{t("home.selectLanguage")}</option>
       {

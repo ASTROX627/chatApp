@@ -10,9 +10,9 @@ const LoginPage: FC = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
-    <div className="bg-gray-400/10 backdrop-blur-lg p-6 flex flex-col min-w-48 items-center justify-center rounded-lg shadow-lg">
-      <h1 className="text-white text-xl font-semibold mb-1">{t("auth.login")} <span className={`${classes.primary.text}`}>{t("auth.chatApp")}</span></h1>
-        <LoginFrom/>
+    <div className="bg-gray-400/10 backdrop-blur-lg p-6 flex flex-col min-w-48 md:min-w-96 items-center justify-center rounded-lg shadow-lg">
+      <h1 className="text-white text-xl md:text-2xl lg:text-3xl font-semibold mb-1 md:mb-3">{t("auth.login")} <span className={`${classes.primary.text}`}>{t("auth.chatApp")}</span></h1>
+      <LoginFrom />
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { AxiosError } from "axios"
 import { useAuthContext } from "../context/auth/authContext"
+import { useAppContext } from "../context/app/appContext"
 
 export type LoginFormValue = {
   username: string,
@@ -14,6 +15,7 @@ export const useLogin = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { setAuthUser } = useAuthContext();
+  const {resetState} = useAppContext();
   const loginIn = async (data: LoginFormValue) => {
     const loginPromise = httpService.post("/auth/login", data);
     toast.promise(
@@ -22,8 +24,9 @@ export const useLogin = () => {
         loading: t("auth.loginLoading"),
         success: (response) => {
           if (response.status === 200) {
-            setAuthUser(response.data.user)
-            localStorage.setItem("chat-user", JSON.stringify(response.data.user))
+            resetState();
+            setAuthUser(response.data.user);
+            localStorage.setItem("chat-user", JSON.stringify(response.data.user));
             setTimeout(() => {
               navigate("/", { replace: true })
             }, 3000);

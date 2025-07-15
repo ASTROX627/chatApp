@@ -15,7 +15,7 @@ const CreateGroupNameInput: FC<CreateGroupNameInputProps> = ({ register, error }
       <input
         {...register}
         type="text"
-        className={`input ${error ? "border-red-500" : ""} placeholder:text-gray-400`}
+        className={`input w-full ${error ? "border-red-500" : ""} placeholder:text-gray-400`}
         placeholder={t("home.groupNamePlaceholder")}
       />
       {
