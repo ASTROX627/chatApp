@@ -18,7 +18,7 @@ const ThemeCard: FC<ThemeCardProps> = ({ config, isActive, onSelect }) => {
   return (
     <div
       onClick={() => onSelect(name)}
-      className={`w-[40vw] relative border-2 rounded cursor-pointer transition-all duration-200 hover:scale-105 ${isActive ? "ring-2 ring-offset-2 ring-offset-transparent" : ""}`}
+      className={`lg:w-[19vw] w-[40vw] relative border-2 rounded cursor-pointer transition-all duration-200 hover:scale-105 ${isActive ? "ring-2 ring-offset-2 ring-offset-transparent" : ""}`}
       style={{
         borderColor: primaryColor,
         '--card-color': primaryColor,

@@ -10,7 +10,7 @@ type SearchInputProps = {
 const ConversationSearch: FC<SearchInputProps> = ({searchTerm, setSearchTerm}): JSX.Element => {
   const {t} = useTranslation();
   return (
-    <div className="p-5 flex items-center gap-2 w-full">
+    <div className="py-5 flex items-center gap-2 w-full">
       <div className="relative w-full">
         <input
           value={searchTerm}

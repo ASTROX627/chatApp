@@ -14,6 +14,7 @@ const ConversationsMenu: FC = () => {
         <nav className="flex items-center justify-between px-5 sticky top-0 z-10 bg-slate-500">
           <button
             onClick={setShowSidebar}
+            className="lg:hidden"
           >
             <Menu size={32} />
           </button>
@@ -22,9 +23,7 @@ const ConversationsMenu: FC = () => {
             setSearchTerm={setSearchTerm}
           />
         </nav>
-        <Conversations
-          searchTerm={searchTerm}
-        />
+        <Conversations searchTerm={searchTerm} />
       </div>
     )
   )

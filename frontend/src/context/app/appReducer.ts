@@ -89,9 +89,10 @@ const appReducer = (state: StateType, action: ActionType) => {
         showSidebar: !state.showSidebar
       }
     case "SHOW_MESSAGE_CONTAINER": {
+      const isLargeScreen = window.innerWidth >= 1024;
       return {
         ...state,
-        showChatMenu: false,
+        showChatMenu: !isLargeScreen ? false : state.showChatMenu,
         showSettingMenu: false,
         ShowCreateGroupMenu: false,
         showSidebar: false,

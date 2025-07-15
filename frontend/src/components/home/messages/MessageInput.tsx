@@ -82,7 +82,7 @@ const MessageInput = () => {
           <input
             {...register("message")}
             type="text"
-            className="border text-sm rounded-lg block w-full bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 p-2.5"
+            className="border text-sm block w-full bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 p-2.5"
             placeholder={t("home.sendMessage")}
           />
           <div className="flex items-center">
