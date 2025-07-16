@@ -15,6 +15,7 @@ const ThemeCard: FC<ThemeCardProps> = ({ config, isActive, onSelect }) => {
   const { primaryColor, image, alt, name } = config;
   const { t } = useTranslation();
   const cardRgb = getColorValues(primaryColor);
+
   return (
     <div
       onClick={() => onSelect(name)}

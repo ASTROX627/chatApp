@@ -9,7 +9,7 @@ const SettingMenuButton: FC = (): JSX.Element => {
   const { classes, } = useTheme();
   const {t} = useTranslation();
   return (
-    <div
+    <button
       onClick={setShowSettingMenu}
       className={`p-3 cursor-pointer ${classes.primary.hover.bg} transition-all duration-200 border-b-1 border-gray-500 ${isActiveSettingButton ? classes.primary.bg : ""} 
         flex items-center justify-start gap-2 whitespace-nowrap
@@ -19,7 +19,7 @@ const SettingMenuButton: FC = (): JSX.Element => {
         <Settings size={30} className="lg:size-20" />
       </div>
       <h2 className="lg:hidden">{t("home.chats")}</h2>
-    </div>
+    </button>
   )
 }
 

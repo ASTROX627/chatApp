@@ -14,7 +14,7 @@ const CreateGroupMenu: FC = (): JSX.Element => {
     <>
       <button
         onClick={setShowSidebar}
-        className="m-5 lg:hidden"  // مخفی کردن در large screens
+        className="m-5 lg:hidden"
       >
         <Menu size={32} />
       </button>

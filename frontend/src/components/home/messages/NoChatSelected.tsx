@@ -1,8 +1,9 @@
 import { MessageSquare } from "lucide-react"
 import { useAuthContext } from "../../../context/auth/authContext"
 import { useTranslation } from "react-i18next";
+import type { FC, JSX } from "react";
 
-const NoChatSelected = () => {
+const NoChatSelected:FC = ():JSX.Element => {
   const {authUser} = useAuthContext();
   const {t} = useTranslation();
   return (

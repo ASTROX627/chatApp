@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type FC, type JSX } from "react";
 import useConversation from "../../../store/useConversation";
 import MessageInput from "./MessageInput"
 import Messages from "./Messages"
@@ -6,7 +6,7 @@ import NoChatSelected from "./NoChatSelected";
 import { useAppContext } from "../../../context/app/appContext";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-const MessageContainer = () => {
+const MessageContainer:FC = ():JSX.Element => {
   const { selectedConversation, setSelectedConversation } = useConversation();
   const { showMessageContainer, setShowChatMenu, language } = useAppContext();
 

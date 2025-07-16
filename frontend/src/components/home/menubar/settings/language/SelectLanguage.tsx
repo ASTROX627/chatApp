@@ -1,8 +1,8 @@
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, FC, JSX } from "react";
 import { useAppContext } from "../../../../../context/app/appContext"
 import { useTranslation } from "react-i18next";
 
-const SelectLanguage = () => {
+const SelectLanguage:FC = ():JSX.Element => {
   const {language, changeLanguage} = useAppContext();
   const {t} = useTranslation();
 

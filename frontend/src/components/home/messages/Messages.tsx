@@ -2,8 +2,8 @@ import { useEffect, useRef } from "react";
 import { useGetMessages } from "../../../hooks/useGetMessages"
 import type { MessageType } from "../../../store/useConversation";
 import MessageSkeleton from "../skeletons/MessageSkeleton";
-import Message from "./Message"
 import { useTranslation } from "react-i18next";
+import MessageContent from "./MessageContent";
 
 const Messages = () => {
   const { messages, loading } = useGetMessages();
@@ -25,7 +25,7 @@ const Messages = () => {
                 key={message._id}
                 ref={isLastMessage ? lastMessageRef : null}
               >
-                <Message
+                <MessageContent
                   message={message}
                 />
               </div>

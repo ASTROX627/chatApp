@@ -9,7 +9,7 @@ const ConversationMenuButton: FC = (): JSX.Element => {
   const { classes } = useTheme();
   const { t } = useTranslation();
   return (
-    <div
+    <button
       onClick={setShowChatMenu}
       className={`p-3 cursor-pointer ${classes.primary.hover.bg} transition-all duration-200 border-b-1 border-gray-500 ${isActiveChatButton ? classes.primary.bg : ""} 
         flex items-center justify-start gap-2 whitespace-nowrap
@@ -19,7 +19,7 @@ const ConversationMenuButton: FC = (): JSX.Element => {
         <MessageCircle size={30} className="lg:size-20" />
       </div>
       <h2 className="lg:hidden">{t("home.chats")}</h2>
-    </div>
+    </button>
   )
 }
 
