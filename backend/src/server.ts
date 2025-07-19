@@ -15,7 +15,7 @@ import path from "path"
 const app = express();
 
 dotenv.config();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 app.use(express.json());
 
@@ -40,7 +40,7 @@ app.use("/api/users", usersRoute);
 app.use("/api/group", protectRoute, groupRoute);
 
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0',() => {
   connectToMongoDB();
   console.log(`server running on port ${PORT}`);
 });

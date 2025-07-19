@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
   profilePicture: {
     type: String,
     default: "",
+  },
+  groups: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Group"
   }
 }, {timestamps: true});
 

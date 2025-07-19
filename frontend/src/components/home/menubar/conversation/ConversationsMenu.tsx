@@ -3,11 +3,12 @@ import { useAppContext } from "../../../../context/app/appContext"
 import ConversationSearch from "./ConversationSearch";
 import Conversations from "./Conversations";
 import { Menu } from "lucide-react";
-
+import ConversationsCategories from "./ConversationsCategories";
 
 const ConversationsMenu: FC = () => {
   const { showChatMenu, setShowSidebar } = useAppContext();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   return (
     showChatMenu && (
       <div className="h-full overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800">
@@ -23,7 +24,14 @@ const ConversationsMenu: FC = () => {
             setSearchTerm={setSearchTerm}
           />
         </nav>
-        <Conversations searchTerm={searchTerm} />
+        <ConversationsCategories
+          selected={selectedCategory}
+          onSelect={setSelectedCategory}
+        />
+        <Conversations
+          searchTerm={searchTerm}
+          selectedCategory={selectedCategory}
+        />
       </div>
     )
   )

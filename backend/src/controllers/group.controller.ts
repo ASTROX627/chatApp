@@ -1,8 +1,10 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import Group from "../models/group.model";
 import { AuthenticatedRequest } from "./message.controller";
 import { generateInviteCode, getAllAdmins } from "../utils/group.utils";
+import { getLocalizedMessage } from "../utils/i18nHelper";
 
+// CREATE_GROUP_CONTROLLER
 export const createGroup = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { groupName, groupType, isPrivate, onlyAdminCanPost, onlyAdminsCanAddMembers } = req.body;
@@ -26,8 +28,8 @@ export const createGroup = async (req: AuthenticatedRequest, res: Response) => {
     const inviteCode = generateInviteCode();
     const admins = getAllAdmins(ownerId, []);
 
-    const profilePicture = groupType === "grop" ? `https://avatar.iran.liara.run/public/group?name=${groupName}` : `https://avatar.iran.liara.run/public/channel?name=${groupName}`;
-
+    const profilePicture = groupType === "group" ? `https://avatar.iran.liara.run/public/group?name=${groupName}` : `https://avatar.iran.liara.run/public/channel?name=${groupName}`;
+    
     let finalOnlyAdminCanPost: boolean;
     let finalOnlyAdminsCanAddMembers: boolean;
 
@@ -72,5 +74,36 @@ export const createGroup = async (req: AuthenticatedRequest, res: Response) => {
     console.log("Error in create group controller", error);
     res.status(500).json({ error: "Internal server error" })
 
+  }
+}
+
+// GET_PUBLIC_GROUP_CONTROLLER
+export const getPublicGroups = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const allGroups = await Group.find({ isPrivate: false }).select("-settings")
+      .populate("owner", "username profilePicture")
+      .populate("admins", "username profilePicture")
+      .populate("members.user", "username profilePicture")
+
+    res.status(200).json(allGroups)
+  } catch (error) {
+    console.log("Error in get groups controller", error);
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") })
+  }
+}
+
+// GET_USER_GROUP_CONTROLLER
+export const getUserGroup = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const userId = req.user?._id;
+    const userGroup = await Group.find({ "members.user": userId }).select("-settings")
+      .populate("owner", "username profilePicture")
+      .populate("admins", "username profilePicture")
+      .populate("members.user", "username profilePicture")
+
+    res.status(200).json(userGroup);
+  } catch (error) {
+    console.log("Error in get groups controller", error);
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") })
   }
 }

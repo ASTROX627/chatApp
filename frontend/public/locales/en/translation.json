@@ -24,6 +24,13 @@
     "chats": "Chats",
     "settings": "Settings",
     "logout": "Logout",
+    "members": "members",
+    "notFound": "notFound",
+    "notConversations": "No conversations",
+    "all": "All",
+    "private": "Private",
+    "groups": "Groups",
+    "channels": "Channels",
     "themes":{
       "sky": "SKY",
       "spring": "SPRING",

@@ -7,7 +7,7 @@ import { getLocalizedMessage } from "../utils/i18nHelper";
 
 export interface AuthenticatedRequest extends Request {
   user?: {
-    _id: mongoose.Types.ObjectId
+    _id: mongoose.Types.ObjectId;
     fullName: string;
     username: string;
     gender: "male" | "female";

@@ -24,6 +24,13 @@
     "chats": "چت ها",
     "settings": "تنظیمات",
     "logout": "خروج",
+    "members": "عضو",
+    "notFound": "هیچ نتیجه ای یافت نشد",
+    "notConversations": "هیج مکالمه ای وجود ندارد",
+    "all": "همه",
+    "private": "خصوصی",
+    "groups": "گروه ها",
+    "channels": "کانال ها",
     "themes": {
       "sky": "آسمان",
       "spring": "بهاری",

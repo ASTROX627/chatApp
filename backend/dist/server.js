@@ -18,7 +18,7 @@ const i18n_1 = __importDefault(require("./core/i18n"));
 const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
 dotenv_1.default.config();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
     origin: process.env.CLIENT_URL,
@@ -34,7 +34,7 @@ app.use("/api/auth", auth_route_1.default);
 app.use("/api/messages", protectRoute_1.default, message_route_1.default);
 app.use("/api/users", users_route_1.default);
 app.use("/api/group", protectRoute_1.default, group_route_1.default);
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     (0, connectToMongoDB_1.default)();
     console.log(`server running on port ${PORT}`);
 });

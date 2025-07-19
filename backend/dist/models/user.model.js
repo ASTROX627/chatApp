@@ -27,6 +27,10 @@ const userSchema = new mongoose_1.default.Schema({
     profilePicture: {
         type: String,
         default: "",
+    },
+    groups: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "Group"
     }
 }, { timestamps: true });
 const User = mongoose_1.default.model("User", userSchema);
