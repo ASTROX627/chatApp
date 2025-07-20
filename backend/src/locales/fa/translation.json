@@ -13,7 +13,10 @@
     "jwtSecretNotConfigured": "رمز JWT تنظیم نشده است",
     "noConversation": "گفتگویی پیدا نشد",
     "messageRequired": "این فیلد نمی تواند خالی باشد",
-    "notAllowedFile": "این نوع فایل مجاز نیست"
+    "notAllowedFile": "این نوع فایل مجاز نیست",
+    "groupNotFound": "گروهی پیدا نشد",
+    "onlyAdmins": "فقط ادمین ها میتوانند اقدام به ارسال پست کنند",
+    "notMember": "کاربری با این مشخصات عضو گروه نیست"
   },
   "success": {
     "registrationSuccessful": "ثبت نام با موفقیت انجام شد",

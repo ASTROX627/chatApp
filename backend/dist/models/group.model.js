@@ -45,7 +45,7 @@ const groupSchema = new mongoose_1.default.Schema({
         }],
     messages: [{
             type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: "Message"
+            ref: "GroupMessage"
         }],
     isPrivate: {
         type: Boolean,

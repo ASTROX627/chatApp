@@ -13,7 +13,10 @@
     "jwtSecretNotConfigured": "JWT Secret not configured",
     "noConversation": "No conversation found",
     "messageRequired": "This filed can not empty",
-    "notAllowedFile": "This type of file not allowed"
+    "notAllowedFile": "This type of file not allowed",
+    "groupNotFound": "Group not found",
+    "onlyAdmins": "Only admins can send post",
+    "notMember": "Not a member"
   },
   "success": {
     "registrationSuccessful": "Registration successful",

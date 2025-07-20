@@ -3,10 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
+exports.getGroupMessage = exports.sendGroupMessage = exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
 const group_model_1 = __importDefault(require("../models/group.model"));
 const group_utils_1 = require("../utils/group.utils");
 const i18nHelper_1 = require("../utils/i18nHelper");
+const groupMessage_model_1 = __importDefault(require("../models/groupMessage.model"));
 // CREATE_GROUP_CONTROLLER
 const createGroup = async (req, res) => {
     try {
@@ -102,3 +103,85 @@ const getUserGroup = async (req, res) => {
     }
 };
 exports.getUserGroup = getUserGroup;
+// SEND_GROUP_MESSAGES_CONTROLLER
+const sendGroupMessage = async (req, res) => {
+    try {
+        const { message } = req.body;
+        const { groupId } = req.params;
+        const senderId = req.user?._id;
+        const file = req.file;
+        if (!groupId) {
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "GroupIdRequired") });
+            return;
+        }
+        if (!message && !file) {
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "messageRequired") });
+            return;
+        }
+        const group = await group_model_1.default.findById(groupId);
+        if (!group) {
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "GroupNotFound") });
+            return;
+        }
+        let messageType = "text";
+        let fileUrl = "";
+        let fileName = "";
+        let fileSize = 0;
+        let fileMimeType = "";
+        if (file) {
+            fileUrl = `uploads/${file.filename}`;
+            fileName = file.originalname;
+            fileSize = file.size;
+            fileMimeType = file.mimetype;
+            if (file.mimetype.startsWith("image/")) {
+                messageType = "image";
+            }
+            else {
+                messageType = "file";
+            }
+        }
+        const newGroupMessage = new groupMessage_model_1.default({
+            senderId,
+            groupId,
+            message: message || "",
+            messageType,
+            fileUrl,
+            fileSize,
+            fileName,
+            fileMimeType,
+        });
+        if (newGroupMessage) {
+            console.log("newGroupMessage:", newGroupMessage);
+        }
+        group.messages.push(newGroupMessage._id);
+        await group.save();
+        await newGroupMessage.save();
+        res.status(200).json({
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.messageSendSuccessful"),
+            newGroupMessage,
+        });
+    }
+    catch (error) {
+        console.log("Erorr in send message group controller", error);
+        res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
+    }
+};
+exports.sendGroupMessage = sendGroupMessage;
+//GET_GROUP_MESSAGE_CONTROLLER
+const getGroupMessage = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const groupMessages = await groupMessage_model_1.default.find({ groupId })
+            .populate('senderId', 'username profilePicture')
+            .sort({ createdAt: 1 });
+        res.status(200).json({
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.messageGaveSuccessful"),
+            groupMessages
+        });
+    }
+    catch (error) {
+        console.log("Error in get group message controller", error);
+        res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
+    }
+};
+exports.getGroupMessage = getGroupMessage;

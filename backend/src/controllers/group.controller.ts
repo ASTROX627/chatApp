@@ -3,6 +3,7 @@ import Group from "../models/group.model";
 import { AuthenticatedRequest } from "./message.controller";
 import { generateInviteCode, getAllAdmins } from "../utils/group.utils";
 import { getLocalizedMessage } from "../utils/i18nHelper";
+import GroupMessage from "../models/groupMessage.model";
 
 // CREATE_GROUP_CONTROLLER
 export const createGroup = async (req: AuthenticatedRequest, res: Response) => {
@@ -29,7 +30,7 @@ export const createGroup = async (req: AuthenticatedRequest, res: Response) => {
     const admins = getAllAdmins(ownerId, []);
 
     const profilePicture = groupType === "group" ? `https://avatar.iran.liara.run/public/group?name=${groupName}` : `https://avatar.iran.liara.run/public/channel?name=${groupName}`;
-    
+
     let finalOnlyAdminCanPost: boolean;
     let finalOnlyAdminsCanAddMembers: boolean;
 
@@ -105,5 +106,114 @@ export const getUserGroup = async (req: AuthenticatedRequest, res: Response): Pr
   } catch (error) {
     console.log("Error in get groups controller", error);
     res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") })
+  }
+}
+
+// SEND_GROUP_MESSAGES_CONTROLLER
+export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const { message } = req.body;
+    const { groupId } = req.params;
+    const senderId = req.user?._id;
+    const file = req.file;
+
+    if (!groupId) {
+      res.status(400).json({ error: getLocalizedMessage(req, "GroupIdRequired") });
+      return;
+    }
+
+    if (!message && !file) {
+      res.status(400).json({ error: getLocalizedMessage(req, "messageRequired") });
+      return;
+    }
+
+    const group = await Group.findById(groupId);
+
+    if(group?.groupType === "channel" || group?.settings?.onlyAdminsCanPost){
+      const isAdmin = group.admins.some(adminId => adminId.toString() === senderId?.toString());
+      if(!isAdmin){
+        res.status(403).json({error: getLocalizedMessage(req, "onlyAdmins")});
+      }
+    }
+
+    if (!group) {
+      res.status(404).json({ error: getLocalizedMessage(req, "GroupNotFound") });
+      return;
+    }
+
+    const isMember = group.members.some(member => member.user?.id.toString() === senderId?.toString());
+
+    if(!isMember){
+        res.status(403).json({error: getLocalizedMessage(req, "notMember")});
+    }
+
+    let messageType = "text";
+    let fileUrl = "";
+    let fileName = "";
+    let fileSize = 0;
+    let fileMimeType = "";
+
+    if (file) {
+      fileUrl = `uploads/${file.filename}`;
+      fileName = file.originalname;
+      fileSize = file.size;
+      fileMimeType = file.mimetype;
+
+      if (file.mimetype.startsWith("image/")) {
+        messageType = "image";
+      } else {
+        messageType = "file";
+      }
+    }
+
+    const newGroupMessage = new GroupMessage({
+      senderId,
+      groupId,
+      message: message || "",
+      messageType,
+      fileUrl,
+      fileSize,
+      fileName,
+      fileMimeType,
+    });
+
+    if (newGroupMessage) {
+      console.log("newGroupMessage:", newGroupMessage);
+
+    }
+
+    group.messages.push(newGroupMessage._id);
+
+    await group.save();
+    await newGroupMessage.save();
+
+    res.status(200).json({
+      message: getLocalizedMessage(req, "success.messageSendSuccessful"),
+      newGroupMessage,
+    });
+
+  } catch (error) {
+    console.log("Erorr in send message group controller", error);
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
+  }
+};
+
+//GET_GROUP_MESSAGE_CONTROLLER
+export const getGroupMessage = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const { groupId } = req.params;
+
+    const groupMessages = await GroupMessage.find({ groupId })
+      .populate('senderId', 'username profilePicture')
+      .sort({ createdAt: 1 });
+
+    res.status(200).json({
+      message: getLocalizedMessage(req, "success.messageGaveSuccessful"),
+      groupMessages
+    });
+
+  } catch (error) {
+    console.log("Error in get group message controller", error);
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
   }
 }

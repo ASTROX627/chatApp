@@ -98,6 +98,11 @@ export const getMessage = async (req: AuthenticatedRequest, res: Response): Prom
       participants: { $all: [senderId, userTochatId] }
     }).populate("messages");
 
+    if(conversation){
+      console.log(conversation);
+      
+    }
+
     if (!conversation) {
       res.status(200).json({
         message: getLocalizedMessage(req, "errors.noConversation"),
