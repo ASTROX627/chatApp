@@ -1,11 +1,11 @@
 import type { FC, JSX } from "react"
-import type { MessageType } from "../../../types/conversations"
+import type { GroupMessageType } from "../../../types/conversations"
 
-type ChatFooterProps = {
-  message: MessageType
+type GroupChatFooterProps = {
+  message: GroupMessageType
 }
 
-const ChatFooter: FC<ChatFooterProps> = ({ message }): JSX.Element => {
+const GroupChatFooter: FC<GroupChatFooterProps> = ({ message }): JSX.Element => {
   return (
     <div className="chat-footer opacity-50 text-xs flex gap-1 items-center">
       {
@@ -18,4 +18,4 @@ const ChatFooter: FC<ChatFooterProps> = ({ message }): JSX.Element => {
   )
 }
 
-export default ChatFooter
+export default GroupChatFooter

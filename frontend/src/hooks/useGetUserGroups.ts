@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { httpService } from "../core/httpService";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import useConversation, { type GroupType } from "../store/useConversation";
+import useConversation from "../store/useConversation";
+import type { GroupType } from "../types/conversations";
 
 const useGetUserGroups = () => {
   const [loading, setLoading] = useState(false);

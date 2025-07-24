@@ -3,7 +3,7 @@ import { useAuthContext } from "../../../context/auth/authContext";
 import { useTheme } from "../../../hooks/useTheme";
 import ImageMessage from "./ImageMessage";
 import FileMessage from "./FileMessage";
-import type { MessageType } from "../../../store/useConversation";
+import type { MessageType } from "../../../types/conversations";
 
 type ChatBubbleProps = {
   message: MessageType,

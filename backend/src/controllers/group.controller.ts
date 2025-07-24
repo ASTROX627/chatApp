@@ -128,23 +128,25 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
     }
 
     const group = await Group.findById(groupId);
-
-    if(group?.groupType === "channel" || group?.settings?.onlyAdminsCanPost){
-      const isAdmin = group.admins.some(adminId => adminId.toString() === senderId?.toString());
-      if(!isAdmin){
-        res.status(403).json({error: getLocalizedMessage(req, "onlyAdmins")});
-      }
-    }
-
     if (!group) {
       res.status(404).json({ error: getLocalizedMessage(req, "GroupNotFound") });
       return;
     }
 
-    const isMember = group.members.some(member => member.user?.id.toString() === senderId?.toString());
+    const isMember = group.members.some(member => member.user?.toString() === senderId?.toString());
+    if (!isMember) {
+      res.status(403).json({ error: getLocalizedMessage(req, "notMember") });
+      return;
+    }
 
-    if(!isMember){
-        res.status(403).json({error: getLocalizedMessage(req, "notMember")});
+    if (group?.groupType === "channel" || group?.settings?.onlyAdminsCanPost) {
+      const isOwner = group.owner.toString() === senderId?.toString();
+      const isAdmin = group.admins.some(adminId => adminId.toString() === senderId?.toString());
+      
+      if (!isOwner && !isAdmin) {
+        res.status(403).json({ error: getLocalizedMessage(req, "onlyAdmins") });
+        return;
+      }
     }
 
     let messageType = "text";
@@ -177,15 +179,10 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
       fileMimeType,
     });
 
-    if (newGroupMessage) {
-      console.log("newGroupMessage:", newGroupMessage);
-
-    }
-
-    group.messages.push(newGroupMessage._id);
-
-    await group.save();
     await newGroupMessage.save();
+    
+    group.messages.push(newGroupMessage._id);
+    await group.save();
 
     res.status(200).json({
       message: getLocalizedMessage(req, "success.messageSendSuccessful"),
@@ -193,7 +190,7 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
     });
 
   } catch (error) {
-    console.log("Erorr in send message group controller", error);
+    console.log("Error in send message group controller", error);
     res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
   }
 };

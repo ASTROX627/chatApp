@@ -1,7 +1,7 @@
 import type { FC, JSX, ReactNode } from "react"
 import { useTheme } from "../../../../hooks/useTheme"
-import type { GroupType } from "../../../../store/useConversation"
 import useConversation from "../../../../store/useConversation"
+import type { GroupType } from "../../../../types/conversations"
 
 type GroupProps = {
   group: GroupType,

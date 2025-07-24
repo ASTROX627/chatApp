@@ -1,17 +1,17 @@
 import { LogOut } from "lucide-react";
 import type { FC, JSX } from "react";
 import { useTheme } from "../../../hooks/useTheme";
-import { useLogout } from "../../../hooks/useLogout";
 import { useTranslation } from "react-i18next";
+import useAuth from "../../../hooks/useAuth";
 
 const Logout: FC = (): JSX.Element => {
   const { classes } = useTheme();
-  const { logingOut } = useLogout();
+  const { handleLogout } = useAuth();
   const { t } = useTranslation();
 
   return (
     <button
-      onClick={logingOut}
+      onClick={handleLogout}
       className={`p-3 border-gray-500 ${classes.primary.hover.text} cursor-pointer transition-all duration-200 whitespace-nowrap
         flex items-center justify-start gap-2
         lg:justify-center lg:flex-col lg:gap-1 lg:text-xs`}

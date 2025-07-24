@@ -2,23 +2,25 @@ import { useState, type FC, type JSX } from "react"
 import AuthInputs from "../AuthInputs"
 import { useTranslation } from "react-i18next"
 import { useForm, type SubmitHandler } from "react-hook-form"
-import { useRegister, type RegisterFormValue } from "../../../hooks/useRegister"
 import { useTheme } from "../../../hooks/useTheme"
 import SelectGender from "./SelectGender"
 import { Link } from "react-router-dom"
-
+import type { RegisterFormValue } from "../../../types/auth"
+import useAuth from "../../../hooks/useAuth"
+import { useAuthValidationRules } from "../../../validations/useAuthValidationRules"
 
 const RegisterForm: FC = (): JSX.Element => {
-  const { register, watch, handleSubmit, formState: { errors } } = useForm<RegisterFormValue>()
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<RegisterFormValue>();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShoConfirmPassword] = useState(false);
   const genders = ["male", "female"];
   const { classes } = useTheme();
   const { t } = useTranslation();
-  const { registeration } = useRegister();
+  const { handleRegister } = useAuth();
+  const validationRules = useAuthValidationRules(watch);
 
   const onSubmit: SubmitHandler<RegisterFormValue> = async (data) => {
-    await registeration(data)
+    await handleRegister(data)
   }
   return (
     <form
@@ -28,13 +30,7 @@ const RegisterForm: FC = (): JSX.Element => {
       {/* FULLNAME_INPUT */}
       <AuthInputs
         label={t("auth.fullName")}
-        register={register("fullName", {
-          required: t("auth.fullNameRequired"),
-          minLength: {
-            value: 3,
-            message: t("auth.fullNameMinLength")
-          }
-        })}
+        register={register("fullName", validationRules.fullName)}
         error={errors.fullName}
         type="text"
         placeholder={t("auth.fullNamePlaceholder")}
@@ -43,13 +39,7 @@ const RegisterForm: FC = (): JSX.Element => {
       {/* USERNAME_INPUT */}
       <AuthInputs
         label={t("auth.username")}
-        register={register("username", {
-          required: t("auth.usernameRequired"),
-          minLength: {
-            value: 3,
-            message: t("auth.usernameMinLength")
-          }
-        })}
+        register={register("username", validationRules.username)}
         error={errors.username}
         type="text"
         placeholder={t("auth.usernamePlaceholder")}
@@ -58,13 +48,7 @@ const RegisterForm: FC = (): JSX.Element => {
       {/* PASSWORD_INPUT */}
       <AuthInputs
         label={t("auth.password")}
-        register={register("password", {
-          required: t("auth.passwordRequired"),
-          minLength: {
-            value: 6,
-            message: t("auth.passwordMinLength")
-          }
-        })}
+        register={register("password", validationRules.password)}
         error={errors.password}
         type="password"
         placeholder={t("auth.passwordPlaceholder")}
@@ -76,14 +60,7 @@ const RegisterForm: FC = (): JSX.Element => {
       {/* CONFIRM_PASSWORD_INPUT */}
       <AuthInputs
         label={t("auth.confirmPassword")}
-        register={register("confirmPassword", {
-          required: t("auth.confirmPasswordRequired"),
-          validate: (value) => {
-            if (watch("password") !== value) {
-              return t("auth.passwordsDoNotMatch")
-            }
-          }
-        })}
+        register={register("confirmPassword", validationRules.confirmPassword)}
         error={errors.confirmPassword}
         type="password"
         placeholder={t("auth.confirmPasswordPlaceholder")}
@@ -94,9 +71,7 @@ const RegisterForm: FC = (): JSX.Element => {
 
       {/* SELECT_GENDER_RADIO */}
       <SelectGender
-        register={register("gender", {
-          required: t("auth.selectGender")
-        })}
+        register={register("gender", validationRules.gender)}
         genders={genders}
         error={errors.gender}
       />

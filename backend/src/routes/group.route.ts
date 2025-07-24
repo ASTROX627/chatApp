@@ -13,6 +13,6 @@ router.get("/user", protectRoute, getUserGroup);
 
 router.post("/send/:groupId", upload.single("file"), sendGroupMessage);
 
-router.get("/:groupId", getGroupMessage);
+router.get("/:groupId", protectRoute, getGroupMessage);
 
 export default router;

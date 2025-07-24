@@ -3,7 +3,7 @@ import useGetUserGroups from '../../../../hooks/useGetUserGroups'
 import { useAppContext } from '../../../../context/app/appContext';
 import { getRandomEmoji } from '../../../../utils/emojis';
 import Group from './Group';
-import type { GroupType } from '../../../../store/useConversation';
+import type { GroupType } from '../../../../types/conversations';
 
 type UserGroupProps = {
   searchTerm: string

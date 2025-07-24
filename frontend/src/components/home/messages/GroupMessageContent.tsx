@@ -1,36 +1,23 @@
-// components/home/messages/MessageContent.tsx - بروزرسانی شده
 import type { FC, JSX } from "react"
 import { useState } from "react"
 import { useAuthContext } from "../../../context/auth/authContext";
 import useConversation from "../../../store/useConversation";
 import Modal from "../../modal/Modal";
 import ChatBubble from "./ChatBubble";
-import ChatFooter from "./ChatFooter";
-import type { MessageType } from "../../../types/conversations";
+import GroupChatFooter from "./GroupChatFooter";
+import type { GroupMessageType } from "../../../types/conversations";
 
-export type MessageContentProps = {
-  message: MessageType,
+
+export type GroupMessageContentProps = {
+  message: GroupMessageType,
 }
 
-const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
+const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Element => {
   const { authUser } = useAuthContext();
-  const { selectedConversation, selectedGroup } = useConversation();
-  const fromMe = message.senderId === authUser?._id;
+  const { selectedGroup } = useConversation();
+  const fromMe = message.senderId._id === authUser?._id;
   const chatClassName = fromMe ? "chat-end" : "chat-start";
-
-  let profilePicture: string;
-  let senderName = "";
-
-  if (selectedGroup) {
-    const sender = selectedGroup.members.find(member =>
-      member.user._id === message.senderId
-    )?.user;
-
-    profilePicture = fromMe ? authUser.profilePicture : (sender?.profilePicture || "");
-    senderName = sender?.username || "";
-  } else {
-    profilePicture = fromMe ? authUser.profilePicture : (selectedConversation?.profilePicture || "");
-  }
+  const profilePicture = fromMe ? authUser.profilePicture : message.senderId.profilePicture;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageSrc, setModalImageSrc] = useState("");
@@ -42,6 +29,12 @@ const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
     setModalImageAlt("");
   };
 
+  const messageForBubble = {
+    ...message,
+    senderId: message.senderId._id,
+    receiverId: selectedGroup?._id || "",
+  };
+
   return (
     <>
       <div className={`chat ${chatClassName}`}>
@@ -50,22 +43,18 @@ const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
             <img src={profilePicture} alt="user image" />
           </div>
         </div>
-        
-        {selectedGroup && !fromMe && (
-          <div className="chat-header text-xs opacity-50 mb-1">
-            {senderName}
+        {!fromMe && (
+          <div className="chat-header text-xs opacity-70 mb-1">
+            {message.senderId.username}
           </div>
         )}
-
         <ChatBubble
           setIsModalOpen={setIsModalOpen}
           setModalImageAlt={setModalImageAlt}
           setModalImageSrc={setModalImageSrc}
-          message={message}
+          message={messageForBubble}
         />
-        <ChatFooter
-          message={message}
-        />
+        <GroupChatFooter message={message} />
       </div>
 
       <Modal
@@ -78,4 +67,4 @@ const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
   )
 }
 
-export default MessageContent;
+export default GroupMessageContent;

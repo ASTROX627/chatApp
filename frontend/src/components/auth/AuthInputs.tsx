@@ -14,13 +14,15 @@ type AuthInputProps = {
 }
 
 const AuthInputs: FC<AuthInputProps> = ({ label, register, type, placeholder, isPassword, showPassword, toggleShowPassword, error }) => {
+
+  const inputType = isPassword ? (showPassword ? "text" : "password") : type
   return (
     <>
       <label className="label ml-1 mb-1 text-sm lg:text-base">{label}</label>
       <div className="relative">
         <input
           {...register}
-          type={isPassword ? (showPassword ? "text" : "password") : type}
+          type={inputType}
           className={`input w-full ${error ? "border-red-500 mb-1" : "mb-4"} text-sm md:text-base placeholder:text-sm`}
           placeholder={placeholder}
         />

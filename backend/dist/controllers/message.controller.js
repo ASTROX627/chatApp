@@ -77,9 +77,6 @@ const getMessage = async (req, res) => {
         const conversation = await conversation_model_1.default.findOne({
             participants: { $all: [senderId, userTochatId] }
         }).populate("messages");
-        if (conversation) {
-            console.log(conversation);
-        }
         if (!conversation) {
             res.status(200).json({
                 message: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.noConversation"),

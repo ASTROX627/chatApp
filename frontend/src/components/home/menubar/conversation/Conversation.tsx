@@ -1,13 +1,13 @@
 import type { FC, ReactNode } from "react"
-import type { ConversationType, GroupType } from "../../../../store/useConversation"
 import useConversation from "../../../../store/useConversation"
 import { useTheme } from "../../../../hooks/useTheme"
 import { Hash, Lock, Users } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import type { ConversationType, GroupType } from "../../../../types/conversations"
 
 type ConversationProps = {
   conversation?: ConversationType,
-  group?: GroupType
+  group?: GroupType,
   emoji: ReactNode,
   lastIndex: boolean
 }
@@ -30,8 +30,6 @@ const Conversation: FC<ConversationProps> = ({ conversation, emoji, group, lastI
   const displayName = conversation?.username || group?.groupName || "";
   const profilePicture = conversation?.profilePicture || group?.groupImage;
 
-  console.log("profile:", profilePicture);
-
   return (
     <>
       <div
@@ -40,7 +38,7 @@ const Conversation: FC<ConversationProps> = ({ conversation, emoji, group, lastI
       >
         <div className="avatar avatar-online">
           <div className="w-12 rounded-full">
-            <img src={`${profilePicture}?v=${Date.now()}`} alt={displayName} />
+            <img src={profilePicture} alt={displayName} />
           </div>
         </div>
         <div className="flex flex-col flex-1">

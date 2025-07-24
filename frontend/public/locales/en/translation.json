@@ -31,6 +31,8 @@
     "private": "Private",
     "groups": "Groups",
     "channels": "Channels",
+    "onlyAdmins": "Only admins can send message",
+    "notAllowed": "Not allowed to send message",
     "themes":{
       "sky": "SKY",
       "spring": "SPRING",

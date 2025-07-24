@@ -1,9 +1,9 @@
 import { useCallback, type FC } from "react";
 import { useAppContext } from "../../../../context/app/appContext";
-import type { AllConversations, ConversationType, GroupType } from "../../../../store/useConversation";
 import Conversation from "./Conversation";
 import { useTranslation } from "react-i18next";
 import { useFilteredConversation } from "../../../../hooks/useFilteredConversation";
+import type { AllConversations, ConversationType, GroupType } from "../../../../types/conversations";
 
 
 type ConversationsProps = {

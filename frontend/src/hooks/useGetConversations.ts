@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { httpService } from "../core/httpService";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import type { ConversationType } from "../store/useConversation";
+import type { ConversationType } from "../types/conversations";
 
 type UserApiResponse = {
   _id: string,

@@ -52,10 +52,10 @@ export const sendMessage = async (req: AuthenticatedRequest, res: Response): Pro
       fileName = file.originalname;
       fileSize = file.size;
       fileMimeType = file.mimetype;
-      
-      if(file.mimetype.startsWith("image/")){
+
+      if (file.mimetype.startsWith("image/")) {
         messageType = "image";
-      }else {
+      } else {
         messageType = "file"
       }
     }
@@ -97,11 +97,6 @@ export const getMessage = async (req: AuthenticatedRequest, res: Response): Prom
     const conversation = await Conversation.findOne({
       participants: { $all: [senderId, userTochatId] }
     }).populate("messages");
-
-    if(conversation){
-      console.log(conversation);
-      
-    }
 
     if (!conversation) {
       res.status(200).json({

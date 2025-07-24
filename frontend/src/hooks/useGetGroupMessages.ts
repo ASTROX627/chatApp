@@ -4,26 +4,23 @@ import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { httpService } from "../core/httpService";
 
-export const useGetMessages = () => {
+export const useGetGroupMessage = () => {
   const [loading, setLoading] = useState(false);
-  const { messages, setMessages, selectedConversation } = useConversation();
+  const { groupMessages, setGroupMessages, selectedGroup } = useConversation();
 
   useEffect(() => {
-    const getMessages = async () => {
+    const getGroupMessage = async () => {
       setLoading(true);
 
       try {
-        const response = await httpService.get(`/messages/${selectedConversation?._id}`);
-        const data = response.data.messages;
-
-        console.log("user message:", data);
-        
+        const response = await httpService.get(`/group/${selectedGroup?._id}`);
+        const data = response.data.groupMessages;
         
         if (data.error) {
           throw new Error(data.error);
         }
 
-        setMessages(data);
+        setGroupMessages(data);
 
       } catch (error) {
         if (error instanceof AxiosError) {
@@ -34,11 +31,11 @@ export const useGetMessages = () => {
       }
     }
 
-    if (selectedConversation?._id) {
-      getMessages();
+    if (selectedGroup?._id) {
+      getGroupMessage();
     }
-  }, [selectedConversation?._id, setMessages])
+  }, [selectedGroup?._id, setGroupMessages])
 
-  return { loading, messages }
+  return { loading, groupMessages }
 
 }

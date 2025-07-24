@@ -1,40 +1,54 @@
 import { useEffect, useRef } from "react";
-import { useGetMessages } from "../../../hooks/useGetMessages"
-import type { MessageType } from "../../../store/useConversation";
 import MessageSkeleton from "../skeletons/MessageSkeleton";
 import { useTranslation } from "react-i18next";
 import MessageContent from "./MessageContent";
+import { useGetMessages } from "../../../hooks/useGetMessages";
+import { useGetGroupMessage } from "../../../hooks/useGetGroupMessages";
+import useConversation from "../../../store/useConversation";
+import GroupMessageContent from "./GroupMessageContent";
+import type { MessageType, GroupMessageType } from "../../../types/conversations";
 
 const Messages = () => {
-  const { messages, loading } = useGetMessages();
+  const { selectedGroup } = useConversation();
+  const { messages, loading: privateLoading } = useGetMessages();
+  const { groupMessages, loading: groupLoading } = useGetGroupMessage();
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
+  const isChatGroup = !!selectedGroup;
+  const loading = isChatGroup ? groupLoading : privateLoading;
+  const currentMessages = isChatGroup ? groupMessages : messages;
+  const hasMessages = isChatGroup ? groupMessages.length > 0 : messages.length > 0;
+
   useEffect(() => {
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+  }, [currentMessages]) 
 
   return (
     <div className="px-4 flex-1 overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800">
       {
-        !loading && messages.length > 0 && (
-          messages.map((message: MessageType, index) => {
-            const isLastMessage = index === messages.length - 1;
+        !loading && hasMessages && (
+          currentMessages.map((message: MessageType | GroupMessageType, index) => {
+            const isLastMessage = index === currentMessages.length - 1;
+            if (!message) return null;
+
             return (
               <div
                 key={message._id}
                 ref={isLastMessage ? lastMessageRef : null}
               >
-                <MessageContent
-                  message={message}
-                />
+                {isChatGroup ? (
+                  <GroupMessageContent message={message as GroupMessageType} />
+                ) : (
+                  <MessageContent message={message as MessageType} />
+                )}
               </div>
             )
           })
         )
       }
       {
-        !loading && messages.length === 0 && (
+        !loading && !hasMessages && (
           <div className="flex items-center justify-center h-full">
             <p className="font-semibold text-lg">{t("home.startConversation")}</p>
           </div>

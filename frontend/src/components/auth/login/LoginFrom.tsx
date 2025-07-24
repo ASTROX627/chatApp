@@ -1,20 +1,23 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useLogin, type LoginFormValue } from "../../../hooks/useLogin";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useTheme } from "../../../hooks/useTheme";
 import AuthInputs from "../AuthInputs";
+import useAuth from "../../../hooks/useAuth";
+import type { LoginFromValue } from "../../../types/auth";
+import { useAuthValidationRules } from "../../../validations/useAuthValidationRules";
 
 const LoginFrom = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValue>();
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFromValue>();
   const [showPassword, setShowPassword] = useState(false);
   const { classes } = useTheme();
   const { t } = useTranslation();
-  const { loginIn } = useLogin();
+  const { handleLogin } = useAuth();
+  const validationRules = useAuthValidationRules();
 
-  const onSubmit: SubmitHandler<LoginFormValue> = async (data) => {
-    await loginIn(data);
+  const onSubmit: SubmitHandler<LoginFromValue> = async (data) => {
+    await handleLogin(data);
   }
   return (
     <form
@@ -24,13 +27,7 @@ const LoginFrom = () => {
       {/* USERNAME_INPUT */}
       <AuthInputs
         label={t("auth.username")}
-        register={register("username", {
-          required: t("auth.usernameRequired"),
-          minLength: {
-            value: 3,
-            message: t("auth.usernameMinLength")
-          }
-        })}
+        register={register("username", validationRules.username)}
         error={errors.username}
         type="text"
         placeholder={t("auth.usernamePlaceholder")}
@@ -39,13 +36,7 @@ const LoginFrom = () => {
       {/* PASSWORD_INPUT */}
       <AuthInputs
         label={t("auth.password")}
-        register={register("password", {
-          required: t("auth.passwordRequired"),
-          minLength: {
-            value: 6,
-            message: t("auth.passwordMinLength")
-          }
-        })}
+        register={register("password", validationRules.password)}
         error={errors.password}
         type="password"
         placeholder={t("auth.passwordPlaceholder")}

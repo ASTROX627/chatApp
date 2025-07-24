@@ -123,6 +123,19 @@ const sendGroupMessage = async (req, res) => {
             res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "GroupNotFound") });
             return;
         }
+        const isMember = group.members.some(member => member.user?.toString() === senderId?.toString());
+        if (!isMember) {
+            res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "notMember") });
+            return;
+        }
+        if (group?.groupType === "channel" || group?.settings?.onlyAdminsCanPost) {
+            const isOwner = group.owner.toString() === senderId?.toString();
+            const isAdmin = group.admins.some(adminId => adminId.toString() === senderId?.toString());
+            if (!isOwner && !isAdmin) {
+                res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "onlyAdmins") });
+                return;
+            }
+        }
         let messageType = "text";
         let fileUrl = "";
         let fileName = "";
@@ -150,19 +163,16 @@ const sendGroupMessage = async (req, res) => {
             fileName,
             fileMimeType,
         });
-        if (newGroupMessage) {
-            console.log("newGroupMessage:", newGroupMessage);
-        }
+        await newGroupMessage.save();
         group.messages.push(newGroupMessage._id);
         await group.save();
-        await newGroupMessage.save();
         res.status(200).json({
             message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.messageSendSuccessful"),
             newGroupMessage,
         });
     }
     catch (error) {
-        console.log("Erorr in send message group controller", error);
+        console.log("Error in send message group controller", error);
         res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
     }
 };
