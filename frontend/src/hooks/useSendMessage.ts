@@ -31,9 +31,8 @@ export const useSendMessage = () => {
           }
         }
       );
-      const data = response.data;      
+      const data = response.data;
       
-
       if (data.error) {
         throw new Error(data.error);
       }

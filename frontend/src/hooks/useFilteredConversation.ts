@@ -1,9 +1,9 @@
 import { useMemo, useRef } from "react";
-import type { AllConversations, ConversationType, GroupType } from "../store/useConversation";
 import { getRandomEmoji } from "../utils/emojis";
 import useGetConversations from "./useGetConversations";
 import useGetPublicGroups from "./useGetPublicGroups";
 import useGetUserGroups from "./useGetUserGroups";
+import type { AllConversations, ConversationType, GroupType } from "../types/conversations";
 
 const CATEGORY_TYPES = {
   ALL: "all",

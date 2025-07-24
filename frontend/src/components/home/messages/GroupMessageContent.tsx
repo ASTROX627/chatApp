@@ -7,7 +7,6 @@ import ChatBubble from "./ChatBubble";
 import GroupChatFooter from "./GroupChatFooter";
 import type { GroupMessageType } from "../../../types/conversations";
 
-
 export type GroupMessageContentProps = {
   message: GroupMessageType,
 }
@@ -16,8 +15,9 @@ const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Ele
   const { authUser } = useAuthContext();
   const { selectedGroup } = useConversation();
   const fromMe = message.senderId._id === authUser?._id;
+  
   const chatClassName = fromMe ? "chat-end" : "chat-start";
-  const profilePicture = fromMe ? authUser.profilePicture : message.senderId.profilePicture;
+  const profilePicture = selectedGroup?.groupType === "channel"? selectedGroup.groupImage : fromMe? authUser.profilePicture : message.senderId.profilePicture
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageSrc, setModalImageSrc] = useState("");
@@ -43,11 +43,6 @@ const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Ele
             <img src={profilePicture} alt="user image" />
           </div>
         </div>
-        {!fromMe && (
-          <div className="chat-header text-xs opacity-70 mb-1">
-            {message.senderId.username}
-          </div>
-        )}
         <ChatBubble
           setIsModalOpen={setIsModalOpen}
           setModalImageAlt={setModalImageAlt}

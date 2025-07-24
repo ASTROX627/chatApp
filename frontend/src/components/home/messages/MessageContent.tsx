@@ -14,23 +14,10 @@ export type MessageContentProps = {
 
 const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
   const { authUser } = useAuthContext();
-  const { selectedConversation, selectedGroup } = useConversation();
+  const { selectedConversation } = useConversation();
   const fromMe = message.senderId === authUser?._id;
   const chatClassName = fromMe ? "chat-end" : "chat-start";
-
-  let profilePicture: string;
-  let senderName = "";
-
-  if (selectedGroup) {
-    const sender = selectedGroup.members.find(member =>
-      member.user._id === message.senderId
-    )?.user;
-
-    profilePicture = fromMe ? authUser.profilePicture : (sender?.profilePicture || "");
-    senderName = sender?.username || "";
-  } else {
-    profilePicture = fromMe ? authUser.profilePicture : (selectedConversation?.profilePicture || "");
-  }
+  const profilePicture = fromMe? authUser.profilePicture : selectedConversation?.profilePicture
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageSrc, setModalImageSrc] = useState("");
@@ -50,12 +37,6 @@ const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
             <img src={profilePicture} alt="user image" />
           </div>
         </div>
-        
-        {selectedGroup && !fromMe && (
-          <div className="chat-header text-xs opacity-50 mb-1">
-            {senderName}
-          </div>
-        )}
 
         <ChatBubble
           setIsModalOpen={setIsModalOpen}

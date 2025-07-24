@@ -29,7 +29,7 @@ const MessageContainer:FC = ():JSX.Element => {
         <NoChatSelected />
       ) : (
         <div className="flex flex-col justify-between h-full">
-          <nav className="bg-slate-500 px-4 py-4 mb-2 flex items-center gap-2 z-10 w-full sticky top-0">
+          <nav className="bg-gray-600 px-4 py-4 mb-2 flex items-center gap-2 z-10 w-full sticky top-0">
             <button
               onClick={setShowChatMenu}
               className="cursor-pointer lg:hidden" 
@@ -57,7 +57,7 @@ const MessageContainer:FC = ():JSX.Element => {
                   )}
                 </div>
               )}
-              <span className="text-gray-900 font-bold">
+              <span className="text-gray-200 font-bold">
                 {selectedConversation?.username || selectedGroup?.groupName}
               </span>
               {selectedGroup && (

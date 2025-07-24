@@ -142,7 +142,7 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
     if (group?.groupType === "channel" || group?.settings?.onlyAdminsCanPost) {
       const isOwner = group.owner.toString() === senderId?.toString();
       const isAdmin = group.admins.some(adminId => adminId.toString() === senderId?.toString());
-      
+
       if (!isOwner && !isAdmin) {
         res.status(403).json({ error: getLocalizedMessage(req, "onlyAdmins") });
         return;
@@ -156,7 +156,7 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
     let fileMimeType = "";
 
     if (file) {
-      fileUrl = `uploads/${file.filename}`;
+      fileUrl = `/uploads/${file.filename}`;
       fileName = file.originalname;
       fileSize = file.size;
       fileMimeType = file.mimetype;
@@ -180,7 +180,10 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
     });
 
     await newGroupMessage.save();
-    
+
+    await newGroupMessage.populate('senderId', 'username profilePicture');
+
+
     group.messages.push(newGroupMessage._id);
     await group.save();
 

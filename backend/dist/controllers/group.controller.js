@@ -142,7 +142,7 @@ const sendGroupMessage = async (req, res) => {
         let fileSize = 0;
         let fileMimeType = "";
         if (file) {
-            fileUrl = `uploads/${file.filename}`;
+            fileUrl = `/uploads/${file.filename}`;
             fileName = file.originalname;
             fileSize = file.size;
             fileMimeType = file.mimetype;
@@ -164,6 +164,7 @@ const sendGroupMessage = async (req, res) => {
             fileMimeType,
         });
         await newGroupMessage.save();
+        await newGroupMessage.populate('senderId', 'username profilePicture');
         group.messages.push(newGroupMessage._id);
         await group.save();
         res.status(200).json({

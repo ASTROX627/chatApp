@@ -15,9 +15,6 @@ export const useGetMessages = () => {
       try {
         const response = await httpService.get(`/messages/${selectedConversation?._id}`);
         const data = response.data.messages;
-
-        console.log("user message:", data);
-        
         
         if (data.error) {
           throw new Error(data.error);
