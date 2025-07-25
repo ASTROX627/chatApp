@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getGroupMessage = exports.sendGroupMessage = exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
+exports.joinGroup = exports.getGroupMessage = exports.sendGroupMessage = exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
 const group_model_1 = __importDefault(require("../models/group.model"));
 const group_utils_1 = require("../utils/group.utils");
 const i18nHelper_1 = require("../utils/i18nHelper");
@@ -14,15 +14,15 @@ const createGroup = async (req, res) => {
         const { groupName, groupType, isPrivate, onlyAdminCanPost, onlyAdminsCanAddMembers } = req.body;
         const ownerId = req.user?._id;
         if (!groupName || !groupType) {
-            res.status(400).json({ error: "name and type is required" });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.allFieldsRequired") });
             return;
         }
         if (!["group", "channel"].includes(groupType)) {
-            res.status(400).json({ error: "invalid type for group" });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.invalidGroupType") });
             return;
         }
         if (!ownerId) {
-            res.status(401).json({ error: "Unauthorized" });
+            res.status(401).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.invalidToken") });
             return;
         }
         const inviteCode = (0, group_utils_1.generateInviteCode)();
@@ -62,13 +62,13 @@ const createGroup = async (req, res) => {
         });
         await newGroup.save();
         res.status(201).json({
-            message: "group create successfully",
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.groupCreateSuccessful"),
             group: newGroup
         });
     }
     catch (error) {
         console.log("Error in create group controller", error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
     }
 };
 exports.createGroup = createGroup;
@@ -111,28 +111,28 @@ const sendGroupMessage = async (req, res) => {
         const senderId = req.user?._id;
         const file = req.file;
         if (!groupId) {
-            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "GroupIdRequired") });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.groupRequired") });
             return;
         }
         if (!message && !file) {
-            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "messageRequired") });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.messageRequired") });
             return;
         }
         const group = await group_model_1.default.findById(groupId);
         if (!group) {
-            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "GroupNotFound") });
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.GroupNotFound") });
             return;
         }
         const isMember = group.members.some(member => member.user?.toString() === senderId?.toString());
         if (!isMember) {
-            res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "notMember") });
+            res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.notMember") });
             return;
         }
         if (group?.groupType === "channel" || group?.settings?.onlyAdminsCanPost) {
             const isOwner = group.owner.toString() === senderId?.toString();
             const isAdmin = group.admins.some(adminId => adminId.toString() === senderId?.toString());
             if (!isOwner && !isAdmin) {
-                res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "onlyAdmins") });
+                res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.onlyAdmins") });
                 return;
             }
         }
@@ -196,3 +196,58 @@ const getGroupMessage = async (req, res) => {
     }
 };
 exports.getGroupMessage = getGroupMessage;
+// JOIN_GROUP_CONTROLLER
+const joinGroup = async (req, res) => {
+    const { groupId } = req.params;
+    const userId = req.user?._id;
+    if (!groupId) {
+        res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "erorrs.groupRequired") });
+        return;
+    }
+    if (!userId) {
+        res.status(401).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "erros.unauthorized") });
+        return;
+    }
+    const group = await group_model_1.default.findById(groupId);
+    if (!group) {
+        res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.groupNotFound") });
+        return;
+    }
+    const isMember = group.members.some(member => member.user?._id.toString() === userId.toString());
+    if (isMember) {
+        res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.isMember") });
+        return;
+    }
+    group.members.push({
+        user: userId,
+        role: "member",
+        joinedAt: new Date()
+    });
+    await group.save();
+    await group.populate([
+        { path: "owner", select: "username profilePicture" },
+        { path: "admins", select: "username profilePicture" },
+        { path: "members.user", select: "username profilePicture" }
+    ]);
+    ;
+    const newMember = group.members.find(member => member.user?._id.toString() === userId.toString());
+    res.status(200).json({
+        message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.joinSuccessfull"),
+        group: {
+            _id: group._id,
+            groupName: group.groupName,
+            groupType: group.groupType,
+            groupImage: group.groupImage,
+            owner: group.owner,
+            admins: group.admins,
+            members: group.members,
+            isPrivate: group.isPrivate,
+            inviteCode: group.inviteCode,
+            createdAt: group.createdAt,
+            updatedAt: group.updatedAt
+        },
+        newMember
+    });
+};
+exports.joinGroup = joinGroup;
+// INVITE_USER_TO_GROUP

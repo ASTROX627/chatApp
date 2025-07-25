@@ -15,14 +15,20 @@
     "messageRequired": "این فیلد نمی تواند خالی باشد",
     "notAllowedFile": "این نوع فایل مجاز نیست",
     "groupNotFound": "گروهی پیدا نشد",
-    "onlyAdmins": "فقط ادمین ها میتوانند اقدام به ارسال پست کنند",
-    "notMember": "کاربری با این مشخصات عضو گروه نیست"
+    "onlyAdmins": "فقط ادمین ها قادر به ارسال پیام و دعوت اعضا هستند",
+    "notMember": "کاربری با این مشخصات عضو گروه نیست",
+    "isMember": "شما عضو این گروه هستید",
+    "groupRequired": "آیدی گروه الزامی است",
+    "invalidGroupType": "نوع غیر مجاز برای گروه",
+    "onlyWithInvite": "برای عضویت در این گروه باید کد دعوت داشته باشید"
   },
   "success": {
     "registrationSuccessful": "ثبت نام با موفقیت انجام شد",
     "loginSuccessful": "ورود موفقیت آمیز",
     "logoutSuccessful": "خروج موفقیت آمیز",
     "messageSendSuccessful": "پیام با موفقیت ارسال شد",
-    "messageGaveSuccessful": "پیام ها با موفیت دریافت شدند"
+    "messageGaveSuccessful": "پیام ها با موفیت دریافت شدند",
+    "joinSuccessfull": "عضویت موفقت آمیز بود",
+    "groupCreateSuccessful": "گروه با موفقیت ایجاد شد"
   }
 }

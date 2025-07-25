@@ -15,14 +15,20 @@
     "messageRequired": "This filed can not empty",
     "notAllowedFile": "This type of file not allowed",
     "groupNotFound": "Group not found",
-    "onlyAdmins": "Only admins can send post",
-    "notMember": "Not a member"
+    "onlyAdmins": "Only admins can send post or invite member",
+    "notMember": "Not a member",
+    "isMember": "You are member of this group",
+    "groupRequired": "Group id is required",
+    "invalidGroupType": "Invalid type for group",
+    "onlyWithInvite": "you can join this group with invite code"
   },
   "success": {
     "registrationSuccessful": "Registration successful",
     "loginSuccessful": "Login successful",
     "logoutSuccessful": "Logged out successful",
     "messageSendSuccessful": "Message sent successfully",
-    "messageGaveSuccessful": "Messages gave successfully"
+    "messageGaveSuccessful": "Messages gave successfully",
+    "joinSuccessfull": "Joined group successful",
+    "groupCreateSuccessful": "group create successfully"
   }
 }

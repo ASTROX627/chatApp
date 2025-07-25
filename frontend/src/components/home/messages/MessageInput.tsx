@@ -6,7 +6,6 @@ import FilePreview from "./FilePreview";
 import MessageInputForm from "./MessageInputForm";
 import PermissionAlert from "./PermissionAlert";
 
-
 const MessageInput = () => {
   const { sendMessage, loading: privateLoading } = useSendMessage();
   const { sendGroupMessage, loading: groupLoading } = useSendGroupMessage();
@@ -31,9 +30,7 @@ const MessageInput = () => {
 
   return (
     <div className="sticky bottom-0 z-10 w-full">
-      {!canSendMessage && (
-        <PermissionAlert />
-      )}
+      {!canSendMessage && <PermissionAlert />}
 
       {selectedFile && (
         <FilePreview file={selectedFile} onRemove={removeSelectedFile} />

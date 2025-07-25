@@ -33,6 +33,8 @@
     "channels": "Channels",
     "onlyAdmins": "Only admins can send message",
     "notAllowed": "Not allowed to send message",
+    "notMember": "Only members can send message",
+    "join": "Join",
     "themes":{
       "sky": "SKY",
       "spring": "SPRING",

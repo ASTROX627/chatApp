@@ -4,6 +4,7 @@ import { AuthenticatedRequest } from "./message.controller";
 import { generateInviteCode, getAllAdmins } from "../utils/group.utils";
 import { getLocalizedMessage } from "../utils/i18nHelper";
 import GroupMessage from "../models/groupMessage.model";
+import User from "../models/user.model";
 
 // CREATE_GROUP_CONTROLLER
 export const createGroup = async (req: AuthenticatedRequest, res: Response) => {
@@ -12,17 +13,17 @@ export const createGroup = async (req: AuthenticatedRequest, res: Response) => {
     const ownerId = req.user?._id;
 
     if (!groupName || !groupType) {
-      res.status(400).json({ error: "name and type is required" });
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.allFieldsRequired") });
       return;
     }
 
     if (!["group", "channel"].includes(groupType)) {
-      res.status(400).json({ error: "invalid type for group" });
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.invalidGroupType") });
       return;
     }
 
     if (!ownerId) {
-      res.status(401).json({ error: "Unauthorized" });
+      res.status(401).json({ error: getLocalizedMessage(req, "errors.invalidToken") });
       return;
     }
 
@@ -67,14 +68,13 @@ export const createGroup = async (req: AuthenticatedRequest, res: Response) => {
     await newGroup.save();
 
     res.status(201).json({
-      message: "group create successfully",
+      message: getLocalizedMessage(req, "success.groupCreateSuccessful"),
       group: newGroup
     })
 
   } catch (error) {
     console.log("Error in create group controller", error);
-    res.status(500).json({ error: "Internal server error" })
-
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") })
   }
 }
 
@@ -118,24 +118,24 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
     const file = req.file;
 
     if (!groupId) {
-      res.status(400).json({ error: getLocalizedMessage(req, "GroupIdRequired") });
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.groupRequired") });
       return;
     }
 
     if (!message && !file) {
-      res.status(400).json({ error: getLocalizedMessage(req, "messageRequired") });
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.messageRequired") });
       return;
     }
 
     const group = await Group.findById(groupId);
     if (!group) {
-      res.status(404).json({ error: getLocalizedMessage(req, "GroupNotFound") });
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.GroupNotFound") });
       return;
     }
 
     const isMember = group.members.some(member => member.user?.toString() === senderId?.toString());
     if (!isMember) {
-      res.status(403).json({ error: getLocalizedMessage(req, "notMember") });
+      res.status(403).json({ error: getLocalizedMessage(req, "errors.notMember") });
       return;
     }
 
@@ -144,7 +144,7 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
       const isAdmin = group.admins.some(adminId => adminId.toString() === senderId?.toString());
 
       if (!isOwner && !isAdmin) {
-        res.status(403).json({ error: getLocalizedMessage(req, "onlyAdmins") });
+        res.status(403).json({ error: getLocalizedMessage(req, "errors.onlyAdmins") });
         return;
       }
     }
@@ -216,4 +216,73 @@ export const getGroupMessage = async (req: AuthenticatedRequest, res: Response):
     console.log("Error in get group message controller", error);
     res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
   }
+}
+
+// JOIN_GROUP_CONTROLLER
+export const joinGroup = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { groupId } = req.params;
+  const userId = req.user?._id;
+
+  if (!groupId) {
+    res.status(404).json({ error: getLocalizedMessage(req, "erorrs.groupRequired") });
+    return;
+  }
+
+  if (!userId) {
+    res.status(401).json({ error: getLocalizedMessage(req, "erros.unauthorized") });
+    return;
+  }
+
+  const group = await Group.findById(groupId);
+
+  if (!group) {
+    res.status(404).json({ error: getLocalizedMessage(req, "errors.groupNotFound") });
+    return;
+  }
+
+  const isMember = group.members.some(member => member.user?._id.toString() === userId.toString());
+
+  if (isMember) {
+    res.status(400).json({ error: getLocalizedMessage(req, "errors.isMember") });
+    return;
+  }
+
+  if(group.isPrivate){
+    res.status(403).json({error: getLocalizedMessage(req, "errors.onlyWithInvite")});
+    return;
+  }
+
+  group.members.push({
+    user: userId,
+    role: "member",
+    joinedAt: new Date()
+  });
+
+  await group.save();
+
+  await group.populate([
+    { path: "owner", select: "username profilePicture" },
+    { path: "admins", select: "username profilePicture" },
+    { path: "members.user", select: "username profilePicture" }
+  ]);;
+
+  const newMember = group.members.find(member => member.user?._id.toString() === userId.toString());
+
+  res.status(200).json({
+    message: getLocalizedMessage(req, "success.joinSuccessfull"),
+    group: {
+      _id: group._id,
+      groupName: group.groupName,
+      groupType: group.groupType,
+      groupImage: group.groupImage,
+      owner: group.owner,
+      admins: group.admins,
+      members: group.members,
+      isPrivate: group.isPrivate,
+      inviteCode: group.inviteCode,
+      createdAt: group.createdAt,
+      updatedAt: group.updatedAt
+    },
+    newMember
+  })
 }
