@@ -2,7 +2,7 @@ import type { FC, JSX } from "react"
 import { useState } from "react"
 import { useAuthContext } from "../../../context/auth/authContext";
 import useConversation from "../../../store/useConversation";
-import Modal from "../../modal/Modal";
+import Modal from "../../modal/ImageModal";
 import ChatBubble from "./ChatBubble";
 import GroupChatFooter from "./GroupChatFooter";
 import type { GroupMessageType } from "../../../types/conversations";
@@ -15,9 +15,9 @@ const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Ele
   const { authUser } = useAuthContext();
   const { selectedGroup } = useConversation();
   const fromMe = message.senderId._id === authUser?._id;
-  
+
   const chatClassName = fromMe ? "chat-end" : "chat-start";
-  const profilePicture = selectedGroup?.groupType === "channel"? selectedGroup.groupImage : fromMe? authUser.profilePicture : message.senderId.profilePicture
+  const profilePicture = selectedGroup?.groupType === "channel" ? selectedGroup.groupImage : fromMe ? authUser.profilePicture : message.senderId.profilePicture
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageSrc, setModalImageSrc] = useState("");

@@ -9,21 +9,24 @@ type ConversationProps = {
   conversation?: ConversationType,
   group?: GroupType,
   emoji: ReactNode,
-  lastIndex: boolean
+  lastIndex: boolean,
+  handleInvite?: () => void
+  handleConversation?: () => void
 }
 
-const Conversation: FC<ConversationProps> = ({ conversation, emoji, group, lastIndex }) => {
-  const { selectedConversation, setSelectedConversation, selectedGroup, setSelectedGroup } = useConversation();
+const Conversation: FC<ConversationProps> = ({ conversation, emoji, group, lastIndex, handleInvite,  handleConversation }) => {
+  const { selectedConversation, selectedGroup } = useConversation();
   const { classes } = useTheme();
   const { t } = useTranslation();
 
   const isSelected = conversation ? selectedConversation?._id === conversation._id : selectedGroup?._id === group?._id;
 
   const handleClick = () => {
-    if (conversation) {
-      setSelectedConversation(conversation)
-    } else if (group) {
-      setSelectedGroup(group)
+    if(handleConversation){
+      handleConversation();
+    }
+    if(handleInvite){
+      handleInvite();
     }
   }
 

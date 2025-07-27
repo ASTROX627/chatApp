@@ -6,23 +6,26 @@ import { httpService } from "../core/httpService";
 
 export const useJoinGroup = () => {
   const [loading, setLoading] = useState(false);
-  const {setSelectedGroup, userGroups, setUserGroups} = useConversation();
+  const { setSelectedGroup, userGroups, setUserGroups, selectedGroup } = useConversation();
 
-  const joinGroup = async(groupId: string) => {
+  const joinGroup = async (groupId: string) => {
+    setLoading(true)
     try {
-      setLoading(true)
       const response = await httpService.post(`/group/join/${groupId}`);
       const data = response.data;
 
-      if(data.error){
+      if (data.error) {
         throw new Error(data.error);
       }
 
-      setUserGroups([...userGroups, data.group]);
-      setSelectedGroup(data.group);
+      const updatedUserGroups = [...userGroups, data.group];
+      setUserGroups(updatedUserGroups);
+      if(selectedGroup?._id === groupId){
+        setSelectedGroup(data.group);
+      }
 
     } catch (error) {
-      if(error instanceof AxiosError){
+      if (error instanceof AxiosError) {
         toast.error(error.message)
       }
     } finally {
@@ -30,6 +33,6 @@ export const useJoinGroup = () => {
     }
   }
 
-  return {joinGroup, loading}
+  return { joinGroup, loading }
 
 }

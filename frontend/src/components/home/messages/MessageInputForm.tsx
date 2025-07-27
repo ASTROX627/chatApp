@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next"
 import { useTheme } from "../../../hooks/useTheme"
 import useConversation from "../../../store/useConversation"
 import { useJoinGroup } from "../../../hooks/usejoinGroup"
+import { useMessagePermissions } from "../../../hooks/useMessagePermissions"
 
 type MessageInputFormValue = {
   message: string
@@ -19,6 +20,7 @@ type MessageInputFormProps = {
 
 const MessageInputForm: FC<MessageInputFormProps> = ({ onSubmit, canSendMessage, loading, onFileSelect }): JSX.Element => {
   const { register, handleSubmit, reset } = useForm<MessageInputFormValue>();
+  const { isMember } = useMessagePermissions();
   const { selectedGroup } = useConversation();
   const { joinGroup, loading: joinLoading } = useJoinGroup();
   const { t } = useTranslation();
@@ -73,17 +75,33 @@ const MessageInputForm: FC<MessageInputFormProps> = ({ onSubmit, canSendMessage,
           </div>
 
         ) : (
-          <button
-            type="button"
-            onClick={handleJoinGroup}
-            className={`${classes.secondary.bg} w-full py-2.5 cursor-pointer`}>
-            {joinLoading ? (
-              <span className="loading loading-spinner"></span>
-            ) : (
-              t("home.join")
-            )}
+          !isMember ? (
+            <button
+              type="button"
+              onClick={handleJoinGroup}
+              className={`${classes.secondary.bg} w-full py-2.5 cursor-pointer`}>
+              {joinLoading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                t("home.join")
+              )}
 
-          </button>
+            </button>
+          ) : (
+            <div className="w-full relative">
+              <input
+                type="text"
+                disabled
+                className="border text-sm block w-full bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 p-2.5 disabled:bg-gray-800 disabled:cursor-not-allowed"
+                placeholder={t("home.notAllowed")}
+              />
+              <ActionButtons
+                onFileClick={handleFileClick}
+                canSendMessage={canSendMessage}
+                loading={loading}
+              />
+            </div>
+          )
         )
       }
     </form>

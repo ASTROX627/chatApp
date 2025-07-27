@@ -20,7 +20,8 @@
     "isMember": "You are member of this group",
     "groupRequired": "Group id is required",
     "invalidGroupType": "Invalid type for group",
-    "onlyWithInvite": "you can join this group with invite code"
+    "onlyWithInvite": "you can join this group with invite code",
+    "isAlreadyJoined": "This user is a member of the group"
   },
   "success": {
     "registrationSuccessful": "Registration successful",
@@ -29,6 +30,7 @@
     "messageSendSuccessful": "Message sent successfully",
     "messageGaveSuccessful": "Messages gave successfully",
     "joinSuccessfull": "Joined group successful",
-    "groupCreateSuccessful": "group create successfully"
+    "groupCreateSuccessful": "group create successfully",
+    "inviteSuccessful": "send invite successful"
   }
 }

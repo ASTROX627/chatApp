@@ -3,14 +3,14 @@ import { X } from 'lucide-react'
 import { Fragment, type FC } from 'react'
 
 
-type ModalProps = {
+type ImageModalProps = {
   isOpen: boolean,
   onClose: () => void,
   src: string,
   alt: string
 }
 
-const Modal: FC<ModalProps> = ({ isOpen, onClose, src, alt }) => {
+const ImageModal: FC<ImageModalProps> = ({ isOpen, onClose, src, alt }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -68,4 +68,4 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose, src, alt }) => {
   )
 }
 
-export default Modal
+export default ImageModal;

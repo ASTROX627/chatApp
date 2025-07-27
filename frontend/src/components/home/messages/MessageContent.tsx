@@ -3,10 +3,10 @@ import type { FC, JSX } from "react"
 import { useState } from "react"
 import { useAuthContext } from "../../../context/auth/authContext";
 import useConversation from "../../../store/useConversation";
-import Modal from "../../modal/Modal";
 import ChatBubble from "./ChatBubble";
 import ChatFooter from "./ChatFooter";
 import type { MessageType } from "../../../types/conversations";
+import ImageModal from "../../modal/ImageModal";
 
 export type MessageContentProps = {
   message: MessageType,
@@ -17,7 +17,7 @@ const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
   const { selectedConversation } = useConversation();
   const fromMe = message.senderId === authUser?._id;
   const chatClassName = fromMe ? "chat-end" : "chat-start";
-  const profilePicture = fromMe? authUser.profilePicture : selectedConversation?.profilePicture
+  const profilePicture = fromMe ? authUser.profilePicture : selectedConversation?.profilePicture
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageSrc, setModalImageSrc] = useState("");
@@ -49,7 +49,7 @@ const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
         />
       </div>
 
-      <Modal
+      <ImageModal
         isOpen={isModalOpen}
         onClose={closeImageModal}
         src={modalImageSrc}

@@ -220,69 +220,138 @@ export const getGroupMessage = async (req: AuthenticatedRequest, res: Response):
 
 // JOIN_GROUP_CONTROLLER
 export const joinGroup = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  const { groupId } = req.params;
-  const userId = req.user?._id;
 
-  if (!groupId) {
-    res.status(404).json({ error: getLocalizedMessage(req, "erorrs.groupRequired") });
-    return;
+  try {
+    const { groupId } = req.params;
+    const userId = req.user?._id;
+
+    if (!groupId) {
+      res.status(404).json({ error: getLocalizedMessage(req, "erorrs.groupRequired") });
+      return;
+    }
+
+    if (!userId) {
+      res.status(401).json({ error: getLocalizedMessage(req, "erros.unauthorized") });
+      return;
+    }
+
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.groupNotFound") });
+      return;
+    }
+
+    const isMember = group.members.some(member => member.user?._id.toString() === userId.toString());
+
+    if (isMember) {
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.isMember") });
+      return;
+    }
+
+    if (group.isPrivate) {
+      res.status(403).json({ error: getLocalizedMessage(req, "errors.onlyWithInvite") });
+      return;
+    }
+
+    group.members.push({
+      user: userId,
+      role: "member",
+      joinedAt: new Date()
+    });
+
+    await group.save();
+
+    await group.populate([
+      { path: "owner", select: "username profilePicture" },
+      { path: "admins", select: "username profilePicture" },
+      { path: "members.user", select: "username profilePicture" }
+    ]);;
+
+    const newMember = group.members.find(member => member.user?._id.toString() === userId.toString());
+
+    res.status(200).json({
+      message: getLocalizedMessage(req, "success.joinSuccessfull"),
+      group: {
+        _id: group._id,
+        groupName: group.groupName,
+        groupType: group.groupType,
+        groupImage: group.groupImage,
+        owner: group.owner,
+        admins: group.admins,
+        members: group.members,
+        isPrivate: group.isPrivate,
+        inviteCode: group.inviteCode,
+        createdAt: group.createdAt,
+        updatedAt: group.updatedAt
+      },
+      newMember
+    })
+
+  } catch (error) {
+    console.log("Error in join group controller", error);
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
   }
+}
 
-  if (!userId) {
-    res.status(401).json({ error: getLocalizedMessage(req, "erros.unauthorized") });
-    return;
+// SEND_INVITE_CONTROLELR
+export const sendInvite = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { groupId } = req.params;
+    const { invitedId } = req.body;
+    const inviterId = req.user?._id;
+
+    if (!groupId || !invitedId) {
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.allFieldsRequired") });
+      return;
+    }
+
+    const group = await Group.findById(groupId)
+      .populate("owner", "username profilePicture")
+      .populate("admins", "username profilePicture");
+
+    const invited = await User.findById(invitedId);
+
+    const isOwner = group?.owner._id.toString() === inviterId?.toString();
+    const isAdmin = group?.admins.some(admin => admin.id.toString() === inviterId?.toString());
+    const isMember = group?.members.some(member => member.user?._id === invitedId);
+
+    if (!group) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.groupNotFound") });
+      return;
+    }
+
+    if (!invited) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.userNotFoud") });
+      return;
+    }
+
+    if (!isOwner && !isAdmin) {
+      res.status(403).json({ error: getLocalizedMessage(req, "errors.onlyAdmins") });
+      return;
+    }
+
+    if (isMember) {
+      res.status(400).json({ errors: getLocalizedMessage(req, "errors.isAlreadyJoined") });
+      return;
+    }
+
+    res.status(200).json({
+      message: getLocalizedMessage(req, "success.inviteSuccessful"),
+      inviteData: {
+        groupName: group.groupName,
+        groupType: group.groupType,
+        groupImage: group.groupImage,
+        inviteCode: group.inviteCode,
+        inviter: req.user?.username,
+        invited: invited.username,
+        inviteUrl: `${process.env.CLIENT_URL}/invite/${group.inviteCode}`
+      }
+    });
+
+
+  } catch (error) {
+    console.log("Error in send invite controller", error);
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
   }
-
-  const group = await Group.findById(groupId);
-
-  if (!group) {
-    res.status(404).json({ error: getLocalizedMessage(req, "errors.groupNotFound") });
-    return;
-  }
-
-  const isMember = group.members.some(member => member.user?._id.toString() === userId.toString());
-
-  if (isMember) {
-    res.status(400).json({ error: getLocalizedMessage(req, "errors.isMember") });
-    return;
-  }
-
-  if(group.isPrivate){
-    res.status(403).json({error: getLocalizedMessage(req, "errors.onlyWithInvite")});
-    return;
-  }
-
-  group.members.push({
-    user: userId,
-    role: "member",
-    joinedAt: new Date()
-  });
-
-  await group.save();
-
-  await group.populate([
-    { path: "owner", select: "username profilePicture" },
-    { path: "admins", select: "username profilePicture" },
-    { path: "members.user", select: "username profilePicture" }
-  ]);;
-
-  const newMember = group.members.find(member => member.user?._id.toString() === userId.toString());
-
-  res.status(200).json({
-    message: getLocalizedMessage(req, "success.joinSuccessfull"),
-    group: {
-      _id: group._id,
-      groupName: group.groupName,
-      groupType: group.groupType,
-      groupImage: group.groupImage,
-      owner: group.owner,
-      admins: group.admins,
-      members: group.members,
-      isPrivate: group.isPrivate,
-      inviteCode: group.inviteCode,
-      createdAt: group.createdAt,
-      updatedAt: group.updatedAt
-    },
-    newMember
-  })
 }

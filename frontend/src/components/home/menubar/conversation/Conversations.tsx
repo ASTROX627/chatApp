@@ -4,6 +4,7 @@ import Conversation from "./Conversation";
 import { useTranslation } from "react-i18next";
 import { useFilteredConversation } from "../../../../hooks/useFilteredConversation";
 import type { AllConversations, ConversationType, GroupType } from "../../../../types/conversations";
+import useConversation from "../../../../store/useConversation";
 
 
 type ConversationsProps = {
@@ -12,6 +13,7 @@ type ConversationsProps = {
 }
 
 const Conversations: FC<ConversationsProps> = ({ searchTerm, selectedCategory }) => {
+  const { setSelectedConversation, setSelectedGroup } = useConversation();
   const { setShowMessageContainer } = useAppContext();
   const { filteredConversations, isLoading, hasSearchTerm, isEmpty, hasNoConversations } = useFilteredConversation({ searchTerm, selectedCategory });
   const { t } = useTranslation();
@@ -19,6 +21,16 @@ const Conversations: FC<ConversationsProps> = ({ searchTerm, selectedCategory })
   const handleMessageContainerClick = useCallback(() => {
     setShowMessageContainer();
   }, [setShowMessageContainer]);
+
+  const handleConversationSelection = useCallback((conversation: ConversationType | GroupType | undefined) => {
+    if (conversation) {
+      if ("username" in conversation) {
+        setSelectedConversation(conversation as ConversationType)
+      } else {
+        setSelectedGroup(conversation as GroupType)
+      }
+    }
+  }, [setSelectedConversation, setSelectedGroup])
 
   return (
     <div onClick={handleMessageContainerClick} className="flex flex-col p-5">
@@ -29,6 +41,7 @@ const Conversations: FC<ConversationsProps> = ({ searchTerm, selectedCategory })
           group={conversation.type === "group" ? conversation as GroupType : undefined}
           emoji={conversation.emoji}
           lastIndex={index === filteredConversations.length - 1}
+          handleConversation={() => handleConversationSelection(conversation.type === "user" ? conversation as ConversationType : conversation as GroupType)}
         />
       ))}
 

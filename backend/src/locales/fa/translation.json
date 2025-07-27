@@ -20,7 +20,8 @@
     "isMember": "شما عضو این گروه هستید",
     "groupRequired": "آیدی گروه الزامی است",
     "invalidGroupType": "نوع غیر مجاز برای گروه",
-    "onlyWithInvite": "برای عضویت در این گروه باید کد دعوت داشته باشید"
+    "onlyWithInvite": "برای عضویت در این گروه باید کد دعوت داشته باشید",
+    "isAlreadyJoined": "این کاربر عضو گروه میباشد"
   },
   "success": {
     "registrationSuccessful": "ثبت نام با موفقیت انجام شد",
@@ -29,6 +30,7 @@
     "messageSendSuccessful": "پیام با موفقیت ارسال شد",
     "messageGaveSuccessful": "پیام ها با موفیت دریافت شدند",
     "joinSuccessfull": "عضویت موفقت آمیز بود",
-    "groupCreateSuccessful": "گروه با موفقیت ایجاد شد"
+    "groupCreateSuccessful": "گروه با موفقیت ایجاد شد",
+    "inviteSuccessful": "ارسال دعوت موفقت آمیز بود"
   }
 }
