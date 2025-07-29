@@ -20,7 +20,7 @@ const groupMessageSchema = new mongoose_1.default.Schema({
     },
     messageType: {
         type: String,
-        enum: ["text", "file", "image", "document"],
+        enum: ["text", "file", "image", "document", "link"],
         default: "text"
     },
     fileUrl: {
@@ -34,6 +34,12 @@ const groupMessageSchema = new mongoose_1.default.Schema({
     },
     fileMimeType: {
         type: String
+    },
+    linkMetaData: {
+        title: String,
+        description: String,
+        favicon: String,
+        domain: String
     },
     systemMessageType: {
         type: String,

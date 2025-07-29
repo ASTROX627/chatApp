@@ -1,5 +1,5 @@
 import express from "express"
-import { createGroup, getGroupMessage, getPublicGroups, getUserGroup, joinGroup, sendGroupMessage, sendInvite } from "../controllers/group.controller";
+import { createGroup, getGroupMessage, getPublicGroups, getUserGroup, joinByInvite, joinGroup, sendGroupMessage, sendInvite } from "../controllers/group.controller";
 import protectRoute from "../middleware/protectRoute";
 import upload from "../utils/upload";
 
@@ -18,5 +18,7 @@ router.get("/:groupId", protectRoute, getGroupMessage);
 router.post("/join/:groupId", protectRoute, joinGroup);
 
 router.post("/invite/:groupId", protectRoute, sendInvite);
+
+router.post("/join-invite/:inviteCode", protectRoute, joinByInvite);
 
 export default router;

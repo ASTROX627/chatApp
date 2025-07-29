@@ -16,7 +16,7 @@ const messageSchema = new mongoose.Schema({
   },
   messageType: {
     type: String,
-    enum: ["text", "file", "image", "document"],
+    enum: ["text", "file", "image", "document", "link", "invite"],
     default: "text"
   },
   fileUrl: {
@@ -30,6 +30,25 @@ const messageSchema = new mongoose.Schema({
   },
   fileMimeType: {
     type: String
+  },
+  linkMetaData: {
+    title: String,
+    description: String,
+    favicon: String,
+    domain: String
+  },
+  inviteData: {
+    groupId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Group"
+    },
+    groupName: String,
+    groupType: {
+      type: String,
+      enum: ["group", "channel"]
+    },
+    inviteCode: String,
+    inviteUrl: String
   }
 }, { timestamps: true });
 

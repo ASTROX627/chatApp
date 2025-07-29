@@ -16,7 +16,7 @@ const groupMessageSchema = new mongoose.Schema({
   },
   messageType: {
     type: String,
-    enum: ["text", "file", "image", "document"],
+    enum: ["text", "file", "image", "document", "link"],
     default: "text"
   },
   fileUrl: {
@@ -31,11 +31,17 @@ const groupMessageSchema = new mongoose.Schema({
   fileMimeType: {
     type: String
   },
+  linkMetaData: {
+    title: String,
+    description: String,
+    favicon: String,
+    domain: String
+  },
   systemMessageType: {
     type: String,
     enum: ["user_joined", "user_left", "user_added", "user_removed", "user_promoted", "user_demoted", "group_created"]
   }
-}, {timestamps: true});
+}, { timestamps: true });
 
 const GroupMessage = mongoose.model("GroupMessage", groupMessageSchema);
 

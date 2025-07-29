@@ -34,7 +34,7 @@ export type MessageType = {
   senderId: string,
   receiverId: string,
   message: string,
-  messageType: "text" | "image" | "file" | "document",
+  messageType: "text" | "image" | "file" | "document" | "link",
   fileUrl?: string,
   fileName?: string,
   fileSize?: number,
@@ -51,12 +51,12 @@ export type GroupMessageType = {
   },
   groupId: string,
   message: string,
-  messageType: "text" | "image" | "file" | "document",
+  messageType: "text" | "image" | "file" | "document" | "link",
   fileUrl?: string,
   fileName?: string,
   fileSize?: number,
   fileMimeType?: string,
-  systemMessageType?: string
+  systemMessageType?: string,
   createdAt: string,
 }
 

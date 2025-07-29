@@ -3,6 +3,7 @@ import Conversation from "../models/conversation.model";
 import Message from "../models/message.model";
 import mongoose from "mongoose";
 import { getLocalizedMessage } from "../utils/i18nHelper";
+import { detectUrl } from "../utils/detectUrl";
 
 
 export interface AuthenticatedRequest extends Request {
@@ -58,6 +59,8 @@ export const sendMessage = async (req: AuthenticatedRequest, res: Response): Pro
       } else {
         messageType = "file"
       }
+    } else if (message && detectUrl(message)) {
+      messageType = "link"
     }
 
     const newMessage = new Message({

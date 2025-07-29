@@ -1,4 +1,3 @@
-// components/home/messages/MessageContent.tsx - بروزرسانی شده
 import type { FC, JSX } from "react"
 import { useState } from "react"
 import { useAuthContext } from "../../../context/auth/authContext";

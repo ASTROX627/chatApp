@@ -58,7 +58,7 @@ const InviteModal: FC<InviteModalProps> = ({ isOpen, onClose }): JSX.Element => 
                     className="text-xl font-bold text-white flex items-center gap-2"
                   >
                     <Users size={20} />
-                    inivite members
+                    {t("home.inviteMembers")}
                   </DialogTitle>
                   <button
                     onClick={onClose}

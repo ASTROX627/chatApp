@@ -3,12 +3,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendInvite = exports.joinGroup = exports.getGroupMessage = exports.sendGroupMessage = exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
+exports.joinByInvite = exports.sendInvite = exports.joinGroup = exports.getGroupMessage = exports.sendGroupMessage = exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
 const group_model_1 = __importDefault(require("../models/group.model"));
 const group_utils_1 = require("../utils/group.utils");
 const i18nHelper_1 = require("../utils/i18nHelper");
 const groupMessage_model_1 = __importDefault(require("../models/groupMessage.model"));
 const user_model_1 = __importDefault(require("../models/user.model"));
+const conversation_model_1 = __importDefault(require("../models/conversation.model"));
+const message_model_1 = __importDefault(require("../models/message.model"));
+const detectUrl_1 = require("../utils/detectUrl");
 // CREATE_GROUP_CONTROLLER
 const createGroup = async (req, res) => {
     try {
@@ -154,6 +157,9 @@ const sendGroupMessage = async (req, res) => {
                 messageType = "file";
             }
         }
+        else if (message && (0, detectUrl_1.detectUrl)(message)) {
+            messageType = "link";
+        }
         const newGroupMessage = new groupMessage_model_1.default({
             senderId,
             groupId,
@@ -294,6 +300,24 @@ const sendInvite = async (req, res) => {
             res.status(400).json({ errors: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.isAlreadyJoined") });
             return;
         }
+        const inviteUrl = `${process.env.CLIENT_URL}/invite/${group.inviteCode}`;
+        let conversation = await conversation_model_1.default.findOne({
+            participants: { $all: [inviterId, invitedId] }
+        });
+        if (!conversation) {
+            conversation = await conversation_model_1.default.create({
+                participants: [inviterId, invitedId]
+            });
+        }
+        const newInviteMessage = new message_model_1.default({
+            senderId: inviterId,
+            receiverId: invitedId,
+            message: inviteUrl,
+            messageType: "text"
+        });
+        await newInviteMessage.save();
+        conversation.messages.push(newInviteMessage.id);
+        await conversation.save();
         res.status(200).json({
             message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.inviteSuccessful"),
             inviteData: {
@@ -303,7 +327,11 @@ const sendInvite = async (req, res) => {
                 inviteCode: group.inviteCode,
                 inviter: req.user?.username,
                 invited: invited.username,
-                inviteUrl: `${process.env.CLIENT_URL}/invite/${group.inviteCode}`
+                inviteUrl: inviteUrl
+            },
+            messageInfo: {
+                messageId: newInviteMessage.id,
+                conversationId: conversation.id
             }
         });
     }
@@ -313,3 +341,58 @@ const sendInvite = async (req, res) => {
     }
 };
 exports.sendInvite = sendInvite;
+// JOIN_GROUP_BY_INVITE_CONTROLLER
+const joinByInvite = async (req, res) => {
+    try {
+        const { inviteCode } = req.params;
+        const userId = req.user?._id;
+        if (!inviteCode) {
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.inivteCodeRequired") });
+            return;
+        }
+        if (!userId) {
+            res.status(401).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.unauthorized") });
+            return;
+        }
+        const group = await group_model_1.default.findOne({ inviteCode })
+            .populate("owner", "username profilePicture")
+            .populate("admins", "username profilePicture")
+            .populate("members.user", "username profilePicture");
+        if (!group) {
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.invalidInviteCode") });
+            return;
+        }
+        const isMember = group.members.some(member => member.user?.id.toString() === userId.toString());
+        if (!isMember) {
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.isAlreadyJoined") });
+        }
+        group.members.push({
+            user: userId,
+            role: "member"
+        });
+        await group.save();
+        const newMember = group.members.find(member => member.user?.id.toString() === userId.toString());
+        res.status(200).json({
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.joinedByInvite"),
+            group: {
+                _id: group._id,
+                groupName: group.groupName,
+                groupType: group.groupType,
+                groupImage: group.groupImage,
+                owner: group.owner,
+                admins: group.admins,
+                members: group.members,
+                isPrivate: group.isPrivate,
+                inviteCode: group.inviteCode,
+                createdAt: group.createdAt,
+                updatedAt: group.updatedAt
+            },
+            newMember
+        });
+    }
+    catch (error) {
+        console.log("Error in join by invite controller", error);
+        res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
+    }
+};
+exports.joinByInvite = joinByInvite;

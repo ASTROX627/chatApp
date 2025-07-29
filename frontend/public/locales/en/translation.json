@@ -34,6 +34,9 @@
     "onlyAdmins": "Only admins can send message",
     "notAllowed": "Not allowed to send message",
     "notMember": "Only members can send message",
+    "sendInviteLoading": "Sending invite...",
+    "sendIviteSuccess": "Invite sent successful.",
+    "inviteMembers": "Invite members",
     "join": "Join",
     "themes":{
       "sky": "SKY",

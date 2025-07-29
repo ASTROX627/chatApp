@@ -7,6 +7,7 @@ exports.getMessage = exports.sendMessage = void 0;
 const conversation_model_1 = __importDefault(require("../models/conversation.model"));
 const message_model_1 = __importDefault(require("../models/message.model"));
 const i18nHelper_1 = require("../utils/i18nHelper");
+const detectUrl_1 = require("../utils/detectUrl");
 // SEND_MESSAGE_CONTROLLER
 const sendMessage = async (req, res) => {
     try {
@@ -42,6 +43,9 @@ const sendMessage = async (req, res) => {
             else {
                 messageType = "file";
             }
+        }
+        else if (message && (0, detectUrl_1.detectUrl)(message)) {
+            messageType = "link";
         }
         const newMessage = new message_model_1.default({
             senderId,

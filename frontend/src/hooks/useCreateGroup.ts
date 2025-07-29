@@ -18,7 +18,6 @@ export const useCreateGroup = () => {
         loading: t("home.createGroupLoading"),
         success: (response) => {
           if (response.status === 201) {
-            console.log("data:", response.data);
             return t("home.createGroupSuccess")
           }
           return t("auth.networkError");

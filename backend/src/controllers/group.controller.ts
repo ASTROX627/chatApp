@@ -5,6 +5,9 @@ import { generateInviteCode, getAllAdmins } from "../utils/group.utils";
 import { getLocalizedMessage } from "../utils/i18nHelper";
 import GroupMessage from "../models/groupMessage.model";
 import User from "../models/user.model";
+import Conversation from "../models/conversation.model";
+import Message from "../models/message.model";
+import { detectUrl } from "../utils/detectUrl";
 
 // CREATE_GROUP_CONTROLLER
 export const createGroup = async (req: AuthenticatedRequest, res: Response) => {
@@ -166,6 +169,8 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
       } else {
         messageType = "file";
       }
+    } else if (message && detectUrl(message)){
+      messageType = "link"
     }
 
     const newGroupMessage = new GroupMessage({
@@ -336,6 +341,30 @@ export const sendInvite = async (req: AuthenticatedRequest, res: Response) => {
       return;
     }
 
+    const inviteUrl = `${process.env.CLIENT_URL}/invite/${group.inviteCode}`;
+
+
+    let conversation = await Conversation.findOne({
+      participants: { $all: [inviterId, invitedId] }
+    });
+
+    if (!conversation) {
+      conversation = await Conversation.create({
+        participants: [inviterId, invitedId]
+      })
+    }
+
+    const newInviteMessage = new Message({
+      senderId: inviterId,
+      receiverId: invitedId,
+      message: inviteUrl,
+      messageType: "text"
+    });
+
+    await newInviteMessage.save();
+    conversation.messages.push(newInviteMessage.id);
+    await conversation.save();
+
     res.status(200).json({
       message: getLocalizedMessage(req, "success.inviteSuccessful"),
       inviteData: {
@@ -345,13 +374,81 @@ export const sendInvite = async (req: AuthenticatedRequest, res: Response) => {
         inviteCode: group.inviteCode,
         inviter: req.user?.username,
         invited: invited.username,
-        inviteUrl: `${process.env.CLIENT_URL}/invite/${group.inviteCode}`
+        inviteUrl: inviteUrl
+      },
+      messageInfo: {
+        messageId: newInviteMessage.id,
+        conversationId: conversation.id
       }
     });
 
 
   } catch (error) {
     console.log("Error in send invite controller", error);
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
+  }
+}
+
+// JOIN_GROUP_BY_INVITE_CONTROLLER
+export const joinByInvite = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { inviteCode } = req.params;
+    const userId = req.user?._id;
+
+    if (!inviteCode) {
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.inivteCodeRequired") });
+      return;
+    }
+
+    if (!userId) {
+      res.status(401).json({ error: getLocalizedMessage(req, "errors.unauthorized") });
+      return;
+    }
+
+    const group = await Group.findOne({ inviteCode })
+      .populate("owner", "username profilePicture")
+      .populate("admins", "username profilePicture")
+      .populate("members.user", "username profilePicture");
+
+    if (!group) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.invalidInviteCode") });
+      return;
+    }
+
+    const isMember = group.members.some(member => member.user?.id.toString() === userId.toString());
+
+    if (!isMember) {
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.isAlreadyJoined") })
+    }
+
+    group.members.push({
+      user: userId,
+      role: "member"
+    })
+
+    await group.save();
+
+    const newMember = group.members.find(member => member.user?.id.toString() === userId.toString());
+
+    res.status(200).json({
+      message: getLocalizedMessage(req, "success.joinedByInvite"),
+      group: {
+        _id: group._id,
+        groupName: group.groupName,
+        groupType: group.groupType,
+        groupImage: group.groupImage,
+        owner: group.owner,
+        admins: group.admins,
+        members: group.members,
+        isPrivate: group.isPrivate,
+        inviteCode: group.inviteCode,
+        createdAt: group.createdAt,
+        updatedAt: group.updatedAt
+      },
+      newMember
+    });
+  } catch (error) {
+    console.log("Error in join by invite controller", error);
     res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
   }
 }

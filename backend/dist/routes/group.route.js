@@ -15,4 +15,5 @@ router.post("/send/:groupId", upload_1.default.single("file"), group_controller_
 router.get("/:groupId", protectRoute_1.default, group_controller_1.getGroupMessage);
 router.post("/join/:groupId", protectRoute_1.default, group_controller_1.joinGroup);
 router.post("/invite/:groupId", protectRoute_1.default, group_controller_1.sendInvite);
+router.post("/join-invite/:inviteCode", protectRoute_1.default, group_controller_1.joinByInvite);
 exports.default = router;
