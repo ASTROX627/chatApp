@@ -5,6 +5,7 @@ import ImageMessage from "./ImageMessage";
 import FileMessage from "./FileMessage";
 import type { MessageType } from "../../../types/conversations";
 import LinkMessage from "./LinkMessage";
+import InviteLinkMessage from "./InviteLinkMessage";
 
 type ChatBubbleProps = {
   message: MessageType,
@@ -25,6 +26,10 @@ const ChatBubble: FC<ChatBubbleProps> = ({ message, setIsModalOpen, setModalImag
   };
 
   const renderLinkMessages = (text: string) => {
+
+    if(message.messageType === "inviteLink"){
+      return text;
+    }
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const parts = text.split(urlRegex);
 
@@ -77,7 +82,16 @@ const ChatBubble: FC<ChatBubbleProps> = ({ message, setIsModalOpen, setModalImag
 
       {
         message.messageType === "link" && (
-          <LinkMessage 
+          <LinkMessage
+            url={message.message}
+          />
+        )
+      }
+
+      {
+        message.messageType === 'inviteLink' && message.inviteData && (
+          <InviteLinkMessage
+            group={message.inviteData} 
             url={message.message}
           />
         )

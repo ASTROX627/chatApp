@@ -37,6 +37,9 @@
     "sendInviteLoading": "در حال ارسال دعوت...",
     "sendIviteSuccess": "دعوت با موفقیت ارسال شد.",
     "inviteMembers": "دعوت اعضا",
+    "loading": "درحال بارگیری...",
+    "clickToJoin": "برای عضویت کلیک کنید",
+    "watchAndJoin": "مشاهده و عضویت",
     "join": "عضویت",
     "themes": {
       "sky": "آسمان",

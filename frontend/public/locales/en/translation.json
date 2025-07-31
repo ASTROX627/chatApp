@@ -37,7 +37,10 @@
     "sendInviteLoading": "Sending invite...",
     "sendIviteSuccess": "Invite sent successful.",
     "inviteMembers": "Invite members",
+    "loading": "Loading...",
     "join": "Join",
+    "clickToJoin": "Click to join",
+    "watchAndJoin": "Watch and join",
     "themes":{
       "sky": "SKY",
       "spring": "SPRING",

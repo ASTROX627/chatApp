@@ -8,6 +8,7 @@ import User from "../models/user.model";
 import Conversation from "../models/conversation.model";
 import Message from "../models/message.model";
 import { detectUrl } from "../utils/detectUrl";
+import { error } from "console";
 
 // CREATE_GROUP_CONTROLLER
 export const createGroup = async (req: AuthenticatedRequest, res: Response) => {
@@ -169,7 +170,7 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
       } else {
         messageType = "file";
       }
-    } else if (message && detectUrl(message)){
+    } else if (message && detectUrl(message)) {
       messageType = "link"
     }
 
@@ -358,7 +359,15 @@ export const sendInvite = async (req: AuthenticatedRequest, res: Response) => {
       senderId: inviterId,
       receiverId: invitedId,
       message: inviteUrl,
-      messageType: "text"
+      messageType: "inviteLink",
+      inviteData: {
+        groupId: group._id,
+        groupName: group.groupName,
+        groupImage: group.groupImage,
+        groupType: group.groupType,
+        inviteCode: group.inviteCode,
+        inviteUrl: inviteUrl
+      }
     });
 
     await newInviteMessage.save();
@@ -389,66 +398,40 @@ export const sendInvite = async (req: AuthenticatedRequest, res: Response) => {
   }
 }
 
-// JOIN_GROUP_BY_INVITE_CONTROLLER
-export const joinByInvite = async (req: AuthenticatedRequest, res: Response) => {
+// GET_PRIVATE_GROUP_BY_INVITE
+export const getPrivategroupByInvite = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { inviteCode } = req.params;
-    const userId = req.user?._id;
 
     if (!inviteCode) {
-      res.status(400).json({ error: getLocalizedMessage(req, "errors.inivteCodeRequired") });
-      return;
-    }
-
-    if (!userId) {
-      res.status(401).json({ error: getLocalizedMessage(req, "errors.unauthorized") });
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.inviteCodeRequired") });
       return;
     }
 
     const group = await Group.findOne({ inviteCode })
       .populate("owner", "username profilePicture")
       .populate("admins", "username profilePicture")
-      .populate("members.user", "username profilePicture");
+      .populate("members.user", "username profilePicture")
 
     if (!group) {
-      res.status(404).json({ error: getLocalizedMessage(req, "errors.invalidInviteCode") });
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.groupNotFound") });
       return;
     }
 
-    const isMember = group.members.some(member => member.user?.id.toString() === userId.toString());
-
-    if (!isMember) {
-      res.status(400).json({ error: getLocalizedMessage(req, "errors.isAlreadyJoined") })
-    }
-
-    group.members.push({
-      user: userId,
-      role: "member"
-    })
-
-    await group.save();
-
-    const newMember = group.members.find(member => member.user?.id.toString() === userId.toString());
-
     res.status(200).json({
-      message: getLocalizedMessage(req, "success.joinedByInvite"),
+      message: getLocalizedMessage(req, "success.groupFound"),
       group: {
         _id: group._id,
         groupName: group.groupName,
-        groupType: group.groupType,
         groupImage: group.groupImage,
+        groupType: group.groupType,
         owner: group.owner,
         admins: group.admins,
         members: group.members,
-        isPrivate: group.isPrivate,
-        inviteCode: group.inviteCode,
-        createdAt: group.createdAt,
-        updatedAt: group.updatedAt
-      },
-      newMember
-    });
+      }
+    })
   } catch (error) {
-    console.log("Error in join by invite controller", error);
+    console.log("Error in get private group by invite controller", error);
     res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
   }
 }

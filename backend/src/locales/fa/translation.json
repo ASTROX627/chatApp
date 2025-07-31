@@ -21,7 +21,8 @@
     "groupRequired": "آیدی گروه الزامی است",
     "invalidGroupType": "نوع غیر مجاز برای گروه",
     "onlyWithInvite": "برای عضویت در این گروه باید کد دعوت داشته باشید",
-    "isAlreadyJoined": "این کاربر عضو گروه میباشد"
+    "isAlreadyJoined": "این کاربر عضو گروه میباشد",
+    "inviteCodeRequired": "کد دعوت الزامی است"
   },
   "success": {
     "registrationSuccessful": "ثبت نام با موفقیت انجام شد",
@@ -31,6 +32,7 @@
     "messageGaveSuccessful": "پیام ها با موفیت دریافت شدند",
     "joinSuccessfull": "عضویت موفقت آمیز بود",
     "groupCreateSuccessful": "گروه با موفقیت ایجاد شد",
-    "inviteSuccessful": "ارسال دعوت موفقت آمیز بود"
+    "inviteSuccessful": "ارسال دعوت موفقت آمیز بود",
+    "groupFound": "گروه پیدا شد"
   }
 }

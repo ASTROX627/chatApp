@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.joinByInvite = exports.sendInvite = exports.joinGroup = exports.getGroupMessage = exports.sendGroupMessage = exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
+exports.getPrivategroupByInvite = exports.sendInvite = exports.joinGroup = exports.getGroupMessage = exports.sendGroupMessage = exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
 const group_model_1 = __importDefault(require("../models/group.model"));
 const group_utils_1 = require("../utils/group.utils");
 const i18nHelper_1 = require("../utils/i18nHelper");
@@ -313,7 +313,15 @@ const sendInvite = async (req, res) => {
             senderId: inviterId,
             receiverId: invitedId,
             message: inviteUrl,
-            messageType: "text"
+            messageType: "inviteLink",
+            inviteData: {
+                groupId: group._id,
+                groupName: group.groupName,
+                groupImage: group.groupImage,
+                groupType: group.groupType,
+                inviteCode: group.inviteCode,
+                inviteUrl: inviteUrl
+            }
         });
         await newInviteMessage.save();
         conversation.messages.push(newInviteMessage.id);
@@ -341,17 +349,12 @@ const sendInvite = async (req, res) => {
     }
 };
 exports.sendInvite = sendInvite;
-// JOIN_GROUP_BY_INVITE_CONTROLLER
-const joinByInvite = async (req, res) => {
+// GET_PRIVATE_GROUP_BY_INVITE
+const getPrivategroupByInvite = async (req, res) => {
     try {
         const { inviteCode } = req.params;
-        const userId = req.user?._id;
         if (!inviteCode) {
-            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.inivteCodeRequired") });
-            return;
-        }
-        if (!userId) {
-            res.status(401).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.unauthorized") });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.inviteCodeRequired") });
             return;
         }
         const group = await group_model_1.default.findOne({ inviteCode })
@@ -359,40 +362,25 @@ const joinByInvite = async (req, res) => {
             .populate("admins", "username profilePicture")
             .populate("members.user", "username profilePicture");
         if (!group) {
-            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.invalidInviteCode") });
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.groupNotFound") });
             return;
         }
-        const isMember = group.members.some(member => member.user?.id.toString() === userId.toString());
-        if (!isMember) {
-            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.isAlreadyJoined") });
-        }
-        group.members.push({
-            user: userId,
-            role: "member"
-        });
-        await group.save();
-        const newMember = group.members.find(member => member.user?.id.toString() === userId.toString());
         res.status(200).json({
-            message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.joinedByInvite"),
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.groupFound"),
             group: {
                 _id: group._id,
                 groupName: group.groupName,
-                groupType: group.groupType,
                 groupImage: group.groupImage,
+                groupType: group.groupType,
                 owner: group.owner,
                 admins: group.admins,
                 members: group.members,
-                isPrivate: group.isPrivate,
-                inviteCode: group.inviteCode,
-                createdAt: group.createdAt,
-                updatedAt: group.updatedAt
-            },
-            newMember
+            }
         });
     }
     catch (error) {
-        console.log("Error in join by invite controller", error);
+        console.log("Error in get private group by invite controller", error);
         res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
     }
 };
-exports.joinByInvite = joinByInvite;
+exports.getPrivategroupByInvite = getPrivategroupByInvite;

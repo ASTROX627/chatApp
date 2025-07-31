@@ -13,7 +13,7 @@ export const useGetGroupMessage = () => {
       setLoading(true);
 
       try {
-        const response = await httpService.get(`/group/${selectedGroup?._id}`);
+        const response = await httpService.get(`/group/messages/${selectedGroup?._id}`);
         const data = response.data.groupMessages;
         
         if (data.error) {

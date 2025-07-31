@@ -1,5 +1,5 @@
 import express from "express"
-import { createGroup, getGroupMessage, getPublicGroups, getUserGroup, joinByInvite, joinGroup, sendGroupMessage, sendInvite } from "../controllers/group.controller";
+import { createGroup, getGroupMessage, getPrivategroupByInvite, getPublicGroups, getUserGroup, joinGroup, sendGroupMessage, sendInvite } from "../controllers/group.controller";
 import protectRoute from "../middleware/protectRoute";
 import upload from "../utils/upload";
 
@@ -13,12 +13,12 @@ router.get("/user", protectRoute, getUserGroup);
 
 router.post("/send/:groupId", upload.single("file"), sendGroupMessage);
 
-router.get("/:groupId", protectRoute, getGroupMessage);
+router.get("/messages/:groupId", protectRoute, getGroupMessage);
 
 router.post("/join/:groupId", protectRoute, joinGroup);
 
 router.post("/invite/:groupId", protectRoute, sendInvite);
 
-router.post("/join-invite/:inviteCode", protectRoute, joinByInvite);
+router.get("/invite/:inviteCode", protectRoute, getPrivategroupByInvite);
 
 export default router;

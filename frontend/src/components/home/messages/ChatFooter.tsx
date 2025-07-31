@@ -7,7 +7,7 @@ type ChatFooterProps = {
 
 const ChatFooter: FC<ChatFooterProps> = ({ message }): JSX.Element => {
   return (
-    <div className="chat-footer opacity-50 text-xs flex gap-1 items-center">
+    <div className="chat-footer opacity-50 text-xs flex gap-1 items-center mt-1">
       {
         new Date(message.createdAt).toLocaleTimeString([], {
           hour: "2-digit",

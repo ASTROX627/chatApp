@@ -34,11 +34,12 @@ export type MessageType = {
   senderId: string,
   receiverId: string,
   message: string,
-  messageType: "text" | "image" | "file" | "document" | "link",
+  messageType: "text" | "image" | "file" | "document" | "link" | "inviteLink",
   fileUrl?: string,
   fileName?: string,
   fileSize?: number,
   fileMimeType?: string,
+  inviteData?: InviteLinkData,
   createdAt: string,
 }
 
@@ -51,12 +52,13 @@ export type GroupMessageType = {
   },
   groupId: string,
   message: string,
-  messageType: "text" | "image" | "file" | "document" | "link",
+  messageType: "text" | "image" | "file" | "document" | "link" | "inviteLink",
   fileUrl?: string,
   fileName?: string,
   fileSize?: number,
   fileMimeType?: string,
   systemMessageType?: string,
+  inviteData?: InviteLinkData,
   createdAt: string,
 }
 
@@ -72,3 +74,12 @@ export type AllConversations = ConversationType | (GroupType & {
   emoji: ReactNode,
   type: "group"
 })
+
+export type InviteLinkData = {
+  groupId: string,
+  groupName: string,
+  groupImage: string,
+  groupType: "channel" | "group",
+  inviteCode: string,
+  inviteUrl: string
+}
