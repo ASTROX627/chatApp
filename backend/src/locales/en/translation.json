@@ -22,7 +22,10 @@
     "invalidGroupType": "Invalid type for group",
     "onlyWithInvite": "you can join this group with invite code",
     "isAlreadyJoined": "This user is a member of the group",
-    "inviteCodeRequired": "Invite code is required"
+    "inviteCodeRequired": "Invite code is required",
+    "userIdRequired": "User id is required",
+    "groupIdRequired": "Group id is required",
+    "accessDenied": "You are not able to access to profile"
   },
   "success": {
     "registrationSuccessful": "Registration successful",
@@ -33,6 +36,8 @@
     "joinSuccessfull": "Joined group successful",
     "groupCreateSuccessful": "group create successfully",
     "inviteSuccessful": "send invite successful",
-    "groupFound": "Group found"
+    "groupFound": "Group found",
+    "userProfileRetrieved": "Profile of this user successfully retrieved",
+    "groupProfileRetrieved": "Profile if this group successfully retrieved"
   }
 }

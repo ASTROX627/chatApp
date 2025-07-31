@@ -9,6 +9,7 @@ const auth_route_1 = __importDefault(require("./routes/auth.route"));
 const message_route_1 = __importDefault(require("./routes/message.route"));
 const users_route_1 = __importDefault(require("./routes/users.route"));
 const group_route_1 = __importDefault(require("./routes/group.route"));
+const profile_route_1 = __importDefault(require("./routes/profile.route"));
 const connectToMongoDB_1 = __importDefault(require("./db/connectToMongoDB"));
 const cors_1 = __importDefault(require("cors"));
 const protectRoute_1 = __importDefault(require("./middleware/protectRoute"));
@@ -34,6 +35,7 @@ app.use("/api/auth", auth_route_1.default);
 app.use("/api/messages", protectRoute_1.default, message_route_1.default);
 app.use("/api/users", users_route_1.default);
 app.use("/api/group", protectRoute_1.default, group_route_1.default);
+app.use("/api/profile", protectRoute_1.default, profile_route_1.default);
 app.listen(PORT, '0.0.0.0', () => {
     (0, connectToMongoDB_1.default)();
     console.log(`server running on port ${PORT}`);

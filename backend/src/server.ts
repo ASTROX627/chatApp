@@ -4,6 +4,7 @@ import authRoute from "./routes/auth.route";
 import messageRoute from "./routes/message.route";
 import usersRoute from "./routes/users.route";
 import groupRoute from "./routes/group.route";
+import profileRoute from "./routes/profile.route";
 import connectToMongoDB from "./db/connectToMongoDB";
 import cors from "cors"
 import protectRoute from "./middleware/protectRoute";
@@ -38,6 +39,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/messages", protectRoute, messageRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/group", protectRoute, groupRoute);
+app.use("/api/profile", protectRoute, profileRoute)
 
 
 app.listen(PORT, '0.0.0.0',() => {
