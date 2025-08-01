@@ -9,10 +9,14 @@ import MessageInput from "./MessageInput";
 import { useTheme } from "../../../hooks/useTheme";
 import { useAuthContext } from "../../../context/auth/authContext";
 import InviteModal from "../../modal/InviteModal";
+import { useGetUserProfile } from "../../../hooks/useGetUserProfile";
+import { useGetGroupProfile } from "../../../hooks/useGetGroupProfile";
 
 const MessageContainer: FC = (): JSX.Element => {
-  const { selectedConversation, selectedGroup, setSelectedConversation, setSelectedGroup } = useConversation();
-  const { showMessageContainer, setShowChatMenu, language } = useAppContext();
+  const { selectedConversation, selectedGroup } = useConversation();
+  const { showMessageContainer, setShowChatMenu, language, setShowProfile } = useAppContext();
+  const {getUserProfile} = useGetUserProfile();
+  const {getGroupProfile} = useGetGroupProfile();
   const { authUser } = useAuthContext();
   const { t } = useTranslation();
   const { classes } = useTheme();
@@ -20,15 +24,7 @@ const MessageContainer: FC = (): JSX.Element => {
   const [canSendInvite, setCanSendInvite] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    return () => {
-      setSelectedConversation(null);
-      setSelectedGroup(null);
-    }
-  }, [setSelectedConversation, setSelectedGroup]);
-
   const activeChat = selectedConversation || selectedGroup;
-
   const isOwner = selectedGroup?.owner._id === authUser?._id;
   const isAdmin = selectedGroup?.admins.some(admin => admin._id === authUser?._id);
 
@@ -41,6 +37,16 @@ const MessageContainer: FC = (): JSX.Element => {
     }
   }, [isAdmin, isOwner])
 
+  const handleAvatarClick = async () => {
+    if(selectedConversation){
+      await getUserProfile(selectedConversation._id)
+      setShowProfile();
+    } else if (selectedGroup){
+      await getGroupProfile(selectedGroup._id)
+      setShowProfile()
+    }
+  }
+
   return (
     <div className={`h-full overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800 border-gray-500 rounded-e-md
       ${showMessageContainer ? "w-full" : "w-0"}
@@ -49,7 +55,7 @@ const MessageContainer: FC = (): JSX.Element => {
         <NoChatSelected />
       ) : (
         <div className="flex flex-col justify-between h-full">
-          <nav className="bg-gray-600 px-4 py-4 mb-2 flex items-center gap-2 z-10 w-full sticky top-0 justify-between">
+          <nav className="bg-gray-600 p-4 mb-2 flex items-center gap-2 z-10 w-full sticky top-0 justify-between">
             <div className="flex justify-between items-center gap-2">
               <button
                 onClick={setShowChatMenu}
@@ -57,7 +63,7 @@ const MessageContainer: FC = (): JSX.Element => {
               >
                 {language === "en" ? <ArrowLeft size={32} /> : <ArrowRight size={32} />}
               </button>
-              <div className="avatar avatar-online">
+              <div className="avatar avatar-online cursor-pointer" onClick={handleAvatarClick}>
                 <div className="w-12 rounded-full">
                   <img
                     src={selectedConversation?.profilePicture || selectedGroup?.groupImage}

@@ -64,10 +64,13 @@ export type GroupMessageType = {
 
 export type ConversationType = {
   _id: string,
-  username: string
+  fullName: string,
+  username: string,
   profilePicture: string,
   emoji: ReactNode
-  type: "user"
+  type: "user",
+  groups: GroupType[],
+  commonGroups: GroupType[]
 }
 
 export type AllConversations = ConversationType | (GroupType & {

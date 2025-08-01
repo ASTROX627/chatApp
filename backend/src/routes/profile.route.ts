@@ -4,8 +4,8 @@ import { getGroupProfile, getUserProfile } from "../controllers/profile.controll
 
 const router = express.Router();
 
-router.get("/user", protectRoute, getUserProfile);
-router.get("/group", protectRoute, getGroupProfile);
+router.get("/user/:userId", protectRoute, getUserProfile);
+router.get("/group/:groupId", protectRoute, getGroupProfile);
 
 export default router;
 

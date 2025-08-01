@@ -6,6 +6,9 @@ import Modal from "../../modal/ImageModal";
 import ChatBubble from "./ChatBubble";
 import GroupChatFooter from "./GroupChatFooter";
 import type { GroupMessageType } from "../../../types/conversations";
+import { useAppContext } from "../../../context/app/appContext";
+import { useGetUserProfile } from "../../../hooks/useGetUserProfile";
+import { useGetGroupProfile } from "../../../hooks/useGetGroupProfile";
 
 export type GroupMessageContentProps = {
   message: GroupMessageType,
@@ -14,8 +17,11 @@ export type GroupMessageContentProps = {
 const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Element => {
   const { authUser } = useAuthContext();
   const { selectedGroup } = useConversation();
-  const fromMe = message.senderId._id === authUser?._id;
+  const {setShowProfile} = useAppContext();
+  const {getUserProfile} = useGetUserProfile();
+  const {getGroupProfile} = useGetGroupProfile();
 
+  const fromMe = message.senderId._id === authUser?._id;
   const chatClassName = fromMe ? "chat-end" : "chat-start";
   const profilePicture = selectedGroup?.groupType === "channel" ? selectedGroup.groupImage : fromMe ? authUser.profilePicture : message.senderId.profilePicture
 
@@ -29,6 +35,18 @@ const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Ele
     setModalImageAlt("");
   };
 
+  const handleAvatarClick = async () => {
+    if(selectedGroup?.groupType === "channel"){
+      await getGroupProfile(selectedGroup._id)
+      setShowProfile();
+    }else if(fromMe){
+      setShowProfile();
+    } else {
+      await getUserProfile(message.senderId._id)
+      setShowProfile()
+    }
+  }
+
   const messageForBubble = {
     ...message,
     senderId: message.senderId._id,
@@ -38,7 +56,7 @@ const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Ele
   return (
     <>
       <div className={`chat ${chatClassName}`}>
-        <div className="chat-image avatar">
+        <div className="chat-image avatar cursor-pointer" onClick={handleAvatarClick}>
           <div className="w-10 rounded-full">
             <img src={profilePicture} alt="user image" />
           </div>

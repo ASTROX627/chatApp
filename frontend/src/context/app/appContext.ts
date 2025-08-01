@@ -8,6 +8,7 @@ type AppContextType = {
   ShowCreateGroupMenu: boolean;
   showSidebar: boolean;
   showMessageContainer: boolean;
+  showProfile: boolean;
   isActiveChatButton: boolean;
   isActiveSettingButton: boolean;
   isActiveCreateGroupButton: boolean,
@@ -19,6 +20,7 @@ type AppContextType = {
   setShowCreateGroupMenu: () => void;
   setShowSidebar: () => void;
   setShowMessageContainer: () => void;
+  setShowProfile: () => void;
   changeTheme: (theme: ThemeType) => void;
   changeLanguage: (language: LanguageType) => void;
 };
@@ -29,6 +31,7 @@ export const AppContext = createContext<AppContextType>({
   ShowCreateGroupMenu: false,
   showSidebar: false,
   showMessageContainer: false,
+  showProfile: false,
   isActiveChatButton: true,
   isActiveSettingButton: false,
   isActiveCreateGroupButton: false,
@@ -40,6 +43,7 @@ export const AppContext = createContext<AppContextType>({
   setShowCreateGroupMenu: () => {},
   setShowSidebar: () => { },
   setShowMessageContainer: () => {},
+  setShowProfile: () => {},
   changeTheme: (theme: ThemeType) => { },
   changeLanguage: (language: LanguageType) => { },
 });

@@ -6,6 +6,8 @@ import ChatBubble from "./ChatBubble";
 import ChatFooter from "./ChatFooter";
 import type { MessageType } from "../../../types/conversations";
 import ImageModal from "../../modal/ImageModal";
+import { useAppContext } from "../../../context/app/appContext";
+import { useGetUserProfile } from "../../../hooks/useGetUserProfile";
 
 export type MessageContentProps = {
   message: MessageType,
@@ -14,6 +16,9 @@ export type MessageContentProps = {
 const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
   const { authUser } = useAuthContext();
   const { selectedConversation } = useConversation();
+  const {setShowProfile} = useAppContext();
+  const {getUserProfile} = useGetUserProfile();
+
   const fromMe = message.senderId === authUser?._id;
   const chatClassName = fromMe ? "chat-end" : "chat-start";
   const profilePicture = fromMe ? authUser.profilePicture : selectedConversation?.profilePicture
@@ -28,10 +33,20 @@ const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
     setModalImageAlt("");
   };
 
+  const handleAvatarClick = async () => {
+    if(fromMe){
+      setShowProfile()
+    } else {
+      const senderId = typeof message.senderId === "string" ? message.senderId : message.senderId;
+      await getUserProfile(senderId);
+      setShowProfile();
+    }
+  }
+
   return (
     <>
       <div className={`chat ${chatClassName}`}>
-        <div className="chat-image avatar">
+        <div className="chat-image avatar cursor-pointer" onClick={handleAvatarClick}>
           <div className="w-10 rounded-full">
             <img src={profilePicture} alt="user image" />
           </div>

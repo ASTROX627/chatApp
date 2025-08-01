@@ -7,6 +7,7 @@ type StateType = {
   ShowCreateGroupMenu: boolean,
   showSidebar: boolean,
   showMessageContainer: boolean,
+  showProfile: boolean
   theme: ThemeType,
   isActiveChatButton: boolean,
   isActiveSettingButton: boolean,
@@ -15,7 +16,13 @@ type StateType = {
 }
 
 type ActionWithType = {
-  type: "SHOW_CHAT_MENU" | "SHOW_SETTING_MENU" | "SHOW_CREATE_GROUP_MENU" | "SHOW_SIDEBAR" | "SHOW_MESSAGE_CONTAINER" | "RESET_STATE"
+  type: "SHOW_CHAT_MENU" | 
+    "SHOW_SETTING_MENU" | 
+    "SHOW_CREATE_GROUP_MENU" | 
+    "SHOW_SIDEBAR" | 
+    "SHOW_MESSAGE_CONTAINER" | 
+    "SHOW_PROFILE" |
+    "RESET_STATE"
 }
 
 
@@ -43,6 +50,7 @@ const appReducer = (state: StateType, action: ActionType) => {
         ShowCreateGroupMenu: false,
         showSidebar: false,
         showMessageContainer: false,
+        showProfile: false,
         isActiveChatButton: true,
         isActiveSettingButton: false,
         isActiveCreateGroupButton: false
@@ -55,6 +63,7 @@ const appReducer = (state: StateType, action: ActionType) => {
         ShowCreateGroupMenu: false,
         showSidebar: false,
         showMessageContainer: false,
+        showProfile: false,
         isActiveChatButton: true,
         isActiveSettingButton: false,
         isActiveCreateGroupButton: false
@@ -67,6 +76,7 @@ const appReducer = (state: StateType, action: ActionType) => {
         ShowCreateGroupMenu: false,
         showSidebar: false,
         showMessageContainer: false,
+        showProfile: false,
         isActiveChatButton: false,
         isActiveSettingButton: true,
         isActiveCreateGroupButton: false
@@ -79,6 +89,7 @@ const appReducer = (state: StateType, action: ActionType) => {
         ShowCreateGroupMenu: true,
         showSidebar: false,
         showMessageContainer: false,
+        showProfile: false,
         isActiveChatButton: false,
         isActiveSettingButton: false,
         isActiveCreateGroupButton: true
@@ -97,6 +108,19 @@ const appReducer = (state: StateType, action: ActionType) => {
         ShowCreateGroupMenu: false,
         showSidebar: false,
         showMessageContainer: true,
+        showProfile: false
+      }
+    }
+    case "SHOW_PROFILE":{
+      const isLargeScreen = window.innerWidth >= 1024;
+      return {
+        ...state,
+        showChatMenu: !isLargeScreen ? false : state.showChatMenu,
+        showSettingMenu: false,
+        ShowCreateGroupMenu: false,
+        showSidebar: false,
+        showMessageContainer: false,
+        showProfile: true
       }
     }
     case "CHANGE_THEME":

@@ -8,6 +8,7 @@ import Group from "../models/group.model";
 export const getUserProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
     const { userId } = req.params;
+    const currentUserId = req.user?._id;
 
     if (!userId) {
       res.status(400).json({ error: getLocalizedMessage(req, "errors.userIdRequired") });
@@ -25,6 +26,16 @@ export const getUserProfile = async (req: AuthenticatedRequest, res: Response): 
     const userGroups = await Group.find({ "members.user": userId })
       .select("groupName groupImage groupType")
 
+    let commonGroups = [];
+    if(currentUserId && currentUserId.toString() !== userId){
+      commonGroups = await Group.find({
+        $and: [
+          {"members.user": userId},
+          {"members.user": currentUserId}
+        ]
+      }).select("groupName groupImage groupType")
+    }
+
     res.status(200).json({
       message: getLocalizedMessage(req, "success.userProfileRetrieved"),
       user: {
@@ -32,7 +43,8 @@ export const getUserProfile = async (req: AuthenticatedRequest, res: Response): 
         fullName: user.fullName,
         username: user.username,
         profilePicture: user.profilePicture,
-        groups: userGroups
+        groups: userGroups,
+        commonGroups: commonGroups
       }
     });
 
@@ -72,11 +84,6 @@ export const getGroupProfile = async (req: AuthenticatedRequest, res: Response):
       return;
     }
 
-    let userRole = "none";
-    if (isOwner) userRole = "owner";
-    else if (isAdmin) userRole = "admin";
-    else userRole = "member";
-
     res.status(200).json({
       message: getLocalizedMessage(req, "success.groupProfileRetrieved"),
       group: {
@@ -90,7 +97,6 @@ export const getGroupProfile = async (req: AuthenticatedRequest, res: Response):
         isPrivate: group.isPrivate,
         inviteCode: isOwner || isAdmin ? group.inviteCode : undefined,
         settings: isOwner || isAdmin ? group.settings : undefined,
-        role: userRole
       }
     })
 

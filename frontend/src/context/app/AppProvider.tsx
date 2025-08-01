@@ -10,6 +10,7 @@ const initialState = {
   showSettingMenu: false,
   ShowCreateGroupMenu: false,
   showMessageContainer: false,
+  showProfile: false,
   showSidebar: false,
   isActiveChatButton: true,
   isActiveSettingButton: false,
@@ -46,6 +47,10 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
     disatch({type: "SHOW_MESSAGE_CONTAINER"})
   }
 
+  const setShowProfile = () => {
+    disatch({type: "SHOW_PROFILE"})
+  }
+
   const changeTheme = (theme: ThemeType) => {
     disatch({ type: "CHANGE_THEME", payload: theme });
   }
@@ -79,7 +84,7 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [i18n, state.language])
 
   return (
-    <AppContext.Provider value={{ ...state, resetState, setShowChatMenu, setShowSettingMenu, setShowCreateGroupMenu, setShowSidebar, setShowMessageContainer ,changeTheme, changeLanguage }}>
+    <AppContext.Provider value={{ ...state, resetState, setShowChatMenu, setShowSettingMenu, setShowCreateGroupMenu, setShowSidebar, setShowMessageContainer , setShowProfile,changeTheme, changeLanguage }}>
       {children}
     </AppContext.Provider>
   )
