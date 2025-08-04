@@ -22,9 +22,11 @@ export type GroupType = {
       username: string,
       profilePicture: string
     }
+    role: string
   }[],
   isPrivate: boolean,
   inviteCode: string,
+  inviteUrl?: string,
   createdAt: string,
   updatedAt: string
 }
@@ -86,3 +88,4 @@ export type InviteLinkData = {
   inviteCode: string,
   inviteUrl: string
 }
+

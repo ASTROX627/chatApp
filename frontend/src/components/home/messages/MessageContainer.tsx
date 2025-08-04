@@ -25,8 +25,8 @@ const MessageContainer: FC = (): JSX.Element => {
   const [showModal, setShowModal] = useState(false);
 
   const activeChat = selectedConversation || selectedGroup;
-  const isOwner = selectedGroup?.owner._id === authUser?._id;
-  const isAdmin = selectedGroup?.admins.some(admin => admin._id === authUser?._id);
+  const isOwner = selectedGroup?.owner?._id === authUser?._id;
+  const isAdmin = selectedGroup?.admins?.some(admin => admin._id === authUser?._id);
 
 
   useEffect(() => {
@@ -45,6 +45,7 @@ const MessageContainer: FC = (): JSX.Element => {
       await getGroupProfile(selectedGroup._id)
       setShowProfile()
     }
+  
   }
 
   return (

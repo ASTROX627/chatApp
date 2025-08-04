@@ -16,13 +16,13 @@ type StateType = {
 }
 
 type ActionWithType = {
-  type: "SHOW_CHAT_MENU" | 
-    "SHOW_SETTING_MENU" | 
-    "SHOW_CREATE_GROUP_MENU" | 
-    "SHOW_SIDEBAR" | 
-    "SHOW_MESSAGE_CONTAINER" | 
-    "SHOW_PROFILE" |
-    "RESET_STATE"
+  type: "SHOW_CHAT_MENU" |
+  "SHOW_SETTING_MENU" |
+  "SHOW_CREATE_GROUP_MENU" |
+  "SHOW_SIDEBAR" |
+  "SHOW_MESSAGE_CONTAINER" |
+  "SHOW_PROFILE" |
+  "RESET_STATE"
 }
 
 
@@ -100,6 +100,8 @@ const appReducer = (state: StateType, action: ActionType) => {
         showSidebar: !state.showSidebar
       }
     case "SHOW_MESSAGE_CONTAINER": {
+      console.log("message container trigger");
+      
       const isLargeScreen = window.innerWidth >= 1024;
       return {
         ...state,
@@ -108,10 +110,11 @@ const appReducer = (state: StateType, action: ActionType) => {
         ShowCreateGroupMenu: false,
         showSidebar: false,
         showMessageContainer: true,
-        showProfile: false
+        showProfile: false,
       }
     }
-    case "SHOW_PROFILE":{
+    case "SHOW_PROFILE": {
+      console.log("profile trigger");
       const isLargeScreen = window.innerWidth >= 1024;
       return {
         ...state,
@@ -119,8 +122,8 @@ const appReducer = (state: StateType, action: ActionType) => {
         showSettingMenu: false,
         ShowCreateGroupMenu: false,
         showSidebar: false,
-        showMessageContainer: false,
-        showProfile: true
+        showMessageContainer: false, 
+        showProfile: true,
       }
     }
     case "CHANGE_THEME":

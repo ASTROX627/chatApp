@@ -16,9 +16,11 @@ const useGetUserGroups = () => {
       try {
         const response = await httpService.get("/group/user");
         const data: GroupType[] = response.data;
+        
         if(data){
           setUserGroups(data);
         }
+        
       } catch (error) {
         if (error instanceof AxiosError) {
           toast.error(error.message)

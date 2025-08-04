@@ -3,7 +3,6 @@ import { useForm, type SubmitHandler } from "react-hook-form"
 import ActionButtons from "./ActionsButton"
 import { useTranslation } from "react-i18next"
 import { useTheme } from "../../../hooks/useTheme"
-import useConversation from "../../../store/useConversation"
 import { useJoinGroup } from "../../../hooks/usejoinGroup"
 import { useMessagePermissions } from "../../../hooks/useMessagePermissions"
 
@@ -20,8 +19,7 @@ type MessageInputFormProps = {
 
 const MessageInputForm: FC<MessageInputFormProps> = ({ onSubmit, canSendMessage, loading, onFileSelect }): JSX.Element => {
   const { register, handleSubmit, reset } = useForm<MessageInputFormValue>();
-  const { isMember } = useMessagePermissions();
-  const { selectedGroup } = useConversation();
+  const { isMember, selectedGroup, isGroupChat } = useMessagePermissions();
   const { joinGroup, loading: joinLoading } = useJoinGroup();
   const { t } = useTranslation();
   const { classes } = useTheme();
@@ -46,6 +44,32 @@ const MessageInputForm: FC<MessageInputFormProps> = ({ onSubmit, canSendMessage,
       await joinGroup(selectedGroup._id)
     }
   }
+  if (!isGroupChat) {
+    return (
+      <form className="w-full" onSubmit={handleSubmit(handleFormSubmit)}>
+        <div className="w-full relative">
+          <input
+            {...register("message")}
+            type="text"
+            className="border text-sm block w-full bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 p-2.5"
+            placeholder={t("home.sendMessage")}
+          />
+          <ActionButtons
+            onFileClick={handleFileClick}
+            canSendMessage={true}
+            loading={loading}
+          />
+          <input
+            ref={fileInputRef}
+            type="file"
+            onChange={handleFileInputChange}
+            className="hidden"
+            accept="image/*,.pdf,.doc,.docx,.txt,.zip"
+          />
+        </div>
+      </form>
+    );
+  }
 
   return (
     <form className="w-full" onSubmit={handleSubmit(handleFormSubmit)}>
@@ -55,8 +79,7 @@ const MessageInputForm: FC<MessageInputFormProps> = ({ onSubmit, canSendMessage,
             <input
               {...register("message")}
               type="text"
-              disabled={!canSendMessage}
-              className="border text-sm block w-full bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 p-2.5 disabled:bg-gray-800 disabled:cursor-not-allowed"
+              className="border text-sm block w-full bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 p-2.5"
               placeholder={t("home.sendMessage")}
             />
             <ActionButtons
@@ -68,12 +91,10 @@ const MessageInputForm: FC<MessageInputFormProps> = ({ onSubmit, canSendMessage,
               ref={fileInputRef}
               type="file"
               onChange={handleFileInputChange}
-              disabled={!canSendMessage}
               className="hidden"
               accept="image/*,.pdf,.doc,.docx,.txt,.zip"
             />
           </div>
-
         ) : (
           !isMember ? (
             <button
@@ -85,7 +106,6 @@ const MessageInputForm: FC<MessageInputFormProps> = ({ onSubmit, canSendMessage,
               ) : (
                 t("home.join")
               )}
-
             </button>
           ) : (
             <div className="w-full relative">
@@ -97,7 +117,7 @@ const MessageInputForm: FC<MessageInputFormProps> = ({ onSubmit, canSendMessage,
               />
               <ActionButtons
                 onFileClick={handleFileClick}
-                canSendMessage={canSendMessage}
+                canSendMessage={false}
                 loading={loading}
               />
             </div>

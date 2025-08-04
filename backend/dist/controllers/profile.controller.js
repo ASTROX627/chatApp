@@ -31,7 +31,7 @@ const getUserProfile = async (req, res) => {
                     { "members.user": userId },
                     { "members.user": currentUserId }
                 ]
-            }).select("groupName groupImage groupType");
+            }).select("groupName groupImage groupType members admins owner");
         }
         res.status(200).json({
             message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.userProfileRetrieved"),
@@ -75,6 +75,17 @@ const getGroupProfile = async (req, res) => {
             res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.accessDenied") });
             return;
         }
+        let inviteCode = undefined;
+        let members = undefined;
+        let inviteUrl = undefined;
+        if (!group.isPrivate) {
+            inviteCode = group.inviteCode;
+            inviteUrl = `${process.env.CLIENT_URL}/invite/${group.inviteCode}`;
+        }
+        members = group.members.map(member => ({
+            user: member.user,
+            role: member.role
+        }));
         res.status(200).json({
             message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.groupProfileRetrieved"),
             group: {
@@ -84,9 +95,10 @@ const getGroupProfile = async (req, res) => {
                 groupType: group.groupType,
                 owner: group.owner,
                 admins: group.admins,
-                members: group.members,
+                members: members,
                 isPrivate: group.isPrivate,
-                inviteCode: isOwner || isAdmin ? group.inviteCode : undefined,
+                inviteCode: inviteCode,
+                inviteUrl: inviteUrl,
                 settings: isOwner || isAdmin ? group.settings : undefined,
             }
         });

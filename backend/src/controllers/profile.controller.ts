@@ -27,13 +27,14 @@ export const getUserProfile = async (req: AuthenticatedRequest, res: Response): 
       .select("groupName groupImage groupType")
 
     let commonGroups = [];
-    if(currentUserId && currentUserId.toString() !== userId){
+    if (currentUserId && currentUserId.toString() !== userId) {
       commonGroups = await Group.find({
         $and: [
-          {"members.user": userId},
-          {"members.user": currentUserId}
+          { "members.user": userId },
+          { "members.user": currentUserId }
         ]
-      }).select("groupName groupImage groupType")
+      }).select("groupName groupImage groupType members admins owner")
+
     }
 
     res.status(200).json({
@@ -84,6 +85,20 @@ export const getGroupProfile = async (req: AuthenticatedRequest, res: Response):
       return;
     }
 
+    let inviteCode = undefined;
+    let members = undefined;
+    let inviteUrl = undefined
+
+    if (!group.isPrivate) {
+      inviteCode = group.inviteCode;
+      inviteUrl = `${process.env.CLIENT_URL}/invite/${group.inviteCode}`;
+    }
+
+    members = group.members.map(member => ({
+      user: member.user,
+      role: member.role
+    }))
+
     res.status(200).json({
       message: getLocalizedMessage(req, "success.groupProfileRetrieved"),
       group: {
@@ -93,9 +108,10 @@ export const getGroupProfile = async (req: AuthenticatedRequest, res: Response):
         groupType: group.groupType,
         owner: group.owner,
         admins: group.admins,
-        members: group.members,
+        members: members,
         isPrivate: group.isPrivate,
-        inviteCode: isOwner || isAdmin ? group.inviteCode : undefined,
+        inviteCode: inviteCode,
+        inviteUrl: inviteUrl,
         settings: isOwner || isAdmin ? group.settings : undefined,
       }
     })

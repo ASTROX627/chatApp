@@ -14,7 +14,7 @@ type ConversationProps = {
   handleConversation?: () => void
 }
 
-const Conversation: FC<ConversationProps> = ({ conversation, emoji, group, lastIndex, handleInvite,  handleConversation }) => {
+const Conversation: FC<ConversationProps> = ({ conversation, emoji, group, lastIndex, handleInvite, handleConversation }) => {
   const { selectedConversation, selectedGroup } = useConversation();
   const { classes } = useTheme();
   const { t } = useTranslation();
@@ -22,10 +22,10 @@ const Conversation: FC<ConversationProps> = ({ conversation, emoji, group, lastI
   const isSelected = conversation ? selectedConversation?._id === conversation._id : selectedGroup?._id === group?._id;
 
   const handleClick = () => {
-    if(handleConversation){
+    if (handleConversation) {
       handleConversation();
     }
-    if(handleInvite){
+    if (handleInvite) {
       handleInvite();
     }
   }
@@ -65,7 +65,7 @@ const Conversation: FC<ConversationProps> = ({ conversation, emoji, group, lastI
             </div>
             <span className="text-xl">{emoji}</span>
           </div>
-          {group && (
+          {group && group.members && Array.isArray(group.members) && (
             <p className="text-xs text-gray-400">
               {group.members.length} {t("home.members")}
             </p>

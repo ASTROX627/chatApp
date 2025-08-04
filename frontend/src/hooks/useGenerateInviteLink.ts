@@ -37,5 +37,5 @@ export const useGenerateInviteLink = () => {
     )
   }
 
-  return {generateInviteLink}
+  return {generateInviteLink, inviteUrl}
 }
