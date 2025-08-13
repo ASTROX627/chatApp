@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/app/appContext";
 import { useAuthContext } from "../context/auth/authContext";
 import { httpService } from "../core/httpService";
-import type { AuthRequestData, AuthResponse, LoginFromValue, RegisterFormValue } from "../types/auth";
+import type { AuthRequestData, AuthResponse, LoginFormValue, RegisterFormValue } from "../types/auth";
 
 
 
@@ -35,7 +35,7 @@ const useAuth = () => {
             localStorage.setItem("chat-user", JSON.stringify(response.data.user));
           }
 
-          setTimeout(() => navigate(redirectPath, { replace: true }), 3000);
+          setTimeout(() => navigate(redirectPath, { replace: true }), 1000);
           return t(successMessage);
         }
         return t("auth.networkError");
@@ -69,7 +69,7 @@ const useAuth = () => {
   );
 
   const handleLogin = useCallback(
-    async (data: LoginFromValue): Promise<void> => {
+    async (data: LoginFormValue): Promise<void> => {
       toast.promise(
         handleAuthRequest(
           "/auth/login",

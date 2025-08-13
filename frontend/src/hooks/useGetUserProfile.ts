@@ -18,7 +18,7 @@ export const useGetUserProfile = () => {
       if (data.error) {
         throw new Error(data.error);
       }
-
+      
       setSelectedConversation(data.user);
       return data.user;
 

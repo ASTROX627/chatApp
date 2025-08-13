@@ -2,7 +2,7 @@ import Messages from "./Messages"
 import NoChatSelected from "./NoChatSelected";
 import { useAppContext } from "../../../context/app/appContext";
 import { ArrowLeft, ArrowRight, Hash, Lock, UserPlus, Users } from "lucide-react";
-import { useEffect, useState, type FC, type JSX } from "react";
+import { useEffect, useState, type FC, type JSX, type MouseEvent } from "react";
 import useConversation from "../../../store/useConversation";
 import { useTranslation } from "react-i18next";
 import MessageInput from "./MessageInput";
@@ -13,8 +13,8 @@ import { useGetUserProfile } from "../../../hooks/useGetUserProfile";
 import { useGetGroupProfile } from "../../../hooks/useGetGroupProfile";
 
 const MessageContainer: FC = (): JSX.Element => {
-  const { selectedConversation, selectedGroup } = useConversation();
-  const { showMessageContainer, setShowChatMenu, language, setShowProfile } = useAppContext();
+  const { selectedConversation, selectedGroup, setSelectedGroup } = useConversation();
+  const { showMessageContainer, setShowChatMenu, language, setShowProfile, pushToHistory } = useAppContext();
   const {getUserProfile} = useGetUserProfile();
   const {getGroupProfile} = useGetGroupProfile();
   const { authUser } = useAuthContext();
@@ -37,13 +37,20 @@ const MessageContainer: FC = (): JSX.Element => {
     }
   }, [isAdmin, isOwner])
 
-  const handleAvatarClick = async () => {
+  const handleAvatarClick = async (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if(selectedConversation){
-      await getUserProfile(selectedConversation._id)
-      setShowProfile();
+      pushToHistory("chat");
+      await getUserProfile(selectedConversation._id);
+      setTimeout(() => setShowProfile(), 50);
+
     } else if (selectedGroup){
-      await getGroupProfile(selectedGroup._id)
-      setShowProfile()
+      pushToHistory("groupChat");
+      const currentGroup = selectedGroup;
+      await getGroupProfile(selectedGroup._id);
+      setSelectedGroup(currentGroup)
+      setTimeout(() => setShowProfile(), 50);
     }
   
   }

@@ -16,7 +16,7 @@ export type MessageContentProps = {
 const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
   const { authUser } = useAuthContext();
   const { selectedConversation } = useConversation();
-  const {setShowProfile} = useAppContext();
+  const {setShowProfile, pushToHistory} = useAppContext();
   const {getUserProfile} = useGetUserProfile();
 
   const fromMe = message.senderId === authUser?._id;
@@ -34,6 +34,7 @@ const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
   };
 
   const handleAvatarClick = async () => {
+    pushToHistory("chat");
     if(fromMe){
       setShowProfile()
     } else {

@@ -213,7 +213,7 @@ const joinGroup = async (req, res) => {
             return;
         }
         if (!userId) {
-            res.status(401).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "erros.unauthorized") });
+            res.status(401).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.unauthorized") });
             return;
         }
         const group = await group_model_1.default.findById(groupId);

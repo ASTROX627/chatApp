@@ -3,10 +3,11 @@ import type { FieldError, UseFormRegisterReturn } from "react-hook-form"
 import { useTheme } from "../../../hooks/useTheme"
 import { useTranslation } from "react-i18next"
 import { useAppContext } from "../../../context/app/appContext"
+import { twMerge } from "tailwind-merge"
 
 type SelectGenderProps = {
   register: UseFormRegisterReturn
-  genders: string[]
+  genders: readonly string[]
   error: FieldError | undefined
 }
 
@@ -25,7 +26,7 @@ const SelectGender: FC<SelectGenderProps> = ({ register, genders, error }) => {
                 {...register}
                 type="radio"
                 value={gender}
-                className={`radio radio-sm lg:radio-md ${classes.secondary.checked.bg} ${classes.primary.checked.text} transition-all duration-200`}
+                className={twMerge("radio radio-sm lg:radio-md transition-all duration-200", classes.secondary.checked.bg, classes.primary.checked.text)}
               />
               {
                 language === "en" ? (

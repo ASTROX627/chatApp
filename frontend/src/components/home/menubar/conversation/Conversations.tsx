@@ -26,7 +26,7 @@ const Conversations: FC<ConversationsProps> = ({ searchTerm, selectedCategory })
     if (conversation) {
       if ("username" in conversation) {
         setSelectedConversation(conversation as ConversationType)
-      } else {
+      } else if("groupName" in conversation) {
         setSelectedGroup(conversation as GroupType)
       }
     }

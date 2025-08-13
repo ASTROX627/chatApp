@@ -16,10 +16,11 @@ export type GroupMessageContentProps = {
 
 const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Element => {
   const { authUser } = useAuthContext();
-  const { selectedGroup } = useConversation();
-  const {setShowProfile} = useAppContext();
-  const {getUserProfile} = useGetUserProfile();
-  const {getGroupProfile} = useGetGroupProfile();
+  const { pushToHistory } = useAppContext();
+  const { selectedGroup, setPreviousGroup, setNavigationContext } = useConversation();
+  const { setShowProfile } = useAppContext();
+  const { getUserProfile } = useGetUserProfile();
+  const { getGroupProfile } = useGetGroupProfile();
 
   const fromMe = message.senderId._id === authUser?._id;
   const chatClassName = fromMe ? "chat-end" : "chat-start";
@@ -37,15 +38,23 @@ const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Ele
 
   const handleAvatarClick = async () => {
     if(selectedGroup?.groupType === "channel"){
-      await getGroupProfile(selectedGroup._id)
+      pushToHistory("groupChat");
+      await getGroupProfile(selectedGroup._id);
       setShowProfile();
-    }else if(fromMe){
+    } else if(fromMe){
+      pushToHistory("groupChat");
       setShowProfile();
     } else {
-      await getUserProfile(message.senderId._id)
-      setShowProfile()
+      if(selectedGroup){
+        setPreviousGroup(selectedGroup);
+        setNavigationContext("groupProfile");
+      }
+
+      pushToHistory("groupProfile");
+      await getUserProfile(message.senderId._id);
+      setShowProfile();
     }
-  }
+  };
 
   const messageForBubble = {
     ...message,

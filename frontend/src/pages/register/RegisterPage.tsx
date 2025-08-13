@@ -1,15 +1,16 @@
-import { type FC, type JSX } from "react"
+import { type FC } from "react"
 import RegisterForm from "../../components/auth/register/RegisterForm"
 import { useTranslation } from "react-i18next"
 import { useTheme } from "../../hooks/useTheme";
+import {twMerge} from "tailwind-merge"
 
-const RegisterPage: FC = (): JSX.Element => {
+const RegisterPage: FC = () => {
   const { t } = useTranslation();
   const { classes } = useTheme();
 
   return (
     <div className="bg-gray-400/10 backdrop-blur-lg p-6 flex flex-col min-w-48 md:min-w-96 items-center justify-center rounded-lg shadow-lg">
-      <h1 className="text-white text-xl md:text-2xl lg:text-3xl font-semibold mb-1 md:mb-3">{t("auth.register")} <span className={`${classes.primary.text}`}>{t("auth.chatApp")}</span></h1>
+      <h1 className="text-white text-xl md:text-2xl lg:text-3xl font-semibold mb-1 md:mb-3">{t("auth.register")} <span className={twMerge(classes.primary.text)}>{t("auth.chatApp")}</span></h1>
       <RegisterForm />
     </div>
   )

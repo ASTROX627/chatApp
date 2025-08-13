@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, type FC, type JSX } from "react";
-import ConversationMenuButton from "./ConversationMenuButton";
-import CreateGroupMenuButton from "./CreateGroupMenuButton";
 import Logout from "./Logout";
-import SettingMenuButton from "./SettingMenuButton";
 import { useAppContext } from "../../../context/app/appContext";
+import MenuButton from "./MenuButton";
+import { MessageCircle, Pencil, Settings } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Sidebar: FC = (): JSX.Element => {
-  const { showSidebar, setShowSidebar } = useAppContext();
+  const { showSidebar, setShowSidebar, setShowChatMenu, setShowCreateGroupMenu, setShowSettingMenu, isActiveChatButton, isActiveCreateGroupButton, isActiveSettingButton } = useAppContext();
+  const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
 
   const checkIfClickOutside = useCallback((e: MouseEvent) => {
@@ -33,9 +34,24 @@ const Sidebar: FC = (): JSX.Element => {
       <div className={`flex flex-col w-full transition-all duration-300 ease-in-out 
         ${showSidebar ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"}
         lg:opacity-100 lg:translate-x-0 lg:w-auto`}>
-        <ConversationMenuButton />
-        <SettingMenuButton />
-        <CreateGroupMenuButton />
+        <MenuButton
+          onClick={setShowChatMenu}
+          isActive={isActiveChatButton}
+          icon={<MessageCircle size={30} className="lg:size-20" />}
+          label={t("home.chat")}
+        />
+        <MenuButton
+          onClick={setShowSettingMenu}
+          isActive={isActiveSettingButton}
+          icon={<Settings size={30} className="lg:size-20" />}
+          label={t("home.settings")}
+        />
+        <MenuButton
+          onClick={setShowCreateGroupMenu}
+          isActive={isActiveCreateGroupButton}
+          icon={<Pencil size={30} className="lg:size-20" />}
+          label={t("home.createGroup")}
+        />
       </div>
       <div className={`transition-all duration-300 ease-in-out 
         ${showSidebar ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"}

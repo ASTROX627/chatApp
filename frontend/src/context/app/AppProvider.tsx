@@ -1,26 +1,29 @@
 import { useEffect, useReducer, type FC, type PropsWithChildren } from "react";
-import appReducer, { type LanguageType, type ThemeType } from "./appReducer";
+import appReducer, { type LanguageType, type NavigationPageType, type ThemeType } from "./appReducer";
 import { AppContext } from "./appContext";
 import { THEME_CONFIGS } from "../../configs/theme/themConfig";
 import { getColorValues } from "../../configs/theme/getColorValues";
 import { useTranslation } from "react-i18next";
+import useConversation from "../../store/useConversation";
 
 const initialState = {
   showChatMenu: true,
   showSettingMenu: false,
-  ShowCreateGroupMenu: false,
-  showMessageContainer: false,
-  showProfile: false,
-  showSidebar: false,
+  showCreateGroupMenu: false,
   isActiveChatButton: true,
   isActiveSettingButton: false,
   isActiveCreateGroupButton: false,
+  showMessageContainer: false,
+  showProfile: false,
+  showSidebar: false,
   theme: (localStorage.getItem("theme") as ThemeType) || "sky",
-  language: (localStorage.getItem("language") as LanguageType) || "en"
+  language: (localStorage.getItem("language") as LanguageType) || "en",
+  navigationHistory: []
 }
 
 export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, disatch] = useReducer(appReducer, initialState);
+  const {clearSelection, restorePreviousGroup} = useConversation();
   const { i18n } = useTranslation();
 
   const resetState = () => {
@@ -28,15 +31,15 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   }
 
   const setShowChatMenu = () => {
-    disatch({ type: "SHOW_CHAT_MENU" })
+    disatch({type: "SHOW_CHAT_MENU"})
   }
 
   const setShowSettingMenu = () => {
-    disatch({ type: "SHOW_SETTING_MENU" })
+    disatch({type: "SHOW_SETTING_MENU"})
   }
 
   const setShowCreateGroupMenu = () => {
-    disatch({ type: "SHOW_CREATE_GROUP_MENU" })
+    disatch({type: "SHOW_CREATE_GROUP_MENU"})
   }
 
   const setShowSidebar = () => {
@@ -57,6 +60,23 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const changeLanguage = (language: LanguageType) => {
     disatch({ type: "CHANGE_LANGUAGE", payload: language })
+  }
+
+  const pushToHistory = (page: NavigationPageType) => {
+    disatch({type: "PUSH_TO_HISTORY", payload: page})
+  }
+
+  const goBack = () => {
+    const currentHistory = state.navigationHistory;
+    const currentPage = currentHistory[currentHistory.length - 1];
+    const previousPage = currentHistory[currentHistory.length - 2];
+
+    if(currentPage === "groupProfile" && previousPage === "groupChat"){
+      clearSelection();
+      restorePreviousGroup();
+    }
+
+    disatch({type: "GO_BACK"});
   }
 
   useEffect(() => {
@@ -84,7 +104,7 @@ export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [i18n, state.language])
 
   return (
-    <AppContext.Provider value={{ ...state, resetState, setShowChatMenu, setShowSettingMenu, setShowCreateGroupMenu, setShowSidebar, setShowMessageContainer , setShowProfile,changeTheme, changeLanguage }}>
+    <AppContext.Provider value={{ ...state, resetState, setShowChatMenu, setShowSettingMenu, setShowCreateGroupMenu, setShowSidebar, setShowMessageContainer , setShowProfile,changeTheme, changeLanguage, pushToHistory, goBack }}>
       {children}
     </AppContext.Provider>
   )

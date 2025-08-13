@@ -1,4 +1,4 @@
-import { Copy, Crown, Hash, MessageSquareText, Shield, User, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, Copy, Crown, Hash, MessageSquareText, Shield, User, Users } from "lucide-react";
 import { useTheme } from "../../../hooks/useTheme";
 import useConversation from "../../../store/useConversation"
 import type { ConversationType, GroupType } from "../../../types/conversations";
@@ -11,8 +11,9 @@ import { useGetUserProfile } from "../../../hooks/useGetUserProfile";
 const ProfileView: FC = () => {
   const { selectedConversation, setSelectedConversation, selectedGroup, setSelectedGroup } = useConversation();
   const { classes } = useTheme();
-  const { setShowMessageContainer, setShowProfile } = useAppContext();
+  const { setShowMessageContainer, setShowProfile, language, goBack, pushToHistory } = useAppContext();
   const { getUserProfile } = useGetUserProfile();
+  const {setPreviousGroup, setNavigationContext} = useConversation();
   const [copiedText, setCopiedText] = useState("");
 
   const commonGroups = selectedConversation?.commonGroups || [];
@@ -29,9 +30,16 @@ const ProfileView: FC = () => {
     setShowMessageContainer();
   }, [setSelectedGroup, setShowMessageContainer]);
 
+  
   const handelUserClick = async (userId: string) => {
+    if(selectedGroup){
+      setPreviousGroup(selectedGroup);
+      setNavigationContext("groupProfile");
+    }
+
     await getUserProfile(userId);
-    setShowProfile()
+    pushToHistory("groupProfile");
+    setShowProfile();
   }
 
 
@@ -83,6 +91,14 @@ const ProfileView: FC = () => {
   return (
     <div className={`w-full flex flex-col ${classes.secondary.bg} h-full overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800 relative`}>
       <div className="w-full my-2 border-b-2 border-gray-600">
+        <button 
+          onClick={goBack}
+          className="m-2 cursor-pointer absolute">
+        {language === "en"? 
+          <ArrowLeft className={`${classes.primary.text}`} size={32}/> :
+          <ArrowRight className={`${classes.primary.text}`} size={32}/>
+        }
+        </button>
         <img className="w-1/3 mx-auto my-2" src={selectedConversation?.profilePicture || selectedGroup?.groupImage} alt="profile picture" />
       </div>
       {

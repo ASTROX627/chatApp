@@ -6,7 +6,7 @@ export type RegisterFormValue = {
   gender: "male" | "female"
 }
 
-export type LoginFromValue = {
+export type LoginFormValue = {
   username: string,
   password: string
 }

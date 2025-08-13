@@ -237,7 +237,7 @@ export const joinGroup = async (req: AuthenticatedRequest, res: Response): Promi
     }
 
     if (!userId) {
-      res.status(401).json({ error: getLocalizedMessage(req, "erros.unauthorized") });
+      res.status(401).json({ error: getLocalizedMessage(req, "errors.unauthorized") });
       return;
     }
 

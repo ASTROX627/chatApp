@@ -6,7 +6,7 @@ import { useAppContext } from "../../context/app/appContext"
 import ProfileView from "../../components/home/profile/ProfileView"
 
 
-const Home:FC = ():JSX.Element => {
+const Home: FC = (): JSX.Element => {
   const { showSidebar, setShowSidebar, showProfile } = useAppContext();
 
   return (
@@ -16,9 +16,9 @@ const Home:FC = ():JSX.Element => {
         <div onClick={setShowSidebar} className="fixed inset-0 bg-black/20 z-20" />
       )}
       <Menubar />
-      {showProfile? <ProfileView/> : <MessageContainer/>}
+      {showProfile ? <ProfileView /> : <MessageContainer />}
     </div>
   )
 }
 
-export default Home
+export default Home;
