@@ -384,3 +384,4 @@ const getPrivategroupByInvite = async (req, res) => {
     }
 };
 exports.getPrivategroupByInvite = getPrivategroupByInvite;
+// LEAVE_GROUP_CONTROLLER

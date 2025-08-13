@@ -435,3 +435,52 @@ export const getPrivategroupByInvite = async (req: AuthenticatedRequest, res: Re
     res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
   }
 }
+
+// LEAVE_GROUP_CONTROLLER
+export const leaveGroup = async(req: AuthenticatedRequest, res: Response): Promise<void> => {
+  try {
+    const {groupId} = req.params;
+    const userId = req.user?._id;
+
+    if(!groupId){
+      res.status(404).json({error: getLocalizedMessage(req, "errors.groupRequired")});
+      return;
+    }
+
+    if(!userId){
+      res.status(401).json({error: getLocalizedMessage(req, "errors.unauthorized")});
+      return;
+    }
+
+    const group = await Group.findById(groupId);
+
+    if(!group){
+      res.status(404).json({error: getLocalizedMessage(req, "errors.groupNotFound")});
+      return;
+    }
+
+    if(group.owner._id.toString() === userId.toString()){
+      res.status(403).json({error: getLocalizedMessage(req, "errors.canNotLeave")});
+      return;
+    }
+
+    const memberIndex = group.members.findIndex(member => member.user?.id.toString() === userId.toString());
+
+    if(memberIndex === -1){
+      res.status(400).json({error: getLocalizedMessage(req, "errors.notMember")});
+      return;
+    }
+
+    group.members.splice(memberIndex, 1);
+
+    group.admins = group.admins.filter(admin => admin._id.toString() !== userId.toString());
+
+    await group.save();
+
+    res.status(200).json({message: getLocalizedMessage(req, "success.leaveSuccessful")})
+
+  } catch (error) {
+    console.log("Error in leave group controller");
+    res.status(500).json({error: getLocalizedMessage(req, "errors.internalServerError")});
+  }
+}

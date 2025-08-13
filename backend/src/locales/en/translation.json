@@ -25,7 +25,8 @@
     "inviteCodeRequired": "Invite code is required",
     "userIdRequired": "User id is required",
     "groupIdRequired": "Group id is required",
-    "accessDenied": "You are not able to access to profile"
+    "accessDenied": "You are not able to access to profile",
+    "canNotLeave": "Owner can not leave the group"
   },
   "success": {
     "registrationSuccessful": "Registration successful",
@@ -38,6 +39,7 @@
     "inviteSuccessful": "send invite successful",
     "groupFound": "Group found",
     "userProfileRetrieved": "Profile of this user successfully retrieved",
-    "groupProfileRetrieved": "Profile if this group successfully retrieved"
+    "groupProfileRetrieved": "Profile if this group successfully retrieved",
+    "leaveSuccessfull": "Leaving the group was successful."
   }
 }
