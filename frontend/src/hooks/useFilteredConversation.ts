@@ -33,37 +33,42 @@ export const useFilteredConversation = ({ searchTerm, selectedCategory }: UseCon
   };
 
   const userMemberConversations = useMemo<AllConversations[]>(() => {
-    const conversationsWithEmojis = conversations.map((conversation: ConversationType) => ({
-      ...conversation,
-      emoji: getStableEmoji(conversation._id, "user"),
-      type: "user" as const
-    }));
+    const conversationsWithEmojis = conversations
+      .filter((conversation: ConversationType) => conversation && conversation._id)
+      .map((conversation: ConversationType) => ({
+        ...conversation,
+        emoji: getStableEmoji(conversation._id, "user"),
+        type: "user" as const
+      }));
 
-    const userGroupsWithEmojis = userGroups.map((group: GroupType) => ({
-      ...group,
-      emoji: getStableEmoji(group._id, "group"),
-      type: "group" as const
-    }));
+    const userGroupsWithEmojis = userGroups
+      .filter((group: GroupType) => group && group._id)
+      .map((group: GroupType) => ({
+        ...group,
+        emoji: getStableEmoji(group._id, "group"),
+        type: "group" as const
+      }));
 
     return [...conversationsWithEmojis, ...userGroupsWithEmojis];
   }, [conversations, userGroups]);
 
-
   const publicGroupsForSearch = useMemo<AllConversations[]>(() => {
-    const nonMemberPublicGroups = publicGroups.filter(publicGroup => !userGroups.some(userGroup => userGroup._id === publicGroup._id));
+    const safePublicGroups = publicGroups.filter((publicGroup) =>
+      publicGroup &&
+      publicGroup._id &&
+      !userGroups.some(userGroup => userGroup && userGroup._id === publicGroup._id)
+    );
 
-    return nonMemberPublicGroups.map((group: GroupType) => ({
+    return safePublicGroups.map((group: GroupType) => ({
       ...group,
       emoji: getStableEmoji(group._id, "public-group"),
       type: "group" as const
     }));
   }, [publicGroups, userGroups]);
 
-
   const allConversationsForSearch = useMemo<AllConversations[]>(() => {
     return [...userMemberConversations, ...publicGroupsForSearch];
   }, [userMemberConversations, publicGroupsForSearch]);
-
 
   const filterByCategory = useMemo(() => {
     if (selectedCategory === CATEGORY_TYPES.ALL) {
@@ -71,6 +76,8 @@ export const useFilteredConversation = ({ searchTerm, selectedCategory }: UseCon
     }
 
     return userMemberConversations.filter((conversation: AllConversations) => {
+      if (!conversation) return false;
+
       switch (selectedCategory) {
         case CATEGORY_TYPES.PRIVATE:
           return conversation.type === "user";
@@ -94,11 +101,13 @@ export const useFilteredConversation = ({ searchTerm, selectedCategory }: UseCon
     const lowerSearchTerm = trimmedSearchTerm.toLowerCase();
 
     return allConversationsForSearch.filter((item: AllConversations) => {
+      if (!item) return false;
+
       const name = item.type === "user"
         ? (item as ConversationType).username
         : (item as GroupType).groupName;
 
-      return name.toLowerCase().includes(lowerSearchTerm);
+      return name && name.toLowerCase().includes(lowerSearchTerm);
     });
   }, [allConversationsForSearch, searchTerm, userMemberConversations]);
 

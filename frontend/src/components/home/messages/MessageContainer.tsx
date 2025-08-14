@@ -1,64 +1,71 @@
 import Messages from "./Messages"
 import NoChatSelected from "./NoChatSelected";
 import { useAppContext } from "../../../context/app/appContext";
-import { ArrowLeft, ArrowRight, Hash, Lock, UserPlus, Users } from "lucide-react";
-import { useEffect, useState, type FC, type JSX, type MouseEvent } from "react";
+import { ArrowLeft, ArrowRight, EllipsisVertical, Hash, Lock, Users } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, type FC, type JSX, type MouseEvent } from "react";
 import useConversation from "../../../store/useConversation";
 import { useTranslation } from "react-i18next";
 import MessageInput from "./MessageInput";
 import { useTheme } from "../../../hooks/useTheme";
-import { useAuthContext } from "../../../context/auth/authContext";
-import InviteModal from "../../modal/InviteModal";
 import { useGetUserProfile } from "../../../hooks/useGetUserProfile";
 import { useGetGroupProfile } from "../../../hooks/useGetGroupProfile";
+import { twMerge } from "tailwind-merge";
+import OptionsDropdown from "./OptionsDropdown";
 
 const MessageContainer: FC = (): JSX.Element => {
   const { selectedConversation, selectedGroup, setSelectedGroup } = useConversation();
   const { showMessageContainer, setShowChatMenu, language, setShowProfile, pushToHistory } = useAppContext();
-  const {getUserProfile} = useGetUserProfile();
-  const {getGroupProfile} = useGetGroupProfile();
-  const { authUser } = useAuthContext();
+  const { getUserProfile } = useGetUserProfile();
+  const { getGroupProfile } = useGetGroupProfile();
   const { t } = useTranslation();
   const { classes } = useTheme();
 
-  const [canSendInvite, setCanSendInvite] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const optionRef = useRef<HTMLDivElement>(null);
 
   const activeChat = selectedConversation || selectedGroup;
-  const isOwner = selectedGroup?.owner?._id === authUser?._id;
-  const isAdmin = selectedGroup?.admins?.some(admin => admin._id === authUser?._id);
 
+
+  const checkIfClickOutside = useCallback((e: globalThis.MouseEvent) => {
+    if (showOptions && optionRef.current && !optionRef.current.contains(e.target as Node)) {
+      const optionsButton = (e.target as Element).closest("button");
+      if (optionsButton && optionsButton.querySelector("svg")) {
+        return
+      }
+      setShowOptions(false);
+    }
+  }, [showOptions, setShowOptions]);
 
   useEffect(() => {
-    if (isAdmin || isOwner) {
-      setCanSendInvite(true)
-    } else {
-      setCanSendInvite(false)
+    if (showOptions) {
+      document.addEventListener("mousedown", checkIfClickOutside);
+      return () => document.removeEventListener("mousedown", checkIfClickOutside);
     }
-  }, [isAdmin, isOwner])
+  }, [showOptions, checkIfClickOutside]);
 
   const handleAvatarClick = async (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if(selectedConversation){
+    if (selectedConversation) {
       pushToHistory("chat");
       await getUserProfile(selectedConversation._id);
       setTimeout(() => setShowProfile(), 50);
 
-    } else if (selectedGroup){
+    } else if (selectedGroup) {
       pushToHistory("groupChat");
       const currentGroup = selectedGroup;
       await getGroupProfile(selectedGroup._id);
       setSelectedGroup(currentGroup)
       setTimeout(() => setShowProfile(), 50);
     }
-  
+
   }
 
   return (
-    <div className={`h-full overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800 border-gray-500 rounded-e-md
-      ${showMessageContainer ? "w-full" : "w-0"}
-      lg:w-full lg:block flex`}>
+    <div className={twMerge(
+      "relative h-full overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800 border-gray-500 rounded-e-md lg:w-full lg:block flex",
+      showMessageContainer ? "w-full" : "w-0",
+    )}>
       {!activeChat ? (
         <NoChatSelected />
       ) : (
@@ -103,26 +110,32 @@ const MessageContainer: FC = (): JSX.Element => {
               </div>
 
             </div>
-            {
-              canSendInvite && (
-                <button 
-                  onClick={() => setShowModal(true)}
-                  className={`${classes.primary.bg} size-12 rounded-full cursor-pointer`}>
-                  <UserPlus className="mx-auto" />
-                </button>
-              )
-            }
+            <div className="relative">
+              <button onClick={() =>
+                setShowOptions(!showOptions)
+              } className={twMerge("size-6 cursor-pointer")}>
+                <EllipsisVertical size={26} />
+              </button>
+              {
+                showOptions && (
+                  <div
+                    ref={optionRef}
+                    className={twMerge("absolute top-10 ltr:right-0 rtl:left-0 w-38 rounded-md shadow-lg z-20 border border-gray-600", classes.primary.bg)}
+                  >
+                    <OptionsDropdown />
+                  </div>
+                )
+              }
+            </div>
+
           </nav>
           <Messages />
           <MessageInput />
         </div>
       )}
-      <InviteModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-      />
+
     </div>
   )
 }
 
-export default MessageContainer
+export default MessageContainer;

@@ -92,8 +92,6 @@ const appReducer = (state: StateType, action: ActionType) => {
         showSidebar: !state.showSidebar
       }
     case "SHOW_MESSAGE_CONTAINER": {
-      console.log("message container trigger");
-
       const isLargeScreen = window.innerWidth >= 1024;
       return {
         ...state,

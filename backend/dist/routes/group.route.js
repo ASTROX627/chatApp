@@ -16,4 +16,5 @@ router.get("/messages/:groupId", protectRoute_1.default, group_controller_1.getG
 router.post("/join/:groupId", protectRoute_1.default, group_controller_1.joinGroup);
 router.post("/invite/:groupId", protectRoute_1.default, group_controller_1.sendInvite);
 router.get("/invite/:inviteCode", protectRoute_1.default, group_controller_1.getPrivategroupByInvite);
+router.post("/leave/:groupId", protectRoute_1.default, group_controller_1.leaveGroup);
 exports.default = router;

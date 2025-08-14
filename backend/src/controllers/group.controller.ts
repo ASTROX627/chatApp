@@ -437,50 +437,62 @@ export const getPrivategroupByInvite = async (req: AuthenticatedRequest, res: Re
 }
 
 // LEAVE_GROUP_CONTROLLER
-export const leaveGroup = async(req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const leaveGroup = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const {groupId} = req.params;
+    const { groupId } = req.params;
     const userId = req.user?._id;
 
-    if(!groupId){
-      res.status(404).json({error: getLocalizedMessage(req, "errors.groupRequired")});
+    if (!groupId) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.groupRequired") });
       return;
     }
 
-    if(!userId){
-      res.status(401).json({error: getLocalizedMessage(req, "errors.unauthorized")});
+    if (!userId) {
+      res.status(401).json({ error: getLocalizedMessage(req, "errors.unauthorized") });
       return;
     }
 
     const group = await Group.findById(groupId);
 
-    if(!group){
-      res.status(404).json({error: getLocalizedMessage(req, "errors.groupNotFound")});
+    if (!group) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.groupNotFound") });
       return;
     }
 
-    if(group.owner._id.toString() === userId.toString()){
-      res.status(403).json({error: getLocalizedMessage(req, "errors.canNotLeave")});
+    const isOwner = group.owner.toHexString() === userId.toString();
+    if (isOwner) {
+      res.status(403).json({ error: getLocalizedMessage(req, "erros.canNotLeave") });
       return;
     }
 
-    const memberIndex = group.members.findIndex(member => member.user?.id.toString() === userId.toString());
+    const memberIndex = group.members.findIndex(member => member.user?.toString() === userId.toString());
 
-    if(memberIndex === -1){
-      res.status(400).json({error: getLocalizedMessage(req, "errors.notMember")});
+    if (memberIndex === -1) {
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.notMember") });
       return;
     }
+
+    const currentMember = group.members[memberIndex];
 
     group.members.splice(memberIndex, 1);
 
-    group.admins = group.admins.filter(admin => admin._id.toString() !== userId.toString());
+    const adminIndex = group.admins.findIndex(adminId => adminId.toString() === userId.toString());
+    if (adminIndex !== -1) {
+      group.admins.splice(adminIndex, 1);
+    }
 
     await group.save();
 
-    res.status(200).json({message: getLocalizedMessage(req, "success.leaveSuccessful")})
+    res.status(200).json({
+      message: getLocalizedMessage(req, "success.leaveSuccessfull"),
+      leftMember: {
+        user: currentMember.user,
+        role: currentMember.role
+      }
+    })
 
   } catch (error) {
     console.log("Error in leave group controller");
-    res.status(500).json({error: getLocalizedMessage(req, "errors.internalServerError")});
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
   }
 }
