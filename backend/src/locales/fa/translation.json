@@ -25,7 +25,12 @@
     "inviteCodeRequired": "کد دعوت الزامی است",
     "userIdRequired": "آیدی کاربر الزامی است",
     "groupIdRequired": "آیدی گروه الزامی است",
-    "canNotLeave": "مالک گروه نمیتواند گروه را ترک کند"
+    "canNotLeave": "مالک گروه نمیتواند گروه را ترک کند",
+    "alreadyAdmin": "این کاربر یک ادمین است",
+    "onlyOwner": "فقط مالک میتواند اعضا را تنزل دهد",
+    "alreadyMember": "این کاربر یک عضو است",
+    "canNotKick": "ادمین ها نمیتوانند یک دیگر را اخراج کنند",
+    "canNotKickOwner": "هیچ کس نمیتواند مالک را اخراج کند"
   },
   "success": {
     "registrationSuccessful": "ثبت نام با موفقیت انجام شد",
@@ -40,7 +45,9 @@
     "userProfileRetrieved": "نمایه کاربر با موفقیت دریافت شد",
     "accessDenied": "شما قادر به دسترسی به نمایه نیستید",
     "groupProfileRetrieved": "نمایه گروه با موفقیت دریافت شد",
-    "leaveSuccessfull": "خروج از گروه موفقیت آمیز بود"
-
+    "leaveSuccessfull": "خروج از گروه موفقیت آمیز بود",
+    "userPromoted": "کاربر با موفقیت ترقی داده شد",
+    "userDemoted": "کاربر با موفقیت تنزل داده شد",
+    "userKicked": "کاربر با موفقیت اخراج شد"
   }
 }

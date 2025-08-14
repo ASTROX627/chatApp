@@ -9,6 +9,7 @@ import Conversation from "../models/conversation.model";
 import Message from "../models/message.model";
 import { detectUrl } from "../utils/detectUrl";
 import { error } from "console";
+import mongoose from "mongoose";
 
 // CREATE_GROUP_CONTROLLER
 export const createGroup = async (req: AuthenticatedRequest, res: Response) => {
@@ -494,5 +495,201 @@ export const leaveGroup = async (req: AuthenticatedRequest, res: Response): Prom
   } catch (error) {
     console.log("Error in leave group controller");
     res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
+  }
+}
+
+// PROMOTE_USERS_CONTROLLER
+export const promoteUsers = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { groupId, userId } = req.params;
+    const promoterId = req.user?._id;
+
+    if (!groupId || !userId) {
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.allFieldsRequired") });
+      return;
+    }
+
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.groupNotFound") });
+      return;
+    }
+
+    const isOwner = group.owner.toString() === promoterId?.toString();
+    const isAdmin = group.admins.some(adminId => adminId.toString() === promoterId?.toString());
+
+    if (!isOwner && !isAdmin) {
+      res.status(403).json({ error: getLocalizedMessage(req, "errors.onlyAdmins") });
+      return;
+    }
+
+    const memberIndex = group.members.findIndex(member => member.user?.toString() === userId.toString());
+
+    if (memberIndex === -1) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.notMember") });
+      return;
+    }
+
+    const promotedMember = group.members[memberIndex];
+
+    if (promotedMember.role === "admin") {
+      res.status(400).json({ erorr: getLocalizedMessage(req, "erorrs.alreadyAdmin") });
+      return;
+    }
+
+    promotedMember.role = "admin";
+    group.admins.push(new mongoose.Types.ObjectId(userId));
+
+    await group.save();
+
+    await group.populate([
+      { path: "owner", select: "username profilePicture" },
+      { path: "admins", select: "username profilePicture" },
+      { path: "members.user", select: "username profilePicture" },
+    ]);
+
+    res.status(200).json({
+      massage: getLocalizedMessage(req, "success.userPromoted"),
+      promotedUser: {
+        user: promotedMember.user
+      }
+    })
+  } catch (error) {
+    console.log("Error in promote users controller");
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") })
+
+  }
+}
+
+// DEMOTE_USER_CONTROLLER
+export const demoteUser = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { groupId, userId } = req.params;
+    const demotedId = req.user?._id;
+
+    if (!groupId || !userId) {
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.allFieldsRequired") });
+      return
+    }
+
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.groupNotFound") });
+      return;
+    }
+
+    const isOwner = group.owner.toString() === demotedId?.toString();
+    if (!isOwner) {
+      res.status(403).json({ error: getLocalizedMessage(req, "errors.onlyOwner") });
+      return;
+    }
+
+    const memberIndex = group.members.findIndex(member => member.user?.toString() === userId.toString());
+
+    if (memberIndex === -1) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.notMember") });
+      return;
+    }
+
+    const demotedMember = group.members[memberIndex];
+
+    if (demotedMember.role === "member") {
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.alreadyMember") });
+      return;
+    }
+
+    demotedMember.role = "member"
+    group.admins = group.admins.filter(adminId => adminId.toString() !== userId);
+
+    await group.save();
+
+    await group.populate([
+      { path: "owner", select: "username profilePicture" },
+      { path: "admins", select: "username profilePicture" },
+      { path: "members.user", select: "username profilePicture" },
+    ]);
+
+    res.status(200).json({
+      message: getLocalizedMessage(req, "success.userDemoted"),
+      demotedUser: {
+        user: demotedMember.user
+      }
+    })
+  } catch (error) {
+    console.log("Error in demote user controller");
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") })
+
+  }
+}
+
+// KICK_USER_CONTROLLER
+export const kikUser = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { groupId, userId } = req.params;
+    const kickerId = req.user?._id;
+
+    if (!groupId || !userId) {
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.allFieldsRequired") });
+      return;
+    }
+
+    const group = await Group.findById(groupId);
+
+    if (!group) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.groupNotFound") });
+      return;
+    }
+
+    const isOwner = group.owner.toString() === kickerId?.toString();
+    const isAdmin = group.admins.some(adminId => adminId.toString() === kickerId?.toString());
+
+    if (!isOwner && isAdmin) {
+      res.status(403).json({ error: getLocalizedMessage(req, "errors.onlyAdmins") });
+      return;
+    }
+
+    const memberIndex = group.members.findIndex(member => member.user?.toString() === userId);
+
+    if (memberIndex === -1) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.notMember") });
+      return;
+    }
+
+    const kickedMember = group.members[memberIndex];
+
+    if (kickedMember.role === "admin" && !isOwner) {
+      res.status(403).json({ error: getLocalizedMessage(req, "errors.canNotKick") });
+      return;
+    }
+
+    if (group.owner.toString() === userId.toString()) {
+      res.status(403).json({ error: getLocalizedMessage(req, "errors.canNotKickOwner") });
+      return;
+    }
+
+    group.members.splice(memberIndex, 1);
+    group.admins = group.admins.filter(adminId => adminId.toString() !== userId);
+
+    await group.save();
+
+    await group.populate([
+      { path: "owner", select: "username profilePicture" },
+      { path: "admins", select: "username profilePicture" },
+      { path: "members.user", select: "username profilePicture" },
+    ]);
+
+    res.status(200).json({
+      message: getLocalizedMessage(req, "success.userKicked"),
+      kickedMember: {
+        user: kickedMember.user,
+        role: kickedMember.role,
+      }
+    });
+
+  } catch (error) {
+    console.log("Error in kick user controller");
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") })
   }
 }

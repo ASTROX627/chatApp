@@ -26,7 +26,12 @@
     "userIdRequired": "User id is required",
     "groupIdRequired": "Group id is required",
     "accessDenied": "You are not able to access to profile",
-    "canNotLeave": "Owner can not leave the group"
+    "canNotLeave": "Owner can not leave the group",
+    "alreadyAdmin": "This user is an admin",
+    "onlyOwner": "Only the owner can demote members",
+    "alreadyMember": "This user is a member",
+    "canNotKick": "Admins can not kick each other",
+    "canNotKickOwner": "No one can kick the owner"
   },
   "success": {
     "registrationSuccessful": "Registration successful",
@@ -40,6 +45,9 @@
     "groupFound": "Group found",
     "userProfileRetrieved": "Profile of this user successfully retrieved",
     "groupProfileRetrieved": "Profile if this group successfully retrieved",
-    "leaveSuccessfull": "Leaving the group was successful."
+    "leaveSuccessfull": "Leaving the group was successful.",
+    "userPromoted": "User promoted successful",
+    "userDemoted": "User demoted successfull",
+    "userKicked": "User Kicked successfull"
   }
 }
