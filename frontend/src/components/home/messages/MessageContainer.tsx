@@ -120,7 +120,7 @@ const MessageContainer: FC = (): JSX.Element => {
                 showOptions && (
                   <div
                     ref={optionRef}
-                    className={twMerge("absolute top-10 ltr:right-0 rtl:left-0 w-38 rounded-md shadow-lg z-20 border border-gray-600", classes.primary.bg)}
+                    className={twMerge("absolute top-10 ltr:right-0 rtl:left-0 w-38 shadow-lg z-20", classes.primary.bg)}
                   >
                     <OptionsDropdown />
                   </div>

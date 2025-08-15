@@ -41,6 +41,11 @@
     "clickToJoin": "برای عضویت کلیک کنید",
     "watchAndJoin": "مشاهده و عضویت",
     "join": "عضویت",
+    "sendInvite": "ارسال دعوت",
+    "promoteUser": "ترقی اعضا",
+    "demoteUser": "تنزل اعضا",
+    "kickUser": "اخراج اعضا",
+    "leaveGroup": "ترک گروه",
     "themes": {
       "sky": "آسمان",
       "spring": "بهاری",

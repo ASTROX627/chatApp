@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.leaveGroup = exports.getPrivategroupByInvite = exports.sendInvite = exports.joinGroup = exports.getGroupMessage = exports.sendGroupMessage = exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
+exports.kikUser = exports.demoteUser = exports.promoteUsers = exports.leaveGroup = exports.getPrivategroupByInvite = exports.sendInvite = exports.joinGroup = exports.getGroupMessage = exports.sendGroupMessage = exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
 const group_model_1 = __importDefault(require("../models/group.model"));
 const group_utils_1 = require("../utils/group.utils");
 const i18nHelper_1 = require("../utils/i18nHelper");
@@ -12,6 +12,7 @@ const user_model_1 = __importDefault(require("../models/user.model"));
 const conversation_model_1 = __importDefault(require("../models/conversation.model"));
 const message_model_1 = __importDefault(require("../models/message.model"));
 const detectUrl_1 = require("../utils/detectUrl");
+const mongoose_1 = __importDefault(require("mongoose"));
 // CREATE_GROUP_CONTROLLER
 const createGroup = async (req, res) => {
     try {
@@ -433,3 +434,160 @@ const leaveGroup = async (req, res) => {
     }
 };
 exports.leaveGroup = leaveGroup;
+// PROMOTE_USERS_CONTROLLER
+const promoteUsers = async (req, res) => {
+    try {
+        const { groupId, userId } = req.params;
+        const promoterId = req.user?._id;
+        if (!groupId || !userId) {
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.allFieldsRequired") });
+            return;
+        }
+        const group = await group_model_1.default.findById(groupId);
+        if (!group) {
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.groupNotFound") });
+            return;
+        }
+        const isOwner = group.owner.toString() === promoterId?.toString();
+        const isAdmin = group.admins.some(adminId => adminId.toString() === promoterId?.toString());
+        if (!isOwner && !isAdmin) {
+            res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.onlyAdmins") });
+            return;
+        }
+        const memberIndex = group.members.findIndex(member => member.user?.toString() === userId.toString());
+        if (memberIndex === -1) {
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.notMember") });
+            return;
+        }
+        const promotedMember = group.members[memberIndex];
+        if (promotedMember.role === "admin") {
+            res.status(400).json({ erorr: (0, i18nHelper_1.getLocalizedMessage)(req, "erorrs.alreadyAdmin") });
+            return;
+        }
+        promotedMember.role = "admin";
+        group.admins.push(new mongoose_1.default.Types.ObjectId(userId));
+        await group.save();
+        await group.populate([
+            { path: "owner", select: "username profilePicture" },
+            { path: "admins", select: "username profilePicture" },
+            { path: "members.user", select: "username profilePicture" },
+        ]);
+        res.status(200).json({
+            massage: (0, i18nHelper_1.getLocalizedMessage)(req, "success.userPromoted"),
+            promotedUser: {
+                user: promotedMember.user
+            }
+        });
+    }
+    catch (error) {
+        console.log("Error in promote users controller");
+        res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
+    }
+};
+exports.promoteUsers = promoteUsers;
+// DEMOTE_USER_CONTROLLER
+const demoteUser = async (req, res) => {
+    try {
+        const { groupId, userId } = req.params;
+        const demotedId = req.user?._id;
+        if (!groupId || !userId) {
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.allFieldsRequired") });
+            return;
+        }
+        const group = await group_model_1.default.findById(groupId);
+        if (!group) {
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.groupNotFound") });
+            return;
+        }
+        const isOwner = group.owner.toString() === demotedId?.toString();
+        if (!isOwner) {
+            res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.onlyOwner") });
+            return;
+        }
+        const memberIndex = group.members.findIndex(member => member.user?.toString() === userId.toString());
+        if (memberIndex === -1) {
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.notMember") });
+            return;
+        }
+        const demotedMember = group.members[memberIndex];
+        if (demotedMember.role === "member") {
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.alreadyMember") });
+            return;
+        }
+        demotedMember.role = "member";
+        group.admins = group.admins.filter(adminId => adminId.toString() !== userId);
+        await group.save();
+        await group.populate([
+            { path: "owner", select: "username profilePicture" },
+            { path: "admins", select: "username profilePicture" },
+            { path: "members.user", select: "username profilePicture" },
+        ]);
+        res.status(200).json({
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.userDemoted"),
+            demotedUser: {
+                user: demotedMember.user
+            }
+        });
+    }
+    catch (error) {
+        console.log("Error in demote user controller");
+        res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
+    }
+};
+exports.demoteUser = demoteUser;
+// KICK_USER_CONTROLLER
+const kikUser = async (req, res) => {
+    try {
+        const { groupId, userId } = req.params;
+        const kickerId = req.user?._id;
+        if (!groupId || !userId) {
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.allFieldsRequired") });
+            return;
+        }
+        const group = await group_model_1.default.findById(groupId);
+        if (!group) {
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.groupNotFound") });
+            return;
+        }
+        const isOwner = group.owner.toString() === kickerId?.toString();
+        const isAdmin = group.admins.some(adminId => adminId.toString() === kickerId?.toString());
+        if (!isOwner && isAdmin) {
+            res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.onlyAdmins") });
+            return;
+        }
+        const memberIndex = group.members.findIndex(member => member.user?.toString() === userId);
+        if (memberIndex === -1) {
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.notMember") });
+            return;
+        }
+        const kickedMember = group.members[memberIndex];
+        if (kickedMember.role === "admin" && !isOwner) {
+            res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.canNotKick") });
+            return;
+        }
+        if (group.owner.toString() === userId.toString()) {
+            res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.canNotKickOwner") });
+            return;
+        }
+        group.members.splice(memberIndex, 1);
+        group.admins = group.admins.filter(adminId => adminId.toString() !== userId);
+        await group.save();
+        await group.populate([
+            { path: "owner", select: "username profilePicture" },
+            { path: "admins", select: "username profilePicture" },
+            { path: "members.user", select: "username profilePicture" },
+        ]);
+        res.status(200).json({
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.userKicked"),
+            kickedMember: {
+                user: kickedMember.user,
+                role: kickedMember.role,
+            }
+        });
+    }
+    catch (error) {
+        console.log("Error in kick user controller");
+        res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
+    }
+};
+exports.kikUser = kikUser;

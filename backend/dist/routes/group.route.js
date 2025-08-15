@@ -17,4 +17,7 @@ router.post("/join/:groupId", protectRoute_1.default, group_controller_1.joinGro
 router.post("/invite/:groupId", protectRoute_1.default, group_controller_1.sendInvite);
 router.get("/invite/:inviteCode", protectRoute_1.default, group_controller_1.getPrivategroupByInvite);
 router.post("/leave/:groupId", protectRoute_1.default, group_controller_1.leaveGroup);
+router.post("/promote/:groupId/:userId", protectRoute_1.default, group_controller_1.promoteUsers);
+router.post("/demote/:groupId/:userId", protectRoute_1.default, group_controller_1.demoteUser);
+router.post("/kick/:groupId/:userId", protectRoute_1.default, group_controller_1.kikUser);
 exports.default = router;

@@ -5,58 +5,85 @@ import { twMerge } from "tailwind-merge";
 import { useTheme } from "../../../hooks/useTheme";
 import InviteModal from "../../modal/InviteModal";
 import { useLeaveGroup } from "../../../hooks/useLeaveGroup";
+import { LogOut, UserCheck, UserRoundPlus } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import UserManagementModal from "../../modal/UserManagementModal";
 
 const OptionsDropdown: FC = () => {
   const { authUser } = useAuthContext();
   const { selectedGroup } = useConversation();
   const { classes } = useTheme();
-  const {leavegroup} = useLeaveGroup();
+  const { leavegroup } = useLeaveGroup();
+  const { t } = useTranslation();
 
-  const [canSendInvite, setCanSendInvite] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [management, setManagement] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showUserManagementModal, setShowUserManagementModal] = useState(false);
 
   const isOwner = selectedGroup?.owner?._id === authUser?._id;
   const isAdmin = selectedGroup?.admins?.some(admin => admin._id === authUser?._id);
 
-  const handleLeaveGroup = async() => {
-    if(selectedGroup){
+  const handleLeaveGroup = async () => {
+    if (selectedGroup) {
       await leavegroup(selectedGroup._id);
     }
   }
 
   useEffect(() => {
     if (isAdmin || isOwner) {
-      setCanSendInvite(true)
+      setManagement(true)
     } else {
-      setCanSendInvite(false)
+      setManagement(false)
     }
   }, [isAdmin, isOwner])
 
+const manageMentItems = [
+    {
+      label: t("home.sendInvite"),
+      icon: <UserRoundPlus size={20} />,
+      onclick: () => setShowInviteModal(true),
+    },
+    {
+      label: t("home.manageMembers"),
+      icon: <UserCheck size={20} />,
+      onclick: () => setShowUserManagementModal(true),
+    },
+  ];
+
   return (
     <>
-      <ul className={twMerge(classes.primary.bg, "cursor-pointer")}>
-        {canSendInvite && (
-          <li className={twMerge(classes.secondary.hover.bg, "p-2 transition-colors duration-200")}>
-            <button
-              className="cursor-pointer"
-              onClick={() => setShowModal(true)}
+      <ul className={twMerge(classes.primary.bg, "cursor-pointer rounded-md")}>
+        {management && (
+          manageMentItems.map((manageMentItem, index) => (
+            <li
+              className={twMerge("p-2 transition-colors duration-200", classes.secondary.hover.bg)}
+              key={index}
             >
-              Send invite
-            </button>
-          </li>
+              <button
+                className="cursor-pointer flex items-center justify-center gap-2 text-sm"
+                onClick={manageMentItem.onclick}
+              >
+                {manageMentItem.icon} {manageMentItem.label}
+              </button>
+            </li>
+          ))
         )}
         <li className={twMerge("p-2 transition-colors duration-200", classes.secondary.hover.bg)}>
-          <button 
-            className="cursor-pointer"
+          <button
+            className="cursor-pointer flex items-center justify-center gap-2 text-sm"
             onClick={handleLeaveGroup}
           >
-            Leave group
+            <LogOut size={20} /> Leave Group
           </button>
         </li>
       </ul>
       <InviteModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+      />
+      <UserManagementModal
+        isOpen={showUserManagementModal}
+        onClose={() => setShowUserManagementModal(false)}
       />
     </>
   )

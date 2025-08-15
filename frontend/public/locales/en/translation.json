@@ -41,6 +41,11 @@
     "join": "Join",
     "clickToJoin": "Click to join",
     "watchAndJoin": "Watch and join",
+    "sendInvite": "Send Invite",
+    "promoteUser": "Promote User",
+    "demoteUser": "Demote User",
+    "kickUser": "Kick User",
+    "leaveGroup": "Leave Group",
     "themes":{
       "sky": "SKY",
       "spring": "SPRING",
