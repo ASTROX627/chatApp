@@ -36,7 +36,7 @@ export type MessageType = {
   senderId: string,
   receiverId: string,
   message: string,
-  messageType: "text" | "image" | "file" | "document" | "link" | "inviteLink",
+  messageType: "text" | "image" | "file" | "document" | "link" | "inviteLink" | "system",
   fileUrl?: string,
   fileName?: string,
   fileSize?: number,
@@ -46,23 +46,29 @@ export type MessageType = {
 }
 
 export type GroupMessageType = {
-  _id: string,
+  _id: string;
   senderId: {
-    _id: string,
-    username: string,
-    profilePicture: string,
-  },
-  groupId: string,
-  message: string,
-  messageType: "text" | "image" | "file" | "document" | "link" | "inviteLink",
-  fileUrl?: string,
-  fileName?: string,
-  fileSize?: number,
-  fileMimeType?: string,
-  systemMessageType?: string,
-  inviteData?: InviteLinkData,
-  createdAt: string,
-}
+    _id: string;
+    username: string;
+    profilePicture: string;
+  };
+  groupId: string;
+  message: string;
+  messageType: "text" | "image" | "file" | "document" | "link" | "inviteLink" | "system";
+  fileUrl?: string;
+  fileName?: string;
+  fileSize?: number;
+  fileMimeType?: string;
+  systemMessageType?:
+    | "group_created"
+    | "user_joined"
+    | "user_left"
+    | "user_removed"
+    | "user_promoted"
+    | "user_demoted";
+  inviteData?: InviteLinkData;
+  createdAt: string;
+};
 
 export type ConversationType = {
   _id: string,

@@ -133,7 +133,7 @@ const UserManagementModal: FC<UserManagementModalProps> = ({ isOpen, onClose }) 
                             {!isMemberAdmin && (
                               <button
                                 onClick={() => handlePromote(member.user._id)}
-                                className="flex items-center gap-1 text-sm text-green-400 hover:text-green-300"
+                                className="flex items-center gap-1 text-sm text-green-400 hover:text-green-300 cursor-pointer"
                               >
                                 <UserCheck size={16} />
                                 {t("home.promoteUser")}
@@ -142,7 +142,7 @@ const UserManagementModal: FC<UserManagementModalProps> = ({ isOpen, onClose }) 
                             {isMemberAdmin && isOwner && (
                               <button
                                 onClick={() => handleDemote(member.user._id)}
-                                className="flex items-center gap-1 text-sm text-yellow-400 hover:text-yellow-300"
+                                className="flex items-center gap-1 text-sm text-yellow-400 hover:text-yellow-300 cursor-pointer"
                               >
                                 <UserX size={16} />
                                 {t("home.demoteUser")}
@@ -150,7 +150,7 @@ const UserManagementModal: FC<UserManagementModalProps> = ({ isOpen, onClose }) 
                             )}
                             <button
                               onClick={() => handleKick(member.user._id)}
-                              className="flex items-center gap-1 text-sm text-red-400 hover:text-red-300"
+                              className="flex items-center gap-1 text-sm text-red-400 hover:text-red-300 cursor-pointer"
                             >
                               <UserRoundX size={16} />
                               {t("home.kickUser")}

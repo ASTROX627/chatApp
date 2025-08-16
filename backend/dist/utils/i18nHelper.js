@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getLocalizedMessage = void 0;
 const i18n_1 = __importDefault(require("../core/i18n"));
-const getLocalizedMessage = (req, key) => {
+const getLocalizedMessage = (req, key, variables = {}) => {
     const language = req.headers[`accept-language`] || "en";
-    return i18n_1.default.t(key, { lng: language });
+    return i18n_1.default.t(key, { lng: language, ...variables });
 };
 exports.getLocalizedMessage = getLocalizedMessage;

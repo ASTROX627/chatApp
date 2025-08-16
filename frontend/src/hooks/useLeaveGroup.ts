@@ -26,7 +26,10 @@ export const useLeaveGroup = () => {
       }
     } catch (error) {
       if(error instanceof AxiosError){
-        toast.error(error.message);
+        const errorMessage = error.response?.data?.error || error.message
+        toast.error(errorMessage)
+      }else {
+        toast.error("auth.networkError");
       }
     } finally {
       setLoading(false);

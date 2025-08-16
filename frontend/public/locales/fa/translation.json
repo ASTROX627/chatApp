@@ -46,6 +46,13 @@
     "demoteUser": "تنزل اعضا",
     "kickUser": "اخراج اعضا",
     "leaveGroup": "ترک گروه",
+    "manageMembers": "مدیریت اعضا",
+    "promoteUserLoading": "در حال ترقی دادن کاربر...",
+    "demoteUserLoading": "در حال تنزل دادن کاربر...",
+    "kickUserLoading": "در حال اخراج کردن کاربر...",
+    "userPromoted": "کاربر با موفقیت ترقی داده شد.",
+    "userDemoted": "کاربر با موفقیت تنزل داده شد.",
+    "userKicked": "کاربر با موفقیت اخراج شد.",
     "themes": {
       "sky": "آسمان",
       "spring": "بهاری",

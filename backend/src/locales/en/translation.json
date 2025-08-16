@@ -49,5 +49,13 @@
     "userPromoted": "User promoted successful",
     "userDemoted": "User demoted successfull",
     "userKicked": "User Kicked successfull"
+  },
+  "systemMessages":{
+    "groupCreated": "Group {{groupName}} was created by{{performer}}",
+    "userJoined": "{{username}} joined the group",
+    "userLeft": "{{username}} left the group",
+    "userPromoted": "{{username}} was promoted by {{performer}}",
+    "userDemoted": "{{username}} was demoted by {{performer}}",
+    "userRemoved": "{{username}} was kicked by {{performer}}"
   }
 }

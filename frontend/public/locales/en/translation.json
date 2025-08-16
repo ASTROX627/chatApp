@@ -46,6 +46,13 @@
     "demoteUser": "Demote User",
     "kickUser": "Kick User",
     "leaveGroup": "Leave Group",
+    "manageMembers": "Manage members",
+    "promoteUserLoading": "Promoting the user...",
+    "demoteUserLoading": "Demoting the user...",
+    "kickUserLoading": "Kicking the user...",
+    "userPromoted": "The user promoted successfully.",
+    "userDemoted": "The user demoted successfully",
+    "userKicked": "The user kicked successfully",
     "themes":{
       "sky": "SKY",
       "spring": "SPRING",

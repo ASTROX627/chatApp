@@ -49,5 +49,13 @@
     "userPromoted": "کاربر با موفقیت ترقی داده شد",
     "userDemoted": "کاربر با موفقیت تنزل داده شد",
     "userKicked": "کاربر با موفقیت اخراج شد"
+  },
+  "groupMessages": {
+    "groupCreated": "گروه {{groupName}} توسط {{performer}} ایجاد شد",
+    "userJoined": "{{username}} به گروه پیوست",
+    "userLeft": "{{username}} گروه را ترک کرد",
+    "userPromoted": "{{username}} توسط {{performer}} ترقی داده شد",
+    "userDemoted": "{{username}} توسط {{performer}} تنزل داده شد",
+    "userRemoved": "{{username}} توسط {{performer}} اخراج شد"
   }
 }

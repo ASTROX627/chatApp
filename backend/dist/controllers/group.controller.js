@@ -66,6 +66,20 @@ const createGroup = async (req, res) => {
             }
         });
         await newGroup.save();
+        const owner = await user_model_1.default.findById(ownerId);
+        const groupCreatedMessage = new groupMessage_model_1.default({
+            groupId: newGroup._id,
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "systemMessages.groupCreated", {
+                groupName,
+                performer: owner?.username || "Unknown"
+            }),
+            messageType: "system",
+            systemMessageType: "group_created",
+            senderId: ownerId
+        });
+        await groupCreatedMessage.save();
+        newGroup.messages.push(groupCreatedMessage._id);
+        await newGroup.save();
         res.status(201).json({
             message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.groupCreateSuccessful"),
             group: newGroup
@@ -261,6 +275,19 @@ const joinGroup = async (req, res) => {
             },
             newMember
         });
+        const user = await user_model_1.default.findById(userId);
+        const userJoinedMessage = new groupMessage_model_1.default({
+            groupId: group._id,
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "systemMessages.userJoined", {
+                username: user?.username || "Unknown",
+            }),
+            messageType: "system",
+            systemMessageType: "user_joined",
+            senderId: userId
+        });
+        await userJoinedMessage.save();
+        group.messages.push(userJoinedMessage._id);
+        await group.save();
     }
     catch (error) {
         console.log("Error in join group controller", error);
@@ -405,7 +432,7 @@ const leaveGroup = async (req, res) => {
         }
         const isOwner = group.owner.toHexString() === userId.toString();
         if (isOwner) {
-            res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "erros.canNotLeave") });
+            res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.canNotLeave") });
             return;
         }
         const memberIndex = group.members.findIndex(member => member.user?.toString() === userId.toString());
@@ -427,6 +454,19 @@ const leaveGroup = async (req, res) => {
                 role: currentMember.role
             }
         });
+        const user = await user_model_1.default.findById(userId);
+        const userLeftGroupMessage = new groupMessage_model_1.default({
+            groupId: group._id,
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "systemMessages.userLeft", {
+                username: user?.username || "Unknown"
+            }),
+            messageType: "system",
+            systemMessageType: "user_left",
+            senderId: userId
+        });
+        await userLeftGroupMessage.save();
+        group.messages.push(userLeftGroupMessage._id);
+        await group.save();
     }
     catch (error) {
         console.log("Error in leave group controller");
@@ -478,6 +518,21 @@ const promoteUsers = async (req, res) => {
                 user: promotedMember.user
             }
         });
+        const promoter = await user_model_1.default.findById(promoterId);
+        const user = await user_model_1.default.findById(userId);
+        const promotedUserMessage = new groupMessage_model_1.default({
+            groupId: group._id,
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "systemMessages.userPromoted", {
+                username: user?.username || "Unknown",
+                performer: promoter?.username || "Unknown"
+            }),
+            messageType: "system",
+            systemMessageType: "user_promoted",
+            senderId: promoterId
+        });
+        await promotedUserMessage.save();
+        group.messages.push(promotedUserMessage._id);
+        await group.save();
     }
     catch (error) {
         console.log("Error in promote users controller");
@@ -489,7 +544,7 @@ exports.promoteUsers = promoteUsers;
 const demoteUser = async (req, res) => {
     try {
         const { groupId, userId } = req.params;
-        const demotedId = req.user?._id;
+        const demoterId = req.user?._id;
         if (!groupId || !userId) {
             res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.allFieldsRequired") });
             return;
@@ -499,7 +554,7 @@ const demoteUser = async (req, res) => {
             res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.groupNotFound") });
             return;
         }
-        const isOwner = group.owner.toString() === demotedId?.toString();
+        const isOwner = group.owner.toString() === demoterId?.toString();
         if (!isOwner) {
             res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.onlyOwner") });
             return;
@@ -528,6 +583,21 @@ const demoteUser = async (req, res) => {
                 user: demotedMember.user
             }
         });
+        const demoter = await user_model_1.default.findById(demoterId);
+        const user = await user_model_1.default.findById(userId);
+        const demotedUserMessage = new groupMessage_model_1.default({
+            groupId: group._id,
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "systemMessages.userDemoted", {
+                username: user?.username || "Unknown",
+                performer: demoter?.username || "Unknown"
+            }),
+            messageType: "system",
+            systemMessageType: "user_demoted",
+            senderId: demoterId
+        });
+        await demotedUserMessage.save();
+        group.messages.push(demotedUserMessage._id);
+        await group.save();
     }
     catch (error) {
         console.log("Error in demote user controller");
@@ -584,6 +654,21 @@ const kikUser = async (req, res) => {
                 role: kickedMember.role,
             }
         });
+        const kicker = await user_model_1.default.findById(kickerId);
+        const user = await user_model_1.default.findById(userId);
+        const kickedUserMessage = new groupMessage_model_1.default({
+            groupId: group._id,
+            message: (0, i18nHelper_1.getLocalizedMessage)(req, "systemMessages.userRemoved", {
+                username: user?.username || "Unknown",
+                performer: kicker?.username || "Unknown"
+            }),
+            messageType: "system",
+            systemMessageType: "user_removed",
+            senderId: kickerId
+        });
+        await kickedUserMessage.save();
+        group.messages.push(kickedUserMessage._id);
+        await group.save();
     }
     catch (error) {
         console.log("Error in kick user controller");

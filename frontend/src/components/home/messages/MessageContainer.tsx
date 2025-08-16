@@ -11,6 +11,8 @@ import { useGetUserProfile } from "../../../hooks/useGetUserProfile";
 import { useGetGroupProfile } from "../../../hooks/useGetGroupProfile";
 import { twMerge } from "tailwind-merge";
 import OptionsDropdown from "./OptionsDropdown";
+import InviteModal from "../../modal/InviteModal";
+import UserManagementModal from "../../modal/UserManagementModal";
 
 const MessageContainer: FC = (): JSX.Element => {
   const { selectedConversation, selectedGroup, setSelectedGroup } = useConversation();
@@ -20,6 +22,8 @@ const MessageContainer: FC = (): JSX.Element => {
   const { t } = useTranslation();
   const { classes } = useTheme();
 
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showManagementModal, setShowManagementModal] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const optionRef = useRef<HTMLDivElement>(null);
 
@@ -110,30 +114,44 @@ const MessageContainer: FC = (): JSX.Element => {
               </div>
 
             </div>
-            <div className="relative">
-              <button onClick={() =>
-                setShowOptions(!showOptions)
-              } className={twMerge("size-6 cursor-pointer")}>
-                <EllipsisVertical size={26} />
-              </button>
-              {
-                showOptions && (
-                  <div
-                    ref={optionRef}
-                    className={twMerge("absolute top-10 ltr:right-0 rtl:left-0 w-38 shadow-lg z-20", classes.primary.bg)}
-                  >
-                    <OptionsDropdown />
-                  </div>
-                )
-              }
-            </div>
+            {
+              selectedGroup && (
+                <div className="relative">
+                  <button onClick={() =>
+                    setShowOptions(!showOptions)
+                  } className={twMerge("size-6 cursor-pointer")}>
+                    <EllipsisVertical size={26} />
+                  </button>
+                  {
+                    showOptions && (
+                      <div
+                        ref={optionRef}
+                        className={twMerge("absolute top-10 ltr:right-0 rtl:left-0 w-48 shadow-lg z-20", classes.primary.bg)}
+                      >
+                        <OptionsDropdown
+                          onInviteClick={() => setShowInviteModal(true)}
+                          onManagementClick={() => setShowManagementModal(true)}
+                        />
+                      </div>
+                    )
+                  }
+                </div>
+              )
+            }
 
           </nav>
           <Messages />
           <MessageInput />
         </div>
       )}
-
+      <InviteModal
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+      />
+      <UserManagementModal
+        isOpen={showManagementModal}
+        onClose={() => setShowManagementModal(false)}
+      />
     </div>
   )
 }

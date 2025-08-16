@@ -20,7 +20,7 @@ const groupMessageSchema = new mongoose_1.default.Schema({
     },
     messageType: {
         type: String,
-        enum: ["text", "file", "image", "document", "link", "inviteLink"],
+        enum: ["text", "file", "image", "document", "link", "inviteLink", "system"],
         default: "text"
     },
     fileUrl: {

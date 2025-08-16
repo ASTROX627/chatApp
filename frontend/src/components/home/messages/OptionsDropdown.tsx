@@ -3,13 +3,16 @@ import { useAuthContext } from "../../../context/auth/authContext";
 import useConversation from "../../../store/useConversation";
 import { twMerge } from "tailwind-merge";
 import { useTheme } from "../../../hooks/useTheme";
-import InviteModal from "../../modal/InviteModal";
 import { useLeaveGroup } from "../../../hooks/useLeaveGroup";
 import { LogOut, UserCheck, UserRoundPlus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import UserManagementModal from "../../modal/UserManagementModal";
 
-const OptionsDropdown: FC = () => {
+type OptionsDropdownProps = {
+  onInviteClick: () => void;
+  onManagementClick: () => void;
+}
+
+const OptionsDropdown: FC<OptionsDropdownProps> = ({onInviteClick, onManagementClick}) => {
   const { authUser } = useAuthContext();
   const { selectedGroup } = useConversation();
   const { classes } = useTheme();
@@ -17,8 +20,6 @@ const OptionsDropdown: FC = () => {
   const { t } = useTranslation();
 
   const [management, setManagement] = useState(false);
-  const [showInviteModal, setShowInviteModal] = useState(false);
-  const [showUserManagementModal, setShowUserManagementModal] = useState(false);
 
   const isOwner = selectedGroup?.owner?._id === authUser?._id;
   const isAdmin = selectedGroup?.admins?.some(admin => admin._id === authUser?._id);
@@ -41,12 +42,12 @@ const manageMentItems = [
     {
       label: t("home.sendInvite"),
       icon: <UserRoundPlus size={20} />,
-      onclick: () => setShowInviteModal(true),
+      onclick: onInviteClick,
     },
     {
       label: t("home.manageMembers"),
       icon: <UserCheck size={20} />,
-      onclick: () => setShowUserManagementModal(true),
+      onclick: onManagementClick,
     },
   ];
 
@@ -77,14 +78,6 @@ const manageMentItems = [
           </button>
         </li>
       </ul>
-      <InviteModal
-        isOpen={showInviteModal}
-        onClose={() => setShowInviteModal(false)}
-      />
-      <UserManagementModal
-        isOpen={showUserManagementModal}
-        onClose={() => setShowUserManagementModal(false)}
-      />
     </>
   )
 }

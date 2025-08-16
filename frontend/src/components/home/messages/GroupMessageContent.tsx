@@ -37,15 +37,15 @@ const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Ele
   };
 
   const handleAvatarClick = async () => {
-    if(selectedGroup?.groupType === "channel"){
+    if (selectedGroup?.groupType === "channel") {
       pushToHistory("groupChat");
       await getGroupProfile(selectedGroup._id);
       setShowProfile();
-    } else if(fromMe){
+    } else if (fromMe) {
       pushToHistory("groupChat");
       setShowProfile();
     } else {
-      if(selectedGroup){
+      if (selectedGroup) {
         setPreviousGroup(selectedGroup);
         setNavigationContext("groupProfile");
       }
@@ -55,6 +55,35 @@ const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Ele
       setShowProfile();
     }
   };
+
+  if (message.messageType === "system") {
+    const systemMessageStyle = "text-center text-gray-300 text-sm py-2 px-4 my-2 bg-gray-800/50 rounded-lg mx-auto max-w-md"
+    const getSystemMessageIcon = () => {
+      switch (message.systemMessageType) {
+        case "group_created":
+          return "🎉";
+        case "user_joined":
+          return "👋";
+        case "user_left":
+          return "🚪";
+        case "user_removed":
+          return "➖";
+        case "user_promoted":
+          return "⬆️";
+        case "user_demoted":
+          return "⬇️";
+        default:
+          return "ℹ️";
+      }
+    }
+
+    return (
+      <div className={systemMessageStyle}>
+        <span className="ltr:mr-2 rtl:ml-2">{getSystemMessageIcon()}</span>
+        <span>{message.message}</span>
+      </div>
+    )
+  }
 
   const messageForBubble = {
     ...message,
