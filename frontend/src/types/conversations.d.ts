@@ -24,11 +24,13 @@ export type GroupType = {
     }
     role: string
   }[],
+  memberCount: number,
   isPrivate: boolean,
   inviteCode: string,
   inviteUrl?: string,
   createdAt: string,
-  updatedAt: string
+  updatedAt: string,
+  newRole: string
 }
 
 export type MessageType = {

@@ -8,7 +8,7 @@ export interface AuthUser{
   profilePicture: string
 }
 
-interface AuthContextType {
+type AuthContextType = {
   authUser: AuthUser | null,
   setAuthUser: Dispatch<SetStateAction<AuthUser | null>>
 }

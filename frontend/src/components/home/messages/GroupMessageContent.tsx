@@ -2,13 +2,13 @@ import type { FC, JSX } from "react"
 import { useState } from "react"
 import { useAuthContext } from "../../../context/auth/authContext";
 import useConversation from "../../../store/useConversation";
-import Modal from "../../modal/ImageModal";
 import ChatBubble from "./ChatBubble";
 import GroupChatFooter from "./GroupChatFooter";
 import type { GroupMessageType } from "../../../types/conversations";
 import { useAppContext } from "../../../context/app/appContext";
 import { useGetUserProfile } from "../../../hooks/useGetUserProfile";
 import { useGetGroupProfile } from "../../../hooks/useGetGroupProfile";
+import ImageModal from "../../modal/ImageModal";
 
 export type GroupMessageContentProps = {
   message: GroupMessageType,
@@ -108,7 +108,7 @@ const GroupMessageContent: FC<GroupMessageContentProps> = ({ message }): JSX.Ele
         <GroupChatFooter message={message} />
       </div>
 
-      <Modal
+      <ImageModal
         isOpen={isModalOpen}
         onClose={closeImageModal}
         src={modalImageSrc}

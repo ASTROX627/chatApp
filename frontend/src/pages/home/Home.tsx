@@ -4,10 +4,12 @@ import MessageContainer from "../../components/home/messages/MessageContainer"
 import Sidebar from "../../components/home/sidebar/Sidebar"
 import { useAppContext } from "../../context/app/appContext"
 import ProfileView from "../../components/home/profile/ProfileView"
+import { useListenGroupUpdated } from "../../hooks/useListenGroupUpdated"
 
 
 const Home: FC = (): JSX.Element => {
   const { showSidebar, setShowSidebar, showProfile } = useAppContext();
+  useListenGroupUpdated();
 
   return (
     <div className="bg-gray-400/10 backdrop-blur-lg rounded-lg shadowlg h-[90vh] w-[90vw] relative lg:grid lg:grid-cols-[auto_1fr_1fr] lg:gap-0">

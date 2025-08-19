@@ -19,7 +19,7 @@ export const useDemoteUser = () => {
             setSelectedGroup({
               ...selectedGroup,
               admins: selectedGroup.admins.filter(admin => admin._id !== userId),
-              members: selectedGroup.members.map(member => member.user._id === userId ? { ...member, role: "admin" } : member)
+              members: selectedGroup.members.map(member => member.user._id === userId ? { ...member, role: "member" } : member)
             })
           }
           return t("home.userPromoted");

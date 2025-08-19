@@ -13,6 +13,7 @@ const conversation_model_1 = __importDefault(require("../models/conversation.mod
 const message_model_1 = __importDefault(require("../models/message.model"));
 const detectUrl_1 = require("../utils/detectUrl");
 const mongoose_1 = __importDefault(require("mongoose"));
+const socket_1 = require("../socket/socket");
 // CREATE_GROUP_CONTROLLER
 const createGroup = async (req, res) => {
     try {
@@ -189,6 +190,7 @@ const sendGroupMessage = async (req, res) => {
         await newGroupMessage.populate('senderId', 'username profilePicture');
         group.messages.push(newGroupMessage._id);
         await group.save();
+        socket_1.io.to(groupId).emit("newGroupMessage", newGroupMessage);
         res.status(200).json({
             message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.messageSendSuccessful"),
             newGroupMessage,
@@ -288,6 +290,13 @@ const joinGroup = async (req, res) => {
         await userJoinedMessage.save();
         group.messages.push(userJoinedMessage._id);
         await group.save();
+        socket_1.io.to(groupId).emit("newGroupMessage", userJoinedMessage);
+        socket_1.io.to(groupId).emit("groupUpdated", {
+            groupId: group._id,
+            members: group.members,
+            memberCount: group.members.length,
+            newMember: newMember
+        });
     }
     catch (error) {
         console.log("Error in join group controller", error);
@@ -467,6 +476,16 @@ const leaveGroup = async (req, res) => {
         await userLeftGroupMessage.save();
         group.messages.push(userLeftGroupMessage._id);
         await group.save();
+        socket_1.io.to(groupId).emit("newGroupMessage", userLeftGroupMessage);
+        socket_1.io.to(groupId).emit("groupUpdated", {
+            admins: group.admins,
+            members: group.members,
+            memberCount: group.members.length,
+            leftMember: {
+                user: currentMember.user,
+                role: currentMember.role
+            }
+        });
     }
     catch (error) {
         console.log("Error in leave group controller");
@@ -529,6 +548,23 @@ const promoteUsers = async (req, res) => {
             messageType: "system",
             systemMessageType: "user_promoted",
             senderId: promoterId
+        });
+        const promotedSocketId = (0, socket_1.getReceiverSocketId)(userId);
+        if (promotedSocketId) {
+            socket_1.io.to(promotedSocketId).emit("roleUpdated", {
+                groupId: group._id,
+                newRole: "admin"
+            });
+        }
+        socket_1.io.to(groupId).emit("newGroupMessage", promotedUserMessage);
+        socket_1.io.to(groupId).emit("groupUpdated", {
+            groupId: group._id,
+            members: group.members,
+            admins: group.admins,
+            promoteUser: {
+                user: promotedMember.user,
+                newRole: "admin"
+            }
         });
         await promotedUserMessage.save();
         group.messages.push(promotedUserMessage._id);
@@ -598,6 +634,23 @@ const demoteUser = async (req, res) => {
         await demotedUserMessage.save();
         group.messages.push(demotedUserMessage._id);
         await group.save();
+        const demotedSocketId = (0, socket_1.getReceiverSocketId)(userId);
+        if (demotedSocketId) {
+            socket_1.io.to(demotedSocketId).emit("roleUpdated", {
+                groupId: group._id,
+                newRole: "member"
+            });
+        }
+        socket_1.io.to(groupId).emit("newGroupMessage", demotedUserMessage);
+        socket_1.io.to(groupId).emit("groupUpdated", {
+            groupId: group._id,
+            admins: group.admins,
+            members: group.members,
+            demotedUser: {
+                user: demotedMember.user,
+                newRole: "member"
+            }
+        });
     }
     catch (error) {
         console.log("Error in demote user controller");
@@ -669,6 +722,23 @@ const kikUser = async (req, res) => {
         await kickedUserMessage.save();
         group.messages.push(kickedUserMessage._id);
         await group.save();
+        socket_1.io.to(groupId).emit("newGroupMessage", kickedUserMessage);
+        socket_1.io.to(groupId).emit("groupUpdated", {
+            groupId: group.id,
+            members: group.members,
+            admins: group.admins,
+            memberCount: group.members.length,
+            kickedUser: {
+                user: kickedMember.user
+            }
+        });
+        const kickedUserSocketId = (0, socket_1.getReceiverSocketId)(userId);
+        if (kickedUserSocketId) {
+            socket_1.io.sockets.sockets.get(kickedUserSocketId)?.leave(groupId);
+            socket_1.io.to(kickedUserSocketId).emit("kickedFromGroup", {
+                groupId: group._id
+            });
+        }
     }
     catch (error) {
         console.log("Error in kick user controller");

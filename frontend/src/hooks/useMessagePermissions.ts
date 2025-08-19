@@ -4,6 +4,7 @@ import useConversation from "../store/useConversation"
 export const useMessagePermissions = () => {
   const { selectedGroup } = useConversation();
   const {authUser} = useAuthContext();
+  
   const isGroupChat = !!selectedGroup;
   const isChannel = selectedGroup?.groupType === "channel";
   const isAdmin = selectedGroup?.admins.some(admin => admin._id === authUser?._id || admin.toString() === authUser?._id) || false;

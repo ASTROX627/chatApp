@@ -7,6 +7,7 @@ import { useAppContext } from "../context/app/appContext";
 import { useAuthContext } from "../context/auth/authContext";
 import { httpService } from "../core/httpService";
 import type { AuthRequestData, AuthResponse, LoginFormValue, RegisterFormValue } from "../types/auth";
+import { useSocketContex } from "../context/socket/socketContext";
 
 
 
@@ -17,6 +18,7 @@ const useAuth = () => {
   const navigate = useNavigate();
   const { setAuthUser } = useAuthContext();
   const { resetState } = useAppContext();
+  const {socket} = useSocketContex();
 
   const handleAuthRequest = useCallback(
     async <T extends AuthRequestData>(
@@ -89,6 +91,11 @@ const useAuth = () => {
 
   const handleLogout = useCallback(
     async (): Promise<void> => {
+      if(socket){
+        socket.close();
+      }
+      localStorage.removeItem("chat-user")
+
       toast.promise(
         handleAuthRequest(
           "/auth/logout",

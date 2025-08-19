@@ -7,11 +7,13 @@ import { useGetGroupMessage } from "../../../hooks/useGetGroupMessages";
 import useConversation from "../../../store/useConversation";
 import GroupMessageContent from "./GroupMessageContent";
 import type { MessageType, GroupMessageType } from "../../../types/conversations";
+import { useListenMessages } from "../../../hooks/useListenMessages";
 
 const Messages = () => {
   const { selectedGroup } = useConversation();
   const { messages, loading: privateLoading } = useGetMessages();
   const { groupMessages, loading: groupLoading } = useGetGroupMessage();
+  useListenMessages();
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 

@@ -8,6 +8,7 @@ const conversation_model_1 = __importDefault(require("../models/conversation.mod
 const message_model_1 = __importDefault(require("../models/message.model"));
 const i18nHelper_1 = require("../utils/i18nHelper");
 const detectUrl_1 = require("../utils/detectUrl");
+const socket_1 = require("../socket/socket");
 // SEND_MESSAGE_CONTROLLER
 const sendMessage = async (req, res) => {
     try {
@@ -62,6 +63,10 @@ const sendMessage = async (req, res) => {
         }
         await conversation.save();
         await newMessage.save();
+        const receiverSocketId = (0, socket_1.getReceiverSocketId)(receiverId);
+        if (receiverSocketId) {
+            socket_1.io.to(receiverSocketId).emit("newMessage", newMessage);
+        }
         res.status(201).json({
             message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.messageSendSuccessful"),
             newMessage

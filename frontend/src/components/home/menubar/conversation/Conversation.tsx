@@ -4,6 +4,7 @@ import { useTheme } from "../../../../hooks/useTheme"
 import { Hash, Lock, Users } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import type { ConversationType, GroupType } from "../../../../types/conversations"
+import { useSocketContex } from "../../../../context/socket/socketContext"
 
 type ConversationProps = {
   conversation?: ConversationType,
@@ -16,10 +17,12 @@ type ConversationProps = {
 
 const Conversation: FC<ConversationProps> = ({ conversation, emoji, group, lastIndex, handleInvite, handleConversation }) => {
   const { selectedConversation, selectedGroup } = useConversation();
+  const {onlineUsers} = useSocketContex();
   const { classes } = useTheme();
   const { t } = useTranslation();
 
   const isSelected = conversation ? selectedConversation?._id === conversation._id : selectedGroup?._id === group?._id;
+  const isOnline = onlineUsers.includes(conversation?._id as string) 
 
   const handleClick = () => {
     if (handleConversation) {
@@ -32,6 +35,7 @@ const Conversation: FC<ConversationProps> = ({ conversation, emoji, group, lastI
 
   const displayName = conversation?.username || group?.groupName || "";
   const profilePicture = conversation?.profilePicture || group?.groupImage;
+  const avatarClassName = `${group? "avatar": isOnline? "avatar avatar-online": "avatar"}`
 
   return (
     <>
@@ -39,7 +43,7 @@ const Conversation: FC<ConversationProps> = ({ conversation, emoji, group, lastI
         onClick={handleClick}
         className={`flex gap-2 items-center justify-center ${classes.primary.hover.bg} rounded px-2 py-1 cursor-pointer ${isSelected ? `${classes.primary.bg}` : ""}`}
       >
-        <div className="avatar avatar-online">
+        <div className={avatarClassName}>
           <div className="w-12 rounded-full">
             <img src={profilePicture} alt={displayName} />
           </div>

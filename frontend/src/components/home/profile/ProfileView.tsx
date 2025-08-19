@@ -13,7 +13,8 @@ const ProfileView: FC = () => {
   const { classes } = useTheme();
   const { setShowMessageContainer, setShowProfile, language, goBack, pushToHistory } = useAppContext();
   const { getUserProfile } = useGetUserProfile();
-  const {setPreviousGroup, setNavigationContext} = useConversation();
+  const { setPreviousGroup, setNavigationContext } = useConversation();
+
   const [copiedText, setCopiedText] = useState("");
 
   const commonGroups = selectedConversation?.commonGroups || [];
@@ -30,9 +31,9 @@ const ProfileView: FC = () => {
     setShowMessageContainer();
   }, [setSelectedGroup, setShowMessageContainer]);
 
-  
+
   const handelUserClick = async (userId: string) => {
-    if(selectedGroup){
+    if (selectedGroup) {
       setPreviousGroup(selectedGroup);
       setNavigationContext("groupProfile");
     }
@@ -91,13 +92,13 @@ const ProfileView: FC = () => {
   return (
     <div className={`w-full flex flex-col ${classes.secondary.bg} h-full overflow-auto scrollbar scrollbar-track-neutral-700 scrollbar-thumb-neutral-900 hover:scrollbar-thumb-neutral-800 relative`}>
       <div className="w-full my-2 border-b-2 border-gray-600">
-        <button 
+        <button
           onClick={goBack}
           className="m-2 cursor-pointer absolute">
-        {language === "en"? 
-          <ArrowLeft className={`${classes.primary.text}`} size={32}/> :
-          <ArrowRight className={`${classes.primary.text}`} size={32}/>
-        }
+          {language === "en" ?
+            <ArrowLeft className={`${classes.primary.text}`} size={32} /> :
+            <ArrowRight className={`${classes.primary.text}`} size={32} />
+          }
         </button>
         <img className="w-1/3 mx-auto my-2" src={selectedConversation?.profilePicture || selectedGroup?.groupImage} alt="profile picture" />
       </div>
@@ -179,7 +180,6 @@ const ProfileView: FC = () => {
               {selectedGroup && selectedGroup.groupType === "group" && (
                 <>
                   {selectedGroup.members.map(member => renderUserItem(member.user, member.user._id))}
-                  {selectedGroup.admins.filter(admin => admin._id !== selectedGroup.owner._id).map(admin => renderUserItem(admin))}
                 </>
               )}
             </div>

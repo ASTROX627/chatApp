@@ -4,6 +4,7 @@ import Message from "../models/message.model";
 import mongoose from "mongoose";
 import { getLocalizedMessage } from "../utils/i18nHelper";
 import { detectUrl } from "../utils/detectUrl";
+import { getReceiverSocketId, io } from "../socket/socket";
 
 
 export interface AuthenticatedRequest extends Request {
@@ -78,8 +79,14 @@ export const sendMessage = async (req: AuthenticatedRequest, res: Response): Pro
       conversation.messages.push(newMessage._id);
     }
 
+
     await conversation.save();
     await newMessage.save();
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if(receiverSocketId){
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
 
     res.status(201).json({
       message: getLocalizedMessage(req, "success.messageSendSuccessful"),

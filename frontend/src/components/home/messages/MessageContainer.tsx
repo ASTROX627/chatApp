@@ -13,12 +13,16 @@ import { twMerge } from "tailwind-merge";
 import OptionsDropdown from "./OptionsDropdown";
 import InviteModal from "../../modal/InviteModal";
 import UserManagementModal from "../../modal/UserManagementModal";
+import { useSocketContex } from "../../../context/socket/socketContext";
 
 const MessageContainer: FC = (): JSX.Element => {
-  const { selectedConversation, selectedGroup, setSelectedGroup } = useConversation();
+  const { selectedConversation, selectedGroup, setSelectedGroup} = useConversation();
   const { showMessageContainer, setShowChatMenu, language, setShowProfile, pushToHistory } = useAppContext();
   const { getUserProfile } = useGetUserProfile();
   const { getGroupProfile } = useGetGroupProfile();
+  const {onlineUsers} = useSocketContex();
+
+  const isOnline = onlineUsers.includes(selectedConversation?._id as string);
   const { t } = useTranslation();
   const { classes } = useTheme();
 
@@ -28,6 +32,8 @@ const MessageContainer: FC = (): JSX.Element => {
   const optionRef = useRef<HTMLDivElement>(null);
 
   const activeChat = selectedConversation || selectedGroup;
+  const avatarClassName = `${selectedGroup? "avatar": isOnline? "avatar avatar-online": "avatar"} cursor-pointer`;
+
 
 
   const checkIfClickOutside = useCallback((e: globalThis.MouseEvent) => {
@@ -82,7 +88,7 @@ const MessageContainer: FC = (): JSX.Element => {
               >
                 {language === "en" ? <ArrowLeft size={32} /> : <ArrowRight size={32} />}
               </button>
-              <div className="avatar avatar-online cursor-pointer" onClick={handleAvatarClick}>
+              <div className={avatarClassName} onClick={handleAvatarClick}>
                 <div className="w-12 rounded-full">
                   <img
                     src={selectedConversation?.profilePicture || selectedGroup?.groupImage}
