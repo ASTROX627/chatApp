@@ -172,13 +172,16 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
     }
 
     let messageType = "text";
-    let fileUrl = "";
+    let fileData = null;
     let fileName = "";
     let fileSize = 0;
     let fileMimeType = "";
 
     if (file) {
-      fileUrl = `/uploads/${file.filename}`;
+      fileData = {
+        data: file.buffer,
+        contentType: file.mimetype
+      }
       fileName = file.originalname;
       fileSize = file.size;
       fileMimeType = file.mimetype;
@@ -197,7 +200,7 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
       groupId,
       message: message || "",
       messageType,
-      fileUrl,
+      fileData,
       fileSize,
       fileName,
       fileMimeType,

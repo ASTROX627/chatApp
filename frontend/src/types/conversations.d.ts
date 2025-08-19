@@ -34,12 +34,16 @@ export type GroupType = {
 }
 
 export type MessageType = {
-  _id: string,
+  _id?: string,
   senderId: string,
   receiverId: string,
   message: string,
   messageType: "text" | "image" | "file" | "document" | "link" | "inviteLink" | "system",
   fileUrl?: string,
+  fileData?: {
+    data: string,
+    contentType: string
+  }
   fileName?: string,
   fileSize?: number,
   fileMimeType?: string,
@@ -58,16 +62,20 @@ export type GroupMessageType = {
   message: string;
   messageType: "text" | "image" | "file" | "document" | "link" | "inviteLink" | "system";
   fileUrl?: string;
+  fileData?: {
+    data: string,
+    contentType: string
+  }
   fileName?: string;
   fileSize?: number;
   fileMimeType?: string;
   systemMessageType?:
-    | "group_created"
-    | "user_joined"
-    | "user_left"
-    | "user_removed"
-    | "user_promoted"
-    | "user_demoted";
+  | "group_created"
+  | "user_joined"
+  | "user_left"
+  | "user_removed"
+  | "user_promoted"
+  | "user_demoted";
   inviteData?: InviteLinkData;
   createdAt: string;
 };

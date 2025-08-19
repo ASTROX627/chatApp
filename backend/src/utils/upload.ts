@@ -6,20 +6,7 @@ import { getLocalizedMessage } from "./i18nHelper";
 
 type FileFilterCallback = (error: Error | null, acceptFile?: boolean) => void;
 
-const uploadDir = "backend/uploads/";
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true })
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir)
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
-})
+const storage = multer.memoryStorage();
 
 const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
 
@@ -40,7 +27,7 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fieldSize: 10 * 1024 * 1024
+    fileSize: 10 * 1024 * 1024
   }
 })
 

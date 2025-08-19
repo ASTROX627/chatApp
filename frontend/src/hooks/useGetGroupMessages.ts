@@ -3,6 +3,7 @@ import useConversation from "../store/useConversation";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { httpService } from "../core/httpService";
+import type { GroupMessageType } from "../types/conversations";
 
 export const useGetGroupMessage = () => {
   const [loading, setLoading] = useState(false);
@@ -15,12 +16,17 @@ export const useGetGroupMessage = () => {
       try {
         const response = await httpService.get(`/group/messages/${selectedGroup?._id}`);
         const data = response.data.groupMessages;
-        
+
         if (data.error) {
           throw new Error(data.error);
         }
 
-        setGroupMessages(data);
+        const updatedMessage: GroupMessageType[] = data.map((msg: GroupMessageType) => ({
+          ...msg,
+          fileUrl: msg.fileData ? msg._id : undefined
+        }))
+
+        setGroupMessages(updatedMessage);
 
       } catch (error) {
         if (error instanceof AxiosError) {

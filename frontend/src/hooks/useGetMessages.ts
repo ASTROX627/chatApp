@@ -3,6 +3,7 @@ import useConversation from "../store/useConversation";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { httpService } from "../core/httpService";
+import type { MessageType } from "../types/conversations";
 
 export const useGetMessages = () => {
   const [loading, setLoading] = useState(false);
@@ -15,12 +16,17 @@ export const useGetMessages = () => {
       try {
         const response = await httpService.get(`/messages/${selectedConversation?._id}`);
         const data = response.data.messages;
-        
+
         if (data.error) {
           throw new Error(data.error);
         }
 
-        setMessages(data);
+        const updatedMessage: MessageType[] = data.map((msg: MessageType) => ({
+          ...msg,
+          fileUrl: msg.fileData ? msg._id : undefined
+        }))
+
+        setMessages(updatedMessage);
 
       } catch (error) {
         if (error instanceof AxiosError) {

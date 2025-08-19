@@ -1,10 +1,19 @@
-export const downloadFile = (fileUrl: string, fileName?: string) => {
-  const link = document.createElement("a");
-  link.href = `${import.meta.env.VITE_BASE_URL}${fileUrl}`;
-  link.download = fileName || "Download-file";
-  link.target = "_blank"
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+export const downloadFile = async (fileUrl: string, fileName?: string) => {
+  try {
+    const response = await fetch(fileUrl, {
+      method: 'GET',
+    });
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName || "download";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error downloading file:", error);
+  }
 }
 

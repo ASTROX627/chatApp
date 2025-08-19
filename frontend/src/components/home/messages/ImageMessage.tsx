@@ -9,7 +9,7 @@ type ImageMesssageProps = {
 
 
 const ImageMessage:FC<ImageMesssageProps> = ({fileName, fileUrl, onClick}):JSX.Element => {
-  const imageUrl = `${import.meta.env.VITE_BASE_URL}${fileUrl}`;
+  const imageUrl = `${import.meta.env.VITE_BASE_URL}/api/files/message/${fileUrl}`;
 
   return(
     <div className="max-w-xs">

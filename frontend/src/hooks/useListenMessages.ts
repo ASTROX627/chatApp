@@ -1,28 +1,37 @@
 import { useEffect } from "react";
-import { useSocketContex } from "../context/socket/socketContext"
+import { useSocketContex } from "../context/socket/socketContext";
 import useConversation from "../store/useConversation";
+import type { MessageType, GroupMessageType } from "../types/conversations";
 
-export const useListenMessages = () =>  {
-  const {socket} = useSocketContex();
-  const {messages, setMessages, groupMessages, setGroupMessages} = useConversation();
+
+export const useListenMessages = () => {
+  const { socket } = useSocketContex();
+  const { messages, setMessages, groupMessages, setGroupMessages, selectedGroup, selectedConversation } = useConversation();
 
   useEffect(() => {
-    socket?.on("newMessage", (newMessage) => {
-      setMessages([...messages, newMessage])
-    })
+    socket?.on("newMessage", (newMessage: MessageType) => {
+      if (selectedConversation?._id === newMessage.receiverId || selectedConversation?._id === newMessage.senderId) {
+        const updatedMessage: MessageType = {
+          ...newMessage,
+          fileUrl: newMessage.fileData ? newMessage._id : undefined,
+        };
+        setMessages([...messages, updatedMessage]);
+      }
+    });
+
+    socket?.on("newGroupMessage", (newGroupMessage: GroupMessageType) => {
+      if (selectedGroup?._id === newGroupMessage.groupId) {
+        const updatedMessage: GroupMessageType = {
+          ...newGroupMessage,
+          fileUrl: newGroupMessage.fileData ? newGroupMessage._id : undefined,
+        };
+        setGroupMessages([...groupMessages, updatedMessage]);
+      }
+    });
 
     return () => {
       socket?.off("newMessage");
-    }
-  }, [messages, setMessages, socket]);
-
-  useEffect(() => {
-    socket?.on("newGroupMessage", (newGroupMessage) => {
-      setGroupMessages([...groupMessages, newGroupMessage])
-    })
-
-    return () => {
-      socket?.off("newGroupMessage")
-    }
-  }, [groupMessages, setGroupMessages, socket])
-}
+      socket?.off("newGroupMessage");
+    };
+  }, [socket, messages, setMessages, groupMessages, setGroupMessages, selectedGroup, selectedConversation]);
+};
