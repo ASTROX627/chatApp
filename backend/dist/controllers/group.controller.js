@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.kikUser = exports.demoteUser = exports.promoteUsers = exports.leaveGroup = exports.getPrivategroupByInvite = exports.sendInvite = exports.joinGroup = exports.getGroupMessage = exports.sendGroupMessage = exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
+exports.kikUser = exports.demoteUser = exports.promoteUsers = exports.leaveGroup = exports.getPrivategroupByInvite = exports.sendInvite = exports.joinGroup = exports.seenGroupMessage = exports.getGroupMessage = exports.sendGroupMessage = exports.getUserGroup = exports.getPublicGroups = exports.createGroup = void 0;
 const group_model_1 = __importDefault(require("../models/group.model"));
 const group_utils_1 = require("../utils/group.utils");
 const i18nHelper_1 = require("../utils/i18nHelper");
@@ -223,6 +223,41 @@ const getGroupMessage = async (req, res) => {
     }
 };
 exports.getGroupMessage = getGroupMessage;
+// SEEN_GROUP_MESSAGE_CONTROLLER
+const seenGroupMessage = async (req, res) => {
+    try {
+        const { messageId } = req.params;
+        const userId = req.user?._id;
+        if (!messageId || !userId) {
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.allFieldsRequired") });
+            return;
+        }
+        const groupMessage = await groupMessage_model_1.default.findById(messageId);
+        if (!groupMessage) {
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.messageNotFound") });
+            return;
+        }
+        const group = await group_model_1.default.findById(groupMessage.groupId);
+        if (!group || !group.members.some(member => member.user?.toString() === userId.toString())) {
+            res.status(403).json({ errors: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.notMember") });
+            return;
+        }
+        if (!groupMessage.seenBy.includes(userId)) {
+            groupMessage.seenBy.push(userId);
+            await groupMessage.save();
+        }
+        socket_1.io.to(groupMessage.groupId.toString()).emit("groupMessageSeen", {
+            messageId,
+            seenBy: groupMessage.seenBy
+        });
+        res.status(200).json({ message: (0, i18nHelper_1.getLocalizedMessage)(req, "success.messageSeen") });
+    }
+    catch (error) {
+        console.log("error in seen group message controller");
+        res.status(500).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.internalServerError") });
+    }
+};
+exports.seenGroupMessage = seenGroupMessage;
 // JOIN_GROUP_CONTROLLER
 const joinGroup = async (req, res) => {
     try {

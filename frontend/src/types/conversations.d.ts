@@ -49,6 +49,7 @@ export type MessageType = {
   fileMimeType?: string,
   inviteData?: InviteLinkData,
   createdAt: string,
+  isSeen?: boolean
 }
 
 export type GroupMessageType = {
@@ -78,6 +79,7 @@ export type GroupMessageType = {
   | "user_demoted";
   inviteData?: InviteLinkData;
   createdAt: string;
+  seenBy?: string[];
 };
 
 export type ConversationType = {

@@ -244,6 +244,49 @@ export const getGroupMessage = async (req: AuthenticatedRequest, res: Response):
   }
 }
 
+// SEEN_GROUP_MESSAGE_CONTROLLER
+export const seenGroupMessage = async(req: AuthenticatedRequest, res: Response) => {
+  try {
+    const {messageId} = req.params;
+    const userId = req.user?._id;
+
+    if(!messageId || !userId){
+      res.status(400).json({error: getLocalizedMessage(req, "errors.allFieldsRequired")});
+      return;
+    }
+
+    const groupMessage = await GroupMessage.findById(messageId);
+
+    if(!groupMessage){
+      res.status(404).json({error: getLocalizedMessage(req, "errors.messageNotFound")});
+      return;
+    }
+
+    const group = await Group.findById(groupMessage.groupId);
+    
+    if(!group || !group.members.some(member => member.user?.toString() === userId.toString())){
+      res.status(403).json({errors: getLocalizedMessage(req, "errors.notMember")});
+      return;
+    }
+
+    if(!groupMessage.seenBy.includes(userId)){
+      groupMessage.seenBy.push(userId);
+      await groupMessage.save();
+    }
+
+    io.to(groupMessage.groupId.toString()).emit("groupMessageSeen", {
+      messageId,
+      seenBy: groupMessage.seenBy
+    })
+
+    res.status(200).json({message: getLocalizedMessage(req, "success.messageSeen")});
+    
+  } catch (error) {
+    console.log("error in seen group message controller");
+    res.status(500).json({error: getLocalizedMessage(req, "errors.internalServerError")});
+  }
+}
+
 // JOIN_GROUP_CONTROLLER
 export const joinGroup = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
 

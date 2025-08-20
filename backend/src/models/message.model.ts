@@ -50,6 +50,10 @@ const messageSchema = new mongoose.Schema({
     },
     inviteCode: String,
     inviteUrl: String
+  },
+  isSeen: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 

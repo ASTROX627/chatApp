@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { getLocalizedMessage } from "../utils/i18nHelper";
 import { detectUrl } from "../utils/detectUrl";
 import { getReceiverSocketId, io } from "../socket/socket";
+import { error } from "console";
 
 
 export interface AuthenticatedRequest extends Request {
@@ -87,7 +88,7 @@ export const sendMessage = async (req: AuthenticatedRequest, res: Response): Pro
     await newMessage.save();
 
     const receiverSocketId = getReceiverSocketId(receiverId);
-    if(receiverSocketId){
+    if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
 
@@ -128,5 +129,47 @@ export const getMessage = async (req: AuthenticatedRequest, res: Response): Prom
   } catch (error) {
     console.log("Erorr in get message controller", error);
     res.status(500).json({ erorr: getLocalizedMessage(req, "errors.internalServerError") })
+  }
+}
+
+// SEEN_MESSAGE_CONTROLLER
+export const seenMessage = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { messageId } = req.params;
+    const userId = req.user?._id;
+
+    if (!messageId || !userId) {
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.allFieldsRequired") });
+      return;
+    }
+
+    const message = await Message.findById(messageId);
+
+    if (!message) {
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.messageNotFound") });
+      return;
+    }
+
+    if (message.receiverId.toString() !== userId.toString()) {
+      res.status(403).json({ error: getLocalizedMessage(req, "errors.unauthorized") });
+      return;
+    }
+
+    message.isSeen = true;
+    await message.save();
+
+    const senderSocketId = getReceiverSocketId(message.senderId.toString());
+
+    if (senderSocketId) {
+      io.to(senderSocketId).emit("messageSeen", { messageId });
+    }
+
+    res.status(200).json({
+      message: getLocalizedMessage(req, "success.messageSeen")
+    });
+
+  } catch (error) {
+    console.log("Error in seen message controller");
+    res.status(500).json({ error: getLocalizedMessage(req, "errors.internalServerError") });
   }
 }

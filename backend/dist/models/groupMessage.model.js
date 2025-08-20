@@ -45,7 +45,13 @@ const groupMessageSchema = new mongoose_1.default.Schema({
     systemMessageType: {
         type: String,
         enum: ["user_joined", "user_left", "user_added", "user_removed", "user_promoted", "user_demoted", "group_created"]
-    }
+    },
+    seenBy: [
+        {
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ]
 }, { timestamps: true });
 const GroupMessage = mongoose_1.default.model("GroupMessage", groupMessageSchema);
 exports.default = GroupMessage;

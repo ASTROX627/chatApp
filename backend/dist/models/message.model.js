@@ -54,6 +54,10 @@ const messageSchema = new mongoose_1.default.Schema({
         },
         inviteCode: String,
         inviteUrl: String
+    },
+    isSeen: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 const Message = mongoose_1.default.model("Message", messageSchema);
