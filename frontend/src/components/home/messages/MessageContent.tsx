@@ -21,7 +21,8 @@ const MessageContent: FC<MessageContentProps> = ({ message }): JSX.Element => {
 
   const fromMe = message.senderId === authUser?._id;
   const chatClassName = fromMe ? "chat-end" : "chat-start";
-  const profilePicture = fromMe ? authUser.profilePicture : selectedConversation?.profilePicture
+  const profilePicture = fromMe ? authUser.profilePicture : selectedConversation?.profilePicture;
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageSrc, setModalImageSrc] = useState("");

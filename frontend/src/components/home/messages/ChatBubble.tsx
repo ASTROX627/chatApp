@@ -19,6 +19,8 @@ const ChatBubble: FC<ChatBubbleProps> = ({ message, setIsModalOpen, setModalImag
   const { authUser } = useAuthContext();
   const fromMe = message.senderId === authUser?._id;
 
+    const shakeClass = message.shouldShake ? "shake" : "";
+
   const openImageModal = (src: string, alt: string) => {
     setModalImageSrc(src);
     setModalImageAlt(alt);
@@ -52,7 +54,7 @@ const ChatBubble: FC<ChatBubbleProps> = ({ message, setIsModalOpen, setModalImag
   }
 
   return (
-    <div className={`chat-bubble text-white ${fromMe ? `${classes.primary.bg} pb-2` : ""}`}>
+    <div className={`chat-bubble text-white ${shakeClass} ${fromMe ? `${classes.primary.bg} pb-2` : ""}`}>
       {
         message.message && (
           <div className="mb-2">{renderLinkMessages(message.message)}</div>

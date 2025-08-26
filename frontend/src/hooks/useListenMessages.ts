@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSocketContex } from "../context/socket/socketContext";
 import useConversation from "../store/useConversation";
 import type { MessageType, GroupMessageType } from "../types/conversations";
+import notificationSound from "../assets/sound/notification.mp3"
 
 
 export const useListenMessages = () => {
@@ -14,7 +15,10 @@ export const useListenMessages = () => {
         const updatedMessage: MessageType = {
           ...newMessage,
           fileUrl: newMessage.fileData ? newMessage._id : undefined,
+          shouldShake: true
         };
+        const sound = new Audio(notificationSound);
+        sound.play();
         setMessages([...messages, updatedMessage]);
       }
     });
@@ -24,7 +28,10 @@ export const useListenMessages = () => {
         const updatedMessage: GroupMessageType = {
           ...newGroupMessage,
           fileUrl: newGroupMessage.fileData ? newGroupMessage._id : undefined,
+          shouldShake: true
         };
+        const sound = new Audio(notificationSound);
+        sound.play();
         setGroupMessages([...groupMessages, updatedMessage]);
       }
     });

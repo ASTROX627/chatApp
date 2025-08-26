@@ -49,7 +49,8 @@ export type MessageType = {
   fileMimeType?: string,
   inviteData?: InviteLinkData,
   createdAt: string,
-  isSeen?: boolean
+  isSeen?: boolean,
+  shouldShake?: boolean
 }
 
 export type GroupMessageType = {
@@ -80,6 +81,7 @@ export type GroupMessageType = {
   inviteData?: InviteLinkData;
   createdAt: string;
   seenBy?: string[];
+  shouldShake?: boolean
 };
 
 export type ConversationType = {
