@@ -7,7 +7,7 @@ import "../src/core/i18n"
 const App = () => {
   const {styles} = useTheme()
   return (
-    <div style={styles} className="flex h-screen mx-auto items-center justify-center">
+    <div style={styles} className="flex h-screen mx-auto items-center justify-center p-2">
       <RouterProvider router={router}/>
       <Toaster
         position="bottom-left"

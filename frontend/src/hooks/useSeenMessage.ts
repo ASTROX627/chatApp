@@ -26,8 +26,11 @@ export const useSeenMessage = () => {
     try {
       await httpService.post(`/seen/group-message/${messageId}`);
     } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.message);
+      if (error instanceof AxiosError && error.response) {
+        const erorrMessage = error.response.data?.error;
+        if (erorrMessage) {
+          toast.error(erorrMessage)
+        }
       }
     }
   };

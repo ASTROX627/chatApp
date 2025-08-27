@@ -7,7 +7,7 @@ import type { GroupType } from "../types/conversations";
 
 const useGetUserGroups = () => {
   const [loading, setLoading] = useState(false);
-  const {userGroups, setUserGroups} = useConversation();
+  const { userGroups, setUserGroups } = useConversation();
 
   useEffect(() => {
     const getUserGroups = async () => {
@@ -16,14 +16,17 @@ const useGetUserGroups = () => {
       try {
         const response = await httpService.get("/group/user");
         const data: GroupType[] = response.data;
-        
-        if(data){
+
+        if (data) {
           setUserGroups(data);
         }
-        
+
       } catch (error) {
-        if (error instanceof AxiosError) {
-          toast.error(error.message)
+        if (error instanceof AxiosError && error.response) {
+          const erorrMessage = error.response.data?.error;
+          if (erorrMessage) {
+            toast.error(erorrMessage)
+          }
         }
       } finally {
         setLoading(false)

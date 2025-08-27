@@ -9,6 +9,10 @@ export const useGetGroupProfile = () => {
   const { setSelectedGroup } = useConversation();
 
   const getGroupProfile = async (groupId: string) => {
+    if (!groupId || groupId === 'undefined') {
+      console.error('Invalid groupId:', groupId);
+      return null;
+    }
     setLoading(true);
 
     try {
@@ -20,11 +24,16 @@ export const useGetGroupProfile = () => {
       }
 
       setSelectedGroup(data.group);
+      console.log(data.group);
+
       return data.group;
 
     } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.message);
+      if (error instanceof AxiosError && error.response) {
+        const erorrMessage = error.response.data?.error;
+        if (erorrMessage) {
+          toast.error(erorrMessage)
+        }
       }
       return null;
 

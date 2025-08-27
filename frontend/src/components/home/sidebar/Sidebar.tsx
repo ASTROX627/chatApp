@@ -38,7 +38,7 @@ const Sidebar: FC = (): JSX.Element => {
           onClick={setShowChatMenu}
           isActive={isActiveChatButton}
           icon={<MessageCircle size={30} className="lg:size-20" />}
-          label={t("home.chat")}
+          label={t("home.chats")}
         />
         <MenuButton
           onClick={setShowSettingMenu}

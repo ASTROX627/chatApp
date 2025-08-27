@@ -13,12 +13,12 @@ export const useSendGroupMessage = () => {
 
     try {
       const formData = new FormData();
-      if (message.trim()){
+      if (message.trim()) {
         formData.append("message", message);
-      } 
-      if (file){
+      }
+      if (file) {
         formData.append("file", file);
-      } 
+      }
 
       const response = await httpService.post(
         `/group/send/${selectedGroup?._id}`,
@@ -27,15 +27,18 @@ export const useSendGroupMessage = () => {
       );
 
       const data = response.data;
-      
-      if(data.error){
+
+      if (data.error) {
         throw new Error(data.error);
       }
 
       setGroupMessages([...groupMessages, data.newGroupMessage])
     } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.message);
+      if (error instanceof AxiosError && error.response) {
+        const erorrMessage = error.response.data?.error;
+        if (erorrMessage) {
+          toast.error(erorrMessage)
+        }
       }
     } finally {
       setLoading(false);

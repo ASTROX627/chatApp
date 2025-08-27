@@ -29,8 +29,11 @@ export const useGetGroupMessage = () => {
         setGroupMessages(updatedMessage);
 
       } catch (error) {
-        if (error instanceof AxiosError) {
-          toast.error(error.message)
+        if (error instanceof AxiosError && error.response) {
+          const erorrMessage = error.response.data?.error;
+          if (erorrMessage) {
+            toast.error(erorrMessage)
+          }
         }
       } finally {
         setLoading(false)

@@ -49,8 +49,8 @@ export const AppContext = createContext<AppContextType>({
   setShowChatMenu: () => {},
   setShowSettingMenu: () => {},
   setShowCreateGroupMenu: () => {},
-  changeTheme: (theme: ThemeType) => { },
-  changeLanguage: (language: LanguageType) => { },
+  changeTheme: () => { },
+  changeLanguage: () => { },
   pushToHistory: () => { },
   goBack: () => { }
 });

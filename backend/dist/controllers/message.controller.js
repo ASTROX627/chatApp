@@ -17,7 +17,7 @@ const sendMessage = async (req, res) => {
         const senderId = req.user?._id;
         const file = req.file;
         if (!message && !file) {
-            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "messageRequired") });
+            res.status(400).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.messageRequired") });
             return;
         }
         let conversation = await conversation_model_1.default.findOne({

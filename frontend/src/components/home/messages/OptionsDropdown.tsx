@@ -59,20 +59,23 @@ const manageMentItems = [
             <li
               className={twMerge("p-2 transition-colors duration-200", classes.secondary.hover.bg)}
               key={index}
+              onClick={manageMentItem.onclick}
             >
               <button
                 className="cursor-pointer flex items-center justify-center gap-2 text-sm"
-                onClick={manageMentItem.onclick}
+                
               >
                 {manageMentItem.icon} {manageMentItem.label}
               </button>
             </li>
           ))
         )}
-        <li className={twMerge("p-2 transition-colors duration-200", classes.secondary.hover.bg)}>
+        <li 
+          className={twMerge("p-2 transition-colors duration-200", classes.secondary.hover.bg)}
+          onClick={handleLeaveGroup}
+        >
           <button
             className="cursor-pointer flex items-center justify-center gap-2 text-sm"
-            onClick={handleLeaveGroup}
           >
             <LogOut size={20} /> Leave Group
           </button>

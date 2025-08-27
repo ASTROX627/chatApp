@@ -18,13 +18,16 @@ export const useGetUserProfile = () => {
       if (data.error) {
         throw new Error(data.error);
       }
-      
+
       setSelectedConversation(data.user);
       return data.user;
 
     } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.message);
+      if (error instanceof AxiosError && error.response) {
+        const erorrMessage = error.response.data?.error;
+        if (erorrMessage) {
+          toast.error(erorrMessage)
+        }
       }
       return null;
 

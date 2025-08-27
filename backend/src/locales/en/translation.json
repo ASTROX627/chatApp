@@ -31,7 +31,10 @@
     "onlyOwner": "Only the owner can demote members",
     "alreadyMember": "This user is a member",
     "canNotKick": "Admins can not kick each other",
-    "canNotKickOwner": "No one can kick the owner"
+    "canNotKickOwner": "No one can kick the owner",
+    "fileNotFound": "File not found",
+    "messageNotFound": "Message not found",
+    "messageSeen": "Message seen"
   },
   "success": {
     "registrationSuccessful": "Registration successful",

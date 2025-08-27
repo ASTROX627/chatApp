@@ -415,7 +415,7 @@ export const sendInvite = async (req: AuthenticatedRequest, res: Response) => {
     }
 
     if (!invited) {
-      res.status(404).json({ error: getLocalizedMessage(req, "errors.userNotFoud") });
+      res.status(404).json({ error: getLocalizedMessage(req, "errors.userNotFound") });
       return;
     }
 
@@ -546,7 +546,7 @@ export const leaveGroup = async (req: AuthenticatedRequest, res: Response): Prom
       return;
     }
 
-    const isOwner = group.owner.toHexString() === userId.toString();
+    const isOwner = group.owner.toString() === userId.toString();
     if (isOwner) {
       res.status(403).json({ error: getLocalizedMessage(req, "errors.canNotLeave") });
       return;

@@ -364,7 +364,7 @@ const sendInvite = async (req, res) => {
             return;
         }
         if (!invited) {
-            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.userNotFoud") });
+            res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.userNotFound") });
             return;
         }
         if (!isOwner && !isAdmin) {
@@ -477,7 +477,7 @@ const leaveGroup = async (req, res) => {
             res.status(404).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.groupNotFound") });
             return;
         }
-        const isOwner = group.owner.toHexString() === userId.toString();
+        const isOwner = group.owner.toString() === userId.toString();
         if (isOwner) {
             res.status(403).json({ error: (0, i18nHelper_1.getLocalizedMessage)(req, "errors.canNotLeave") });
             return;

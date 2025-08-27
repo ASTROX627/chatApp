@@ -4,7 +4,7 @@ import useConversation from "../../../store/useConversation"
 import type { ConversationType, GroupType } from "../../../types/conversations";
 import Conversation from "../menubar/conversation/Conversation";
 import { useAppContext } from "../../../context/app/appContext";
-import { useCallback, useState, type FC } from "react";
+import { useCallback, type FC } from "react";
 import toast from "react-hot-toast";
 import { useGetUserProfile } from "../../../hooks/useGetUserProfile";
 
@@ -14,8 +14,6 @@ const ProfileView: FC = () => {
   const { setShowMessageContainer, setShowProfile, language, goBack, pushToHistory } = useAppContext();
   const { getUserProfile } = useGetUserProfile();
   const { setPreviousGroup, setNavigationContext } = useConversation();
-
-  const [copiedText, setCopiedText] = useState("");
 
   const commonGroups = selectedConversation?.commonGroups || [];
   const hasCommonGroups = commonGroups.length > 0;
@@ -57,9 +55,7 @@ const ProfileView: FC = () => {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      setCopiedText(text);
       toast.success("URL Copied!");
-      setTimeout(() => setCopiedText(""), 3000);
     } catch (error) {
       toast.error("Copied failed!");
       console.log(error);

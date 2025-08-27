@@ -30,7 +30,7 @@ export const sendMessage = async (req: AuthenticatedRequest, res: Response): Pro
     const file = req.file
 
     if (!message && !file) {
-      res.status(400).json({ error: getLocalizedMessage(req, "messageRequired") });
+      res.status(400).json({ error: getLocalizedMessage(req, "errors.messageRequired") });
       return
     }
 

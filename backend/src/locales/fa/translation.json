@@ -19,6 +19,7 @@
     "notMember": "کاربری با این مشخصات عضو گروه نیست",
     "isMember": "شما عضو این گروه هستید",
     "groupRequired": "آیدی گروه الزامی است",
+    "accessDenied": "شما قادر به دسترسی به نمایه نیستید",
     "invalidGroupType": "نوع غیر مجاز برای گروه",
     "onlyWithInvite": "برای عضویت در این گروه باید کد دعوت داشته باشید",
     "isAlreadyJoined": "این کاربر عضو گروه میباشد",
@@ -30,7 +31,10 @@
     "onlyOwner": "فقط مالک میتواند اعضا را تنزل دهد",
     "alreadyMember": "این کاربر یک عضو است",
     "canNotKick": "ادمین ها نمیتوانند یک دیگر را اخراج کنند",
-    "canNotKickOwner": "هیچ کس نمیتواند مالک را اخراج کند"
+    "canNotKickOwner": "هیچ کس نمیتواند مالک را اخراج کند",
+    "fileNotFound": "فایلی پیدا نشد",
+    "messageNotFound": "پیامی یافت نشد",
+    "messageSeen": "پیام دیده شد"
   },
   "success": {
     "registrationSuccessful": "ثبت نام با موفقیت انجام شد",
@@ -43,7 +47,6 @@
     "inviteSuccessful": "ارسال دعوت موفقت آمیز بود",
     "groupFound": "گروه پیدا شد",
     "userProfileRetrieved": "نمایه کاربر با موفقیت دریافت شد",
-    "accessDenied": "شما قادر به دسترسی به نمایه نیستید",
     "groupProfileRetrieved": "نمایه گروه با موفقیت دریافت شد",
     "leaveSuccessfull": "خروج از گروه موفقیت آمیز بود",
     "userPromoted": "کاربر با موفقیت ترقی داده شد",

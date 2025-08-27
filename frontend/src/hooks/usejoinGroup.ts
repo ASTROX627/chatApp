@@ -20,13 +20,16 @@ export const useJoinGroup = () => {
 
       const updatedUserGroups = [...userGroups, data.group];
       setUserGroups(updatedUserGroups);
-      if(selectedGroup?._id === groupId){
+      if (selectedGroup?._id === groupId) {
         setSelectedGroup(data.group);
       }
 
     } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.message)
+      if (error instanceof AxiosError && error.response) {
+        const erorrMessage = error.response.data?.error;
+        if (erorrMessage) {
+          toast.error(erorrMessage)
+        }
       }
     } finally {
       setLoading(false)

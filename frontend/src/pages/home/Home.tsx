@@ -12,7 +12,7 @@ const Home: FC = (): JSX.Element => {
   useListenGroupUpdated();
 
   return (
-    <div className="bg-gray-400/10 backdrop-blur-lg rounded-lg shadowlg h-[90vh] w-[90vw] relative lg:grid lg:grid-cols-[auto_1fr_1fr] lg:gap-0">
+    <div className="bg-gray-400/10 backdrop-blur-lg rounded-lg shadow-lg h-full w-[90vw] relative flex lg:grid lg:grid-cols-[auto_1fr_1fr] lg:gap-0">
       <Sidebar />
       {showSidebar && !window.matchMedia('(min-width: 1024px)').matches && (
         <div onClick={setShowSidebar} className="fixed inset-0 bg-black/20 z-20" />
