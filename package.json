@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nodemon backend/dist/server.js",
     "watch": "tsc --watch",
-    "server": "concurrently \"npm run watch\" \"npm run dev\""
+    "server": "concurrently \"npm run watch\" \"npm run dev\"",
+    "start": "node backend/dist/server.js"
   },
   "keywords": [],
   "author": "",
