@@ -24,7 +24,7 @@ dotenv_1.default.config();
 const PORT = Number(process.env.PORT) || 5000;
 socket_1.app.use(express_1.default.json());
 socket_1.app.use((0, cors_1.default)({
-    origin: "http://localhost:8000",
+    origin: "*",
     credentials: true
 }));
 socket_1.app.use((0, cookie_parser_1.default)());
