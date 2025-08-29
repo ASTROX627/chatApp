@@ -6,7 +6,8 @@
     "dev": "nodemon backend/dist/server.js",
     "watch": "tsc --watch",
     "server": "concurrently \"npm run watch\" \"npm run dev\"",
-    "start": "node backend/dist/server.js"
+    "start": "node backend/dist/server.js",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
   "author": "",
