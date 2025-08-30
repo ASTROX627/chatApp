@@ -26,6 +26,7 @@
   <li>➕👤 Add Member / New Group</li>
   <li>🎨 Theme Switch</li>
   <li>🌐 Change Language</li>
+  <li>📱💻 Responsive Design</li>
 </ul>
 
 <h2>Build The app</h2>
