@@ -156,6 +156,7 @@ export const sendGroupMessage = async (req: AuthenticatedRequest, res: Response)
     }
 
     const isMember = group.members.some(member => member.user?.toString() === senderId?.toString());
+    
     if (!isMember) {
       res.status(403).json({ error: getLocalizedMessage(req, "errors.notMember") });
       return;

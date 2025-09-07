@@ -32,7 +32,7 @@
   "devDependencies": {
     "@eslint/js": "^9.29.0",
     "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
+    "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react-swc": "^3.10.2",
     "daisyui": "^5.0.43",
     "eslint": "^9.29.0",
