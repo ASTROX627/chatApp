@@ -7,7 +7,8 @@
     "watch": "tsc --watch",
     "server": "concurrently \"npm run watch\" \"npm run dev\"",
     "start": "node backend/dist/server.js",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend && npm run copy-locales",
+    "copy-locales": "cpx \"backend/src/locales/**/*\" backend/dist/locales"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +35,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "concurrently": "^9.2.0",
+    "cpx": "^1.2.1",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
