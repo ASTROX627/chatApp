@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
+    "copy-locales": "npx cpx \"backend/src/locales/**/*\" backend/dist/locales",
     "dev": "nodemon backend/dist/server.js",
     "watch": "tsc --watch",
     "server": "concurrently \"npm run watch\" \"npm run dev\"",
     "start": "node backend/dist/server.js",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend && npm run copy-locales",
-    "copy-locales": "cpx \"backend/src/locales/**/*\" backend/dist/locales"
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend && npm run copy-locales"
   },
   "keywords": [],
   "author": "",
