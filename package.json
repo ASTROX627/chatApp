@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "copy-locales": "copyfiles -u 2 backend/src/locales/**/* backend/dist",
+    "copy-locales": "cp -r backend/src/locales backend/dist/",
     "build-backend": "tsc",
     "build-frontend": "npm install --prefix frontend && npm run build --prefix frontend",
     "build": "npm install && npm run build-backend && npm run build-frontend && npm run copy-locales",
